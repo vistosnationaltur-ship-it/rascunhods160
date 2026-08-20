@@ -6,13 +6,18 @@ import { prisma } from "@/lib/prisma";
 import { SESSION_COOKIE_STAFF, criarTokenStaff } from "@/lib/auth";
 import { senhaConfere } from "@/lib/senha";
 
-export async function loginStaff(formData: FormData) {
+export type EstadoLoginStaff = { erro?: string };
+
+export async function loginStaff(
+  _estadoAnterior: EstadoLoginStaff,
+  formData: FormData,
+): Promise<EstadoLoginStaff> {
   const username = (formData.get("username") ?? "").toString().trim();
   const senha = (formData.get("senha") ?? "").toString();
 
   const usuario = await prisma.usuario.findUnique({ where: { username } });
   if (!usuario || !senhaConfere(senha, usuario.senhaHash)) {
-    throw new Error("Usuário ou senha incorretos.");
+    return { erro: "Usuário ou senha incorretos." };
   }
 
   const cookieStore = await cookies();

@@ -1,5 +1,12 @@
 import { randomBytes, scryptSync, timingSafeEqual } from "crypto";
 
+// Senha de login do cliente é sempre o CPF, só dígitos — usado tanto pra
+// gerar o hash no cadastro quanto pra normalizar o que o cliente digita
+// no login (tolera pontuação: "123.456.789-00" vira "12345678900").
+export function apenasDigitos(valor: string): string {
+  return valor.replace(/\D/g, "");
+}
+
 export function hashSenha(senha: string): string {
   const salt = randomBytes(16).toString("hex");
   const hash = scryptSync(senha, salt, 64).toString("hex");

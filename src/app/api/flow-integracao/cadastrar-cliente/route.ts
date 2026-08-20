@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
-import { hashSenha } from "@/lib/senha";
+import { apenasDigitos, hashSenha } from "@/lib/senha";
 import { enviarLinkAcessoWhatsapp } from "@/lib/whatsapp";
 
 // Endpoint isolado, chamado pelo Flow Visto Americano (botão "Gerar
@@ -23,18 +23,18 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ erro: "Corpo da requisição não é JSON válido." }, { status: 400 });
   }
 
-  const { nome, cpf, email, telefone, senha, flowClienteId } = body as {
+  const { nome, cpf: cpfBruto, email, telefone, flowClienteId } = body as {
     nome?: string;
     cpf?: string;
     email?: string;
     telefone?: string;
-    senha?: string;
     flowClienteId?: string;
   };
+  const cpf = apenasDigitos(cpfBruto ?? "");
 
-  if (!nome || !email || !telefone || !senha) {
+  if (!nome || !email || !telefone || !cpf) {
     return NextResponse.json(
-      { erro: "nome, email, telefone e senha são obrigatórios." },
+      { erro: "nome, email, telefone e cpf são obrigatórios (o CPF é a senha de login)." },
       { status: 400 },
     );
   }
@@ -50,15 +50,15 @@ export async function POST(request: NextRequest) {
   const cliente = await prisma.clienteDs160.create({
     data: {
       nome,
-      cpf: cpf || null,
+      cpf,
       email,
       telefone,
       flowClienteId: flowClienteId || null,
-      senhaHash: hashSenha(senha),
+      senhaHash: hashSenha(cpf),
     },
   });
 
-  const envio = await enviarLinkAcessoWhatsapp({ telefone, login: nome, senha });
+  const envio = await enviarLinkAcessoWhatsapp({ telefone, login: nome });
 
   return NextResponse.json(
     { ok: true, id: cliente.id, whatsappEnviado: envio.ok, whatsappErro: envio.erro },

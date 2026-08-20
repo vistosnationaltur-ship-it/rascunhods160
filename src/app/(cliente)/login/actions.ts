@@ -4,15 +4,27 @@ import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 import { prisma } from "@/lib/prisma";
 import { SESSION_COOKIE_CLIENTE, criarTokenCliente } from "@/lib/auth";
-import { senhaConfere } from "@/lib/senha";
+import { apenasDigitos, senhaConfere } from "@/lib/senha";
 
-export async function loginCliente(formData: FormData) {
+export type EstadoLoginCliente = { erro?: string };
+
+export async function loginCliente(
+  _estadoAnterior: EstadoLoginCliente,
+  formData: FormData,
+): Promise<EstadoLoginCliente> {
   const email = (formData.get("email") ?? "").toString().trim().toLowerCase();
-  const senha = (formData.get("senha") ?? "").toString();
+  const senhaDigitada = (formData.get("senha") ?? "").toString();
 
   const cliente = await prisma.clienteDs160.findUnique({ where: { email } });
-  if (!cliente || !senhaConfere(senha, cliente.senhaHash)) {
-    throw new Error("E-mail ou senha incorretos.");
+  // Senha nova é sempre o CPF — tolera pontuação (000.000.000-00) digitada
+  // pelo cliente, normalizando pra só dígitos. Tenta o valor exato primeiro
+  // pra não quebrar contas antigas cadastradas com senha manual (não-CPF).
+  const confere =
+    cliente &&
+    (senhaConfere(senhaDigitada, cliente.senhaHash) ||
+      senhaConfere(apenasDigitos(senhaDigitada), cliente.senhaHash));
+  if (!confere) {
+    return { erro: "E-mail ou senha incorretos." };
   }
 
   const cookieStore = await cookies();

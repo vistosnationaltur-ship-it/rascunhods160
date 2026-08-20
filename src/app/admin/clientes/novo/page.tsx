@@ -108,9 +108,10 @@ export default async function CadastrarClientePage({
           </label>
           <div className="grid grid-cols-2 gap-4">
             <label className="flex flex-col gap-1.5 text-sm">
-              <span className="text-zinc-400">CPF</span>
+              <span className="text-zinc-400">CPF (é a senha de login)</span>
               <input
                 name="cpf"
+                required
                 defaultValue={sp.cpf}
                 className="rounded-lg border border-white/10 bg-zinc-950/60 px-3 py-2.5 text-zinc-100 outline-none focus:border-indigo-500/60"
               />
@@ -133,17 +134,6 @@ export default async function CadastrarClientePage({
               required
               defaultValue={sp.telefone}
               placeholder="(17) 98838-0346"
-              className="rounded-lg border border-white/10 bg-zinc-950/60 px-3 py-2.5 text-zinc-100 outline-none focus:border-indigo-500/60"
-            />
-          </label>
-
-          <hr className="border-white/10" />
-
-          <label className="flex flex-col gap-1.5 text-sm">
-            <span className="text-zinc-400">Senha de acesso</span>
-            <input
-              name="senha"
-              required
               className="rounded-lg border border-white/10 bg-zinc-950/60 px-3 py-2.5 text-zinc-100 outline-none focus:border-indigo-500/60"
             />
           </label>

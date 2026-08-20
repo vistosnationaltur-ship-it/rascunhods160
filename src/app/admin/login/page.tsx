@@ -1,10 +1,15 @@
+"use client";
+
+import { useActionState } from "react";
 import { loginStaff } from "./actions";
 
 export default function LoginStaffPage() {
+  const [estado, formAction, pendente] = useActionState(loginStaff, {});
+
   return (
     <div className="flex flex-1 items-center justify-center">
       <form
-        action={loginStaff}
+        action={formAction}
         className="flex w-full max-w-sm flex-col gap-5 rounded-2xl border border-white/10 bg-zinc-900/60 p-8 shadow-2xl shadow-black/40"
       >
         <div className="flex flex-col items-center gap-2 text-center">
@@ -33,11 +38,17 @@ export default function LoginStaffPage() {
             className="rounded-lg border border-white/10 bg-zinc-950/60 px-3 py-2.5 text-zinc-100 outline-none transition-colors focus:border-indigo-500/60 focus:ring-2 focus:ring-indigo-500/30"
           />
         </label>
+        {estado?.erro && (
+          <p className="rounded-lg border border-red-500/20 bg-red-500/[0.06] px-3 py-2 text-sm text-red-300">
+            {estado.erro}
+          </p>
+        )}
         <button
           type="submit"
-          className="rounded-lg bg-indigo-600 px-4 py-2.5 text-sm font-medium text-white transition-colors hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-400"
+          disabled={pendente}
+          className="rounded-lg bg-indigo-600 px-4 py-2.5 text-sm font-medium text-white transition-colors hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-400 disabled:opacity-60"
         >
-          Entrar
+          {pendente ? "Entrando..." : "Entrar"}
         </button>
       </form>
     </div>

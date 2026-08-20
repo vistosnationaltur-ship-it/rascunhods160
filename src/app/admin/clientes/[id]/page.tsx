@@ -3,7 +3,7 @@ import { notFound } from "next/navigation";
 import { prisma } from "@/lib/prisma";
 import { respostasPorPagina, type Respostas } from "@/lib/formatar-respostas";
 import { obterPaginas } from "@/lib/formulario-schema";
-import { reenviarLinkComNovaSenha } from "./actions";
+import { reenviarLinkAcesso } from "./actions";
 
 export default async function ClienteDs160DetalhePage(
   props: PageProps<"/admin/clientes/[id]">,
@@ -71,27 +71,18 @@ export default async function ClienteDs160DetalhePage(
         Baixar PDF (protegido por senha)
       </a>
 
-      <form action={reenviarLinkComNovaSenha} className="flex flex-col gap-3">
+      <form action={reenviarLinkAcesso} className="flex flex-col gap-3">
         <input type="hidden" name="clienteId" value={cliente.id} />
         <p className="text-sm text-zinc-400">
-          Reenviar o link de acesso via WhatsApp (define uma senha nova — não guardamos a senha em
-          texto puro, então não dá pra reenviar a mesma).
+          Reenviar o link de acesso via WhatsApp (a senha de login continua sendo o CPF do
+          cliente, já cadastrado).
         </p>
-        <div className="flex gap-2">
-          <input
-            type="text"
-            name="novaSenha"
-            required
-            placeholder="Nova senha"
-            className="flex-1 rounded-lg border border-white/10 bg-zinc-950/60 px-3 py-2.5 text-sm text-zinc-100 outline-none focus:border-indigo-500/60"
-          />
-          <button
-            type="submit"
-            className="rounded-lg bg-indigo-600 px-4 py-2.5 text-sm font-medium text-white hover:bg-indigo-500"
-          >
-            Reenviar link
-          </button>
-        </div>
+        <button
+          type="submit"
+          className="w-fit rounded-lg bg-indigo-600 px-4 py-2.5 text-sm font-medium text-white hover:bg-indigo-500"
+        >
+          Reenviar link
+        </button>
       </form>
 
       <div className="flex flex-col gap-6 border-t border-white/10 pt-6">
