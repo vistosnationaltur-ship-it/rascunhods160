@@ -60,6 +60,13 @@ export default async function ClienteDs160DetalhePage(
         )}
       </div>
 
+      <a
+        href={`/admin/clientes/${cliente.id}/pdf`}
+        className="w-fit rounded-lg border border-white/10 px-4 py-2.5 text-sm text-zinc-100 transition-colors hover:border-indigo-500/50"
+      >
+        Baixar PDF (protegido por senha)
+      </a>
+
       <form action={reenviarLinkComNovaSenha} className="flex flex-col gap-3">
         <input type="hidden" name="clienteId" value={cliente.id} />
         <p className="text-sm text-zinc-400">
