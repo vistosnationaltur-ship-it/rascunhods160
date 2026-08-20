@@ -1,0 +1,62 @@
+generator client {
+  provider = "prisma-client"
+  output   = "../src/generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+enum Role {
+  ADMIN
+  USUARIO
+}
+
+enum StatusRascunho {
+  EM_PREENCHIMENTO
+  CONCLUIDO
+}
+
+// Staff que administra o módulo (cadastra clientes, acompanha rascunhos).
+// Independente do login do cliente e independente da tabela Usuario do
+// projeto Flow Visto Americano (bancos separados de propósito).
+model Usuario {
+  id        String   @id @default(cuid())
+  username  String   @unique
+  senhaHash String
+  role      Role     @default(USUARIO)
+  criadoEm  DateTime @default(now())
+}
+
+model ClienteDs160 {
+  id String @id @default(cuid())
+
+  // Referência solta pro Cliente.id do Flow Visto Americano — sem FK real
+  // entre bancos, só pra rastreabilidade manual (colado pelo admin).
+  flowClienteId String?
+
+  nome     String
+  cpf      String? @unique
+  telefone String? // obrigatório na prática: usado pro envio do link via WhatsApp
+
+  // Login do cliente é o e-mail — bate com o texto do template de WhatsApp
+  // já aprovado na Meta ("utilize o e-mail cadastrado"), que não dá pra
+  // reformular sem reenviar pra aprovação.
+  email     String @unique
+  senhaHash String // senha ESCOLHIDA pelo admin no cadastro, não gerada
+
+  status StatusRascunho @default(EM_PREENCHIMENTO)
+
+  // Respostas do formulário: { [fieldId: string]: valor }. Schema fixo
+  // (ver src/lib/formulario-schema.ts), não precisa de tabela normalizada.
+  respostas Json @default("{}")
+
+  paginaAtual Int @default(0) // índice da última página vista, pra retomar exatamente de onde parou
+
+  pdfGeradoEm DateTime?
+
+  criadoEm     DateTime @default(now())
+  atualizadoEm DateTime @updatedAt
+
+  @@index([flowClienteId])
+}

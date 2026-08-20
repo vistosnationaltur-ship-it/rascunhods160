@@ -1,0 +1,12 @@
+@import "tailwindcss";
+
+/* Projeto é só tema escuro (definido via classes utilitárias no body,
+   em layout.tsx) — sem bloco de cor fora de @layer aqui, porque no
+   Tailwind v4 uma regra CSS fora de layer sempre vence as classes
+   utilitárias, independente de especificidade (mesmo gotcha já visto
+   e documentado no projeto Flow Visto Americano). */
+
+@theme inline {
+  --font-sans: var(--font-geist-sans);
+  --font-mono: var(--font-geist-mono);
+}
