@@ -1,6 +1,7 @@
 "use server";
 
-import { exigirCliente } from "@/lib/auth";
+import { cookies } from "next/headers";
+import { exigirCliente, SESSION_COOKIE_CLIENTE } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
 import { obterPaginas } from "@/lib/formulario-schema";
 import { gerarPdfRascunho } from "@/lib/gerar-pdf";
@@ -31,6 +32,17 @@ export async function salvarPagina(paginaIndice: number, respostasPagina: Record
       paginaAtual: paginaIndice,
     },
   });
+}
+
+// "Salvar e continuar depois": salva a página atual (igual salvarPagina)
+// e desloga o cliente, pra ele saber com clareza que pode fechar a aba
+// com segurança — a sessão já dura 30 dias sozinha, mas sem um passo
+// explícito o cliente não tinha como ter certeza de que estava salvo.
+export async function salvarESair(paginaIndice: number, respostasPagina: Record<string, Valor>) {
+  await salvarPagina(paginaIndice, respostasPagina);
+
+  const cookieStore = await cookies();
+  cookieStore.delete(SESSION_COOKIE_CLIENTE);
 }
 
 // Salva a última página, marca como concluído, gera o PDF protegido por

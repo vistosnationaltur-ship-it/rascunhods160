@@ -5,7 +5,7 @@ import { useRouter } from "next/navigation";
 import type { Campo, Pagina } from "@/lib/formulario-schema";
 import { campoVisivel } from "@/lib/condicional";
 import { CampoRenderer } from "@/components/preencher/CampoRenderer";
-import { salvarPagina, concluirRascunho } from "../actions";
+import { salvarPagina, salvarESair, concluirRascunho } from "../actions";
 
 type Valor = string | string[] | undefined;
 
@@ -83,6 +83,18 @@ export function PaginaWizard({
     });
   }
 
+  function salvarESairAgora() {
+    setErro(null);
+    iniciarTransicao(async () => {
+      try {
+        await salvarESair(pagina.indice, respostasDestaPagina());
+        router.push("/login?salvo=1");
+      } catch (err) {
+        setErro(err instanceof Error ? err.message : "Falha ao salvar.");
+      }
+    });
+  }
+
   function voltar() {
     if (pagina.indice === 0) return;
     setErro(null);
@@ -126,21 +138,31 @@ export function PaginaWizard({
         <p className="rounded-md border border-red-200 bg-red-50 px-4 py-2.5 text-sm text-red-700">{erro}</p>
       )}
 
-      <div className="flex items-center justify-between border-t border-zinc-200 pt-4">
+      <div className="flex flex-col gap-3 border-t border-zinc-200 pt-4">
+        <div className="flex items-center justify-between">
+          <button
+            type="button"
+            onClick={voltar}
+            disabled={pagina.indice === 0 || pendente}
+            className="rounded-md border border-zinc-300 px-4 py-2.5 text-sm text-zinc-700 transition-colors hover:bg-zinc-50 disabled:opacity-40"
+          >
+            Anterior
+          </button>
+          <button
+            type="submit"
+            disabled={pendente}
+            className="rounded-md bg-zinc-800 px-4 py-2.5 text-sm font-medium text-white hover:bg-zinc-700 disabled:opacity-60"
+          >
+            {ehUltimaPagina ? "Concluído" : "Seguinte"}
+          </button>
+        </div>
         <button
           type="button"
-          onClick={voltar}
-          disabled={pagina.indice === 0 || pendente}
-          className="rounded-md border border-zinc-300 px-4 py-2.5 text-sm text-zinc-700 transition-colors hover:bg-zinc-50 disabled:opacity-40"
-        >
-          Anterior
-        </button>
-        <button
-          type="submit"
+          onClick={salvarESairAgora}
           disabled={pendente}
-          className="rounded-md bg-zinc-800 px-4 py-2.5 text-sm font-medium text-white hover:bg-zinc-700 disabled:opacity-60"
+          className="self-center text-sm text-blue-600 underline-offset-4 hover:underline disabled:opacity-40"
         >
-          {ehUltimaPagina ? "Concluído" : "Seguinte"}
+          Salvar e continuar depois
         </button>
       </div>
     </form>
