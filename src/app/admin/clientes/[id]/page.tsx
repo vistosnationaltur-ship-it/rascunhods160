@@ -22,9 +22,17 @@ export default async function ClienteDs160DetalhePage(
     <div className="mx-auto flex w-full max-w-3xl flex-1 flex-col gap-6 p-8">
       <div className="flex items-center justify-between">
         <h1 className="text-lg font-semibold text-zinc-100">{cliente.nome}</h1>
-        <Link href="/admin/clientes" className="text-sm text-indigo-400 underline-offset-4 hover:underline">
-          Voltar
-        </Link>
+        <div className="flex items-center gap-4">
+          <Link
+            href={`/admin/clientes/${cliente.id}/editar`}
+            className="text-sm text-indigo-400 underline-offset-4 hover:underline"
+          >
+            Editar
+          </Link>
+          <Link href="/admin/clientes" className="text-sm text-indigo-400 underline-offset-4 hover:underline">
+            Voltar
+          </Link>
+        </div>
       </div>
 
       {whatsapp === "ok" && (
