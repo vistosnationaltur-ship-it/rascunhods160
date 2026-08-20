@@ -180,7 +180,7 @@ export function PaginaWizard({
           type="button"
           onClick={salvarESairAgora}
           disabled={pendente}
-          className="self-center text-sm text-blue-600 underline-offset-4 hover:underline disabled:opacity-40"
+          className="self-center rounded-md px-3 py-1.5 text-xs font-normal text-zinc-400 transition-colors hover:bg-zinc-50 hover:text-zinc-600 disabled:opacity-40"
         >
           Salvar e continuar depois
         </button>
