@@ -1,3 +1,6 @@
+-- CreateSchema
+CREATE SCHEMA IF NOT EXISTS "public";
+
 -- CreateEnum
 CREATE TYPE "Role" AS ENUM ('ADMIN', 'USUARIO');
 
@@ -16,14 +19,22 @@ CREATE TABLE "Usuario" (
 );
 
 -- CreateTable
+CREATE TABLE "FormularioSchema" (
+    "id" TEXT NOT NULL,
+    "paginas" JSONB NOT NULL,
+    "atualizadoEm" TIMESTAMP(3) NOT NULL,
+
+    CONSTRAINT "FormularioSchema_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateTable
 CREATE TABLE "ClienteDs160" (
     "id" TEXT NOT NULL,
     "flowClienteId" TEXT,
     "nome" TEXT NOT NULL,
     "cpf" TEXT,
-    "email" TEXT,
     "telefone" TEXT,
-    "username" TEXT NOT NULL,
+    "email" TEXT NOT NULL,
     "senhaHash" TEXT NOT NULL,
     "status" "StatusRascunho" NOT NULL DEFAULT 'EM_PREENCHIMENTO',
     "respostas" JSONB NOT NULL DEFAULT '{}',
@@ -42,7 +53,8 @@ CREATE UNIQUE INDEX "Usuario_username_key" ON "Usuario"("username");
 CREATE UNIQUE INDEX "ClienteDs160_cpf_key" ON "ClienteDs160"("cpf");
 
 -- CreateIndex
-CREATE UNIQUE INDEX "ClienteDs160_username_key" ON "ClienteDs160"("username");
+CREATE UNIQUE INDEX "ClienteDs160_email_key" ON "ClienteDs160"("email");
 
 -- CreateIndex
 CREATE INDEX "ClienteDs160_flowClienteId_idx" ON "ClienteDs160"("flowClienteId");
+
