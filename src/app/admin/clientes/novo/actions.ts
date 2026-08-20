@@ -22,9 +22,12 @@ export async function cadastrarCliente(formData: FormData) {
     throw new Error("Telefone é obrigatório — é pra ele que o link de acesso vai ser enviado.");
   }
 
-  const emailExistente = await prisma.clienteDs160.findUnique({ where: { email } });
-  if (emailExistente) {
-    throw new Error(`Já existe um cliente cadastrado com o e-mail "${email}".`);
+  // E-mail pode se repetir (ex: pai cadastrando o filho com o próprio
+  // e-mail) — quem precisa ser único é o CPF, é a senha de login de cada
+  // pessoa.
+  const cpfExistente = await prisma.clienteDs160.findUnique({ where: { cpf } });
+  if (cpfExistente) {
+    throw new Error(`Já existe um cliente cadastrado com o CPF "${cpf}".`);
   }
 
   const cliente = await prisma.clienteDs160.create({

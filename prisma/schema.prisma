@@ -49,11 +49,13 @@ model ClienteDs160 {
   cpf      String? @unique
   telefone String? // obrigatório na prática: usado pro envio do link via WhatsApp
 
-  // Login do cliente é o e-mail — bate com o texto do template de WhatsApp
-  // já aprovado na Meta ("utilize o e-mail cadastrado"), que não dá pra
-  // reformular sem reenviar pra aprovação.
-  email     String @unique
-  senhaHash String // senha ESCOLHIDA pelo admin no cadastro, não gerada
+  // Login do cliente é e-mail + CPF (senha) juntos, não só o e-mail — de
+  // propósito não é @unique: uma família inteira pode logar com o mesmo
+  // e-mail/telefone do responsável, um cadastro por pessoa (nome e CPF
+  // diferentes cada um). O e-mail sozinho bate com o texto do template de
+  // WhatsApp já aprovado na Meta ("utilize o e-mail cadastrado").
+  email     String
+  senhaHash String // senha é o CPF (ver src/lib/senha.ts)
 
   status StatusRascunho @default(EM_PREENCHIMENTO)
 

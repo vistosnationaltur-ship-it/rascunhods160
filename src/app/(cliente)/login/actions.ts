@@ -15,15 +15,16 @@ export async function loginCliente(
   const email = (formData.get("email") ?? "").toString().trim().toLowerCase();
   const senhaDigitada = (formData.get("senha") ?? "").toString();
 
-  const cliente = await prisma.clienteDs160.findUnique({ where: { email } });
-  // Senha nova é sempre o CPF — tolera pontuação (000.000.000-00) digitada
-  // pelo cliente, normalizando pra só dígitos. Tenta o valor exato primeiro
-  // pra não quebrar contas antigas cadastradas com senha manual (não-CPF).
-  const confere =
-    cliente &&
-    (senhaConfere(senhaDigitada, cliente.senhaHash) ||
-      senhaConfere(apenasDigitos(senhaDigitada), cliente.senhaHash));
-  if (!confere) {
+  // E-mail não é mais único (mesma família pode compartilhar), então um
+  // e-mail pode bater com vários cadastros — a senha (CPF) é quem
+  // desempata qual conta é essa. Tenta o valor exato primeiro pra não
+  // quebrar contas antigas com senha manual (não-CPF), depois normalizado
+  // (tolera pontuação: "000.000.000-00").
+  const candidatos = await prisma.clienteDs160.findMany({ where: { email } });
+  const cliente = candidatos.find(
+    (c) => senhaConfere(senhaDigitada, c.senhaHash) || senhaConfere(apenasDigitos(senhaDigitada), c.senhaHash),
+  );
+  if (!cliente) {
     return { erro: "E-mail ou senha incorretos." };
   }
 

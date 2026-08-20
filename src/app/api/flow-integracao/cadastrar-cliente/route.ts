@@ -39,10 +39,13 @@ export async function POST(request: NextRequest) {
     );
   }
 
-  const existente = await prisma.clienteDs160.findUnique({ where: { email } });
+  // E-mail pode se repetir (ex: pai cadastrando o filho com o próprio
+  // e-mail) — quem precisa ser único é o CPF, é a senha de login de cada
+  // pessoa.
+  const existente = await prisma.clienteDs160.findUnique({ where: { cpf } });
   if (existente) {
     return NextResponse.json(
-      { erro: `Já existe um cliente cadastrado com o e-mail "${email}".`, id: existente.id },
+      { erro: `Já existe um cliente cadastrado com o CPF "${cpf}".`, id: existente.id },
       { status: 409 },
     );
   }

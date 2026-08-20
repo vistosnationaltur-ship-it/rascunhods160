@@ -5,6 +5,7 @@ import { hashSenha } from "@/lib/senha";
 // Se já existir, só atualiza as respostas de exemplo.
 async function main() {
   const email = "teste.qa@2ntravel.com.br";
+  const cpf = "00000000000";
 
   const respostas = {
     "22": "Maria Teste Da Silva",
@@ -20,11 +21,11 @@ async function main() {
   };
 
   await prisma.clienteDs160.upsert({
-    where: { email },
+    where: { cpf },
     update: { respostas },
     create: {
       nome: "Maria Teste Da Silva",
-      cpf: "00000000000",
+      cpf,
       email,
       senhaHash: hashSenha("teste123"),
       telefone: "+5517988380346",
