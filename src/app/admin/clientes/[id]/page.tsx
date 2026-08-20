@@ -3,7 +3,8 @@ import { notFound } from "next/navigation";
 import { prisma } from "@/lib/prisma";
 import { respostasPorPagina, type Respostas } from "@/lib/formatar-respostas";
 import { obterPaginas } from "@/lib/formulario-schema";
-import { reenviarLinkAcesso } from "./actions";
+import { reenviarLinkAcesso, excluirCliente } from "./actions";
+import { ConfirmSubmitButton } from "@/components/ConfirmSubmitButton";
 
 export default async function ClienteDs160DetalhePage(
   props: PageProps<"/admin/clientes/[id]">,
@@ -83,6 +84,20 @@ export default async function ClienteDs160DetalhePage(
         >
           Reenviar link
         </button>
+      </form>
+
+      <form action={excluirCliente} className="flex flex-col gap-3 border-t border-white/10 pt-6">
+        <input type="hidden" name="clienteId" value={cliente.id} />
+        <p className="text-sm text-zinc-400">
+          Excluir esse cliente (libera o e-mail pra um cadastro novo, ex: recadastrar do zero a
+          partir do Flow). Não dá pra desfazer.
+        </p>
+        <ConfirmSubmitButton
+          confirmMessage={`Excluir o cadastro de "${cliente.nome}" (${cliente.email}) do Rascunho DS160? Isso apaga as respostas já preenchidas e não pode ser desfeito.`}
+          className="w-fit rounded-lg border border-red-500/30 px-4 py-2.5 text-sm font-medium text-red-300 transition-colors hover:bg-red-500/10"
+        >
+          Excluir cliente
+        </ConfirmSubmitButton>
       </form>
 
       <div className="flex flex-col gap-6 border-t border-white/10 pt-6">

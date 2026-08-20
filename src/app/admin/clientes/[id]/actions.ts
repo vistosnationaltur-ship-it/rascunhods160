@@ -24,3 +24,15 @@ export async function reenviarLinkAcesso(formData: FormData) {
 
   redirect(`/admin/clientes/${clienteId}?whatsapp=${envio.ok ? "ok" : "falhou"}`);
 }
+
+// Permite excluir um cliente já cadastrado (ex: acesso enviado errado,
+// teste, ou pra recadastrar do zero a partir do Flow) — libera o e-mail
+// pra um cadastro novo, já que é único.
+export async function excluirCliente(formData: FormData) {
+  await exigirAdmin();
+
+  const clienteId = (formData.get("clienteId") ?? "").toString();
+  await prisma.clienteDs160.delete({ where: { id: clienteId } });
+
+  redirect("/admin/clientes");
+}
