@@ -108,7 +108,7 @@ function FormularioLogin() {
 
 export default function LoginClientePage() {
   return (
-    <div className="flex flex-col items-center gap-8 py-8">
+    <div className="mx-auto flex w-full max-w-3xl flex-col items-center gap-8 px-6 py-8">
       <AvisoRascunho />
       <Suspense fallback={null}>
         <FormularioLogin />

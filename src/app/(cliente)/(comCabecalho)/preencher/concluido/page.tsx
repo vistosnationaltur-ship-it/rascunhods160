@@ -1,4 +1,4 @@
-import { logoutCliente } from "../../login/actions";
+import { logoutCliente } from "../../../login/actions";
 
 export default function ConcluidoPage() {
   return (
