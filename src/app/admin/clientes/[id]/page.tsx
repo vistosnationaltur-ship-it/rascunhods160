@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { prisma } from "@/lib/prisma";
+import { respostasPorPagina, type Respostas } from "@/lib/formatar-respostas";
 import { reenviarLinkComNovaSenha } from "./actions";
 
 export default async function ClienteDs160DetalhePage(
@@ -12,9 +13,10 @@ export default async function ClienteDs160DetalhePage(
   if (!cliente) notFound();
 
   const whatsapp = typeof sp.whatsapp === "string" ? sp.whatsapp : undefined;
+  const paginasComRespostas = respostasPorPagina((cliente.respostas as Respostas) ?? {});
 
   return (
-    <div className="mx-auto flex w-full max-w-2xl flex-1 flex-col gap-6 p-8">
+    <div className="mx-auto flex w-full max-w-3xl flex-1 flex-col gap-6 p-8">
       <div className="flex items-center justify-between">
         <h1 className="text-lg font-semibold text-zinc-100">{cliente.nome}</h1>
         <Link href="/admin/clientes" className="text-sm text-indigo-400 underline-offset-4 hover:underline">
@@ -89,6 +91,33 @@ export default async function ClienteDs160DetalhePage(
           </button>
         </div>
       </form>
+
+      <div className="flex flex-col gap-6 border-t border-white/10 pt-6">
+        <h2 className="text-sm font-semibold text-zinc-100">
+          Respostas do formulário
+          {paginasComRespostas.length === 0 && (
+            <span className="ml-2 font-normal text-zinc-500">(nada preenchido ainda)</span>
+          )}
+        </h2>
+
+        {paginasComRespostas.map((pagina, i) => (
+          <div key={i} className="flex flex-col gap-3">
+            <h3 className="text-xs font-semibold uppercase tracking-wide text-indigo-400">
+              {pagina.titulo}
+            </h3>
+            <div className="flex flex-col divide-y divide-white/10 rounded-xl border border-white/10 bg-zinc-900/40">
+              {pagina.itens.map(({ campo, texto }) => (
+                <div key={campo.id} className="px-4 py-3">
+                  <p className="text-xs text-zinc-500">{campo.label}</p>
+                  <p className={texto ? "text-sm text-zinc-100" : "text-sm italic text-zinc-600"}>
+                    {texto || "(não respondido)"}
+                  </p>
+                </div>
+              ))}
+            </div>
+          </div>
+        ))}
+      </div>
     </div>
   );
 }

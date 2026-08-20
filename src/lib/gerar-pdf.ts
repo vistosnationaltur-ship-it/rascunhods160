@@ -1,9 +1,5 @@
 import PDFDocument from "pdfkit";
-import { paginas, type Campo } from "@/lib/formulario-schema";
-import { campoVisivel } from "@/lib/condicional";
-
-type Valor = string | string[] | undefined;
-type Respostas = Record<string, Valor>;
+import { respostasPorPagina, type Respostas } from "@/lib/formatar-respostas";
 
 // Réplica em pdfkit (pure JS, roda em serverless sem binário nativo) —
 // não é pixel-a-pixel igual ao template mPDF "zadani" antigo, mas
@@ -42,12 +38,7 @@ export function gerarPdfRascunho(params: {
       .fillColor("#000000")
       .moveDown(1.5);
 
-    for (const pagina of paginas) {
-      const camposVisiveis = pagina.campos.filter(
-        (c) => campoTemConteudo(c) && campoVisivel(c, params.respostas),
-      );
-      if (camposVisiveis.length === 0) continue;
-
+    for (const pagina of respostasPorPagina(params.respostas)) {
       if (doc.y > doc.page.height - 150) doc.addPage();
 
       doc
@@ -57,14 +48,7 @@ export function gerarPdfRascunho(params: {
         .fillColor("#000000")
         .moveDown(0.5);
 
-      for (const campo of camposVisiveis) {
-        if (campo.tipo === "section") {
-          if (doc.y > doc.page.height - 100) doc.addPage();
-          doc.fontSize(11).fillColor("#374151").text(campo.label).fillColor("#000000").moveDown(0.3);
-          continue;
-        }
-
-        const texto = formatarResposta(campo, params.respostas);
+      for (const { campo, texto } of pagina.itens) {
         if (doc.y > doc.page.height - 100) doc.addPage();
 
         doc.fontSize(10).font("Helvetica-Bold").text(campo.label);
@@ -81,32 +65,4 @@ export function gerarPdfRascunho(params: {
 
     doc.end();
   });
-}
-
-function campoTemConteudo(campo: Campo): boolean {
-  return campo.tipo !== "page";
-}
-
-function formatarResposta(campo: Campo, respostas: Respostas): string {
-  if (campo.subCampos && campo.subCampos.length > 0) {
-    return campo.subCampos
-      .map((sub) => {
-        const v = respostas[sub.id];
-        return v ? `${sub.label}: ${Array.isArray(v) ? v.join(", ") : v}` : null;
-      })
-      .filter(Boolean)
-      .join(" · ");
-  }
-
-  const valor = respostas[String(campo.id)];
-  if (valor === undefined || valor === null || valor === "") return "";
-  if (Array.isArray(valor)) return valor.join(", ");
-
-  if (campo.opcoes) {
-    const opcao = campo.opcoes.find((o) => o.valor === valor);
-    if (opcao) return opcao.texto;
-  }
-  if (campo.tipo === "consent") return valor === "1" ? "Sim, concordou." : "";
-
-  return valor;
 }
