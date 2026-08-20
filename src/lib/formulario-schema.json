@@ -7,13 +7,16 @@
         "id": 22,
         "tipo": "text",
         "label": "Nome e sobrenome atuais",
-        "obrigatorio": true
+        "obrigatorio": true,
+        "grupoLayout": "023fac14",
+        "colunaSpan": 12
       },
       {
         "id": 5,
         "tipo": "section",
         "label": "",
-        "obrigatorio": false
+        "obrigatorio": false,
+        "grupoLayout": "643d4cbd"
       },
       {
         "id": 6,
@@ -29,7 +32,9 @@
             "texto": "Não",
             "valor": "Não"
           }
-        ]
+        ],
+        "grupoLayout": "629d6984",
+        "colunaSpan": 12
       },
       {
         "id": 7,
@@ -46,13 +51,16 @@
               "valor": "Sim"
             }
           ]
-        }
+        },
+        "grupoLayout": "030238b9",
+        "colunaSpan": 12
       },
       {
         "id": 15,
         "tipo": "section",
         "label": "",
-        "obrigatorio": false
+        "obrigatorio": false,
+        "grupoLayout": "7645983e"
       },
       {
         "id": 24,
@@ -68,7 +76,9 @@
             "texto": "Masculino",
             "valor": "Masculino"
           }
-        ]
+        ],
+        "grupoLayout": "b60db036",
+        "colunaSpan": 3
       },
       {
         "id": 30,
@@ -112,31 +122,41 @@
             "texto": "Outros",
             "valor": "Outros"
           }
-        ]
+        ],
+        "grupoLayout": "b60db036",
+        "colunaSpan": 4
       },
       {
         "id": 25,
         "tipo": "date",
         "label": "Data de nascimento",
-        "obrigatorio": true
+        "obrigatorio": true,
+        "grupoLayout": "b60db036",
+        "colunaSpan": 5
       },
       {
         "id": 26,
         "tipo": "text",
         "label": "Cidade de nascimento",
-        "obrigatorio": true
+        "obrigatorio": true,
+        "grupoLayout": "1b60d7c8",
+        "colunaSpan": 5
       },
       {
         "id": 27,
         "tipo": "text",
         "label": "Estado",
-        "obrigatorio": true
+        "obrigatorio": true,
+        "grupoLayout": "1b60d7c8",
+        "colunaSpan": 3
       },
       {
         "id": 28,
         "tipo": "text",
         "label": "País",
-        "obrigatorio": true
+        "obrigatorio": true,
+        "grupoLayout": "1b60d7c8",
+        "colunaSpan": 4
       }
     ]
   },
@@ -154,7 +174,8 @@
             "texto": "Brasil",
             "valor": "Brasil"
           }
-        ]
+        ],
+        "grupoLayout": "d7812a72"
       },
       {
         "id": 36,
@@ -170,7 +191,9 @@
             "texto": "Não",
             "valor": "Não"
           }
-        ]
+        ],
+        "grupoLayout": "45d21f0b",
+        "colunaSpan": 11
       },
       {
         "id": 37,
@@ -187,7 +210,9 @@
               "valor": "Sim"
             }
           ]
-        }
+        },
+        "grupoLayout": "f1f1fe27",
+        "colunaSpan": 12
       },
       {
         "id": 39,
@@ -214,7 +239,8 @@
               "valor": "Sim"
             }
           ]
-        }
+        },
+        "grupoLayout": "19a9178b"
       },
       {
         "id": 275,
@@ -231,7 +257,9 @@
               "valor": "Sim"
             }
           ]
-        }
+        },
+        "grupoLayout": "61203cc0",
+        "colunaSpan": 12
       },
       {
         "id": 42,
@@ -247,7 +275,9 @@
             "texto": "Não",
             "valor": "Não"
           }
-        ]
+        ],
+        "grupoLayout": "e0adbf1c",
+        "colunaSpan": 12
       },
       {
         "id": 43,
@@ -264,19 +294,24 @@
               "valor": "Sim"
             }
           ]
-        }
+        },
+        "grupoLayout": "9e7edc2e",
+        "colunaSpan": 12
       },
       {
         "id": 277,
         "tipo": "section",
         "label": "",
-        "obrigatorio": false
+        "obrigatorio": false,
+        "grupoLayout": "0a108bbd"
       },
       {
         "id": 276,
         "tipo": "text",
         "label": "Informe o número do seu CPF",
-        "obrigatorio": true
+        "obrigatorio": true,
+        "grupoLayout": "437f89b2",
+        "colunaSpan": 12
       }
     ]
   },
@@ -306,7 +341,9 @@
             "texto": "B1 - Empregada Doméstica / Babá",
             "valor": "B1 - Empregada Doméstica / Babá"
           }
-        ]
+        ],
+        "grupoLayout": "5debee2e",
+        "colunaSpan": 12
       },
       {
         "id": 47,
@@ -337,13 +374,15 @@
               "valor": "F - Estudante"
             }
           ]
-        }
+        },
+        "grupoLayout": "9831f03b"
       },
       {
         "id": 49,
         "tipo": "section",
         "label": "",
-        "obrigatorio": false
+        "obrigatorio": false,
+        "grupoLayout": "e82b6f79"
       },
       {
         "id": 50,
@@ -363,13 +402,17 @@
             "id": "50.3",
             "label": "Ano"
           }
-        ]
+        ],
+        "grupoLayout": "2ccf7243",
+        "colunaSpan": 12
       },
       {
         "id": 51,
         "tipo": "text",
         "label": "Tempo de permanência  nos EUA",
-        "obrigatorio": false
+        "obrigatorio": false,
+        "grupoLayout": "eddfcb71",
+        "colunaSpan": 12
       },
       {
         "id": 53,
@@ -393,19 +436,24 @@
             "texto": "Selecionar",
             "valor": "Selecionar"
           }
-        ]
+        ],
+        "grupoLayout": "3f68c3c7",
+        "colunaSpan": 12
       },
       {
         "id": 334,
         "tipo": "text",
         "label": "Qual Cidade ficará nos Estados Unidos (pretensão)",
-        "obrigatorio": true
+        "obrigatorio": true,
+        "grupoLayout": "bc481ce1",
+        "colunaSpan": 12
       },
       {
         "id": 278,
         "tipo": "section",
         "label": "",
-        "obrigatorio": false
+        "obrigatorio": false,
+        "grupoLayout": "d1f117cf"
       },
       {
         "id": 52,
@@ -448,7 +496,9 @@
               "valor": "Casa Particular"
             }
           ]
-        }
+        },
+        "grupoLayout": "01894b32",
+        "colunaSpan": 9
       }
     ]
   },
@@ -486,7 +536,9 @@
             "texto": "Outra empresa",
             "valor": "Outra empresa"
           }
-        ]
+        ],
+        "grupoLayout": "e8c85b01",
+        "colunaSpan": 12
       },
       {
         "id": 283,
@@ -503,7 +555,9 @@
               "valor": "Outra pessoa irá pagar as despesas da minha viagem"
             }
           ]
-        }
+        },
+        "grupoLayout": "dba3686b",
+        "colunaSpan": 12
       },
       {
         "id": 286,
@@ -520,7 +574,9 @@
               "valor": "Outra pessoa irá pagar as despesas da minha viagem"
             }
           ]
-        }
+        },
+        "grupoLayout": "85941dda",
+        "colunaSpan": 12
       },
       {
         "id": 287,
@@ -537,7 +593,9 @@
               "valor": "Outra pessoa irá pagar as despesas da minha viagem"
             }
           ]
-        }
+        },
+        "grupoLayout": "06289fb6",
+        "colunaSpan": 12
       },
       {
         "id": 284,
@@ -554,7 +612,9 @@
               "valor": "Outra pessoa irá pagar as despesas da minha viagem"
             }
           ]
-        }
+        },
+        "grupoLayout": "6d942ca2",
+        "colunaSpan": 12
       },
       {
         "id": 289,
@@ -589,7 +649,9 @@
               "valor": "Outra pessoa irá pagar as despesas da minha viagem"
             }
           ]
-        }
+        },
+        "grupoLayout": "21d3d85e",
+        "colunaSpan": 12
       },
       {
         "id": 288,
@@ -632,7 +694,9 @@
               "valor": "Outro endereço"
             }
           ]
-        }
+        },
+        "grupoLayout": "1778f196",
+        "colunaSpan": 12
       },
       {
         "id": 291,
@@ -649,7 +713,9 @@
               "valor": "Outra empresa"
             }
           ]
-        }
+        },
+        "grupoLayout": "578bca9f",
+        "colunaSpan": 12
       },
       {
         "id": 293,
@@ -666,7 +732,9 @@
               "valor": "Outra empresa"
             }
           ]
-        }
+        },
+        "grupoLayout": "93a6ad8e",
+        "colunaSpan": 12
       },
       {
         "id": 294,
@@ -683,7 +751,9 @@
               "valor": "Outra empresa"
             }
           ]
-        }
+        },
+        "grupoLayout": "ff9d3c06",
+        "colunaSpan": 12
       },
       {
         "id": 295,
@@ -726,7 +796,9 @@
               "valor": "Outra empresa"
             }
           ]
-        }
+        },
+        "grupoLayout": "4d02aa67",
+        "colunaSpan": 12
       }
     ]
   },
@@ -748,7 +820,9 @@
             "texto": "Sim",
             "valor": "Sim"
           }
-        ]
+        ],
+        "grupoLayout": "9dc53532",
+        "colunaSpan": 12
       },
       {
         "id": 63,
@@ -765,7 +839,9 @@
               "valor": "Sim"
             }
           ]
-        }
+        },
+        "grupoLayout": "1af54d85",
+        "colunaSpan": 8
       },
       {
         "id": 73,
@@ -828,7 +904,9 @@
               "valor": "Sim"
             }
           ]
-        }
+        },
+        "grupoLayout": "1af54d85",
+        "colunaSpan": 4
       },
       {
         "id": 71,
@@ -845,7 +923,9 @@
               "valor": "Sim"
             }
           ]
-        }
+        },
+        "grupoLayout": "ed051523",
+        "colunaSpan": 8
       },
       {
         "id": 74,
@@ -908,7 +988,9 @@
               "valor": "Sim"
             }
           ]
-        }
+        },
+        "grupoLayout": "ed051523",
+        "colunaSpan": 4
       },
       {
         "id": 70,
@@ -925,7 +1007,9 @@
               "valor": "Sim"
             }
           ]
-        }
+        },
+        "grupoLayout": "7c2664b8",
+        "colunaSpan": 8
       },
       {
         "id": 75,
@@ -988,7 +1072,9 @@
               "valor": "Sim"
             }
           ]
-        }
+        },
+        "grupoLayout": "7c2664b8",
+        "colunaSpan": 4
       },
       {
         "id": 69,
@@ -1005,7 +1091,9 @@
               "valor": "Sim"
             }
           ]
-        }
+        },
+        "grupoLayout": "4b350579",
+        "colunaSpan": 8
       },
       {
         "id": 76,
@@ -1068,7 +1156,9 @@
               "valor": "Sim"
             }
           ]
-        }
+        },
+        "grupoLayout": "4b350579",
+        "colunaSpan": 4
       },
       {
         "id": 68,
@@ -1085,7 +1175,9 @@
               "valor": "Sim"
             }
           ]
-        }
+        },
+        "grupoLayout": "042cbc7f",
+        "colunaSpan": 8
       },
       {
         "id": 77,
@@ -1148,7 +1240,9 @@
               "valor": "Sim"
             }
           ]
-        }
+        },
+        "grupoLayout": "042cbc7f",
+        "colunaSpan": 4
       }
     ]
   },
@@ -1170,7 +1264,9 @@
             "texto": "Sim",
             "valor": "Sim"
           }
-        ]
+        ],
+        "grupoLayout": "64f6162d",
+        "colunaSpan": 12
       },
       {
         "id": 298,
@@ -1188,7 +1284,8 @@
               "valor": "Sim"
             }
           ]
-        }
+        },
+        "grupoLayout": "eaf87494"
       },
       {
         "id": 82,
@@ -1220,7 +1317,9 @@
               "valor": "Sim"
             }
           ]
-        }
+        },
+        "grupoLayout": "33ce4534",
+        "colunaSpan": 4
       },
       {
         "id": 83,
@@ -1279,7 +1378,9 @@
               "valor": "Sim"
             }
           ]
-        }
+        },
+        "grupoLayout": "33ce4534",
+        "colunaSpan": 4
       },
       {
         "id": 84,
@@ -1314,7 +1415,9 @@
               "valor": "Sim"
             }
           ]
-        }
+        },
+        "grupoLayout": "33ce4534",
+        "colunaSpan": 4
       },
       {
         "id": 86,
@@ -1346,7 +1449,9 @@
               "valor": "Sim"
             }
           ]
-        }
+        },
+        "grupoLayout": "3d490c7e",
+        "colunaSpan": 4
       },
       {
         "id": 89,
@@ -1405,7 +1510,9 @@
               "valor": "Sim"
             }
           ]
-        }
+        },
+        "grupoLayout": "3d490c7e",
+        "colunaSpan": 4
       },
       {
         "id": 95,
@@ -1440,7 +1547,9 @@
               "valor": "Sim"
             }
           ]
-        }
+        },
+        "grupoLayout": "3d490c7e",
+        "colunaSpan": 4
       },
       {
         "id": 326,
@@ -1472,7 +1581,9 @@
               "valor": "Sim"
             }
           ]
-        }
+        },
+        "grupoLayout": "7369f636",
+        "colunaSpan": 4
       },
       {
         "id": 90,
@@ -1531,7 +1642,9 @@
               "valor": "Sim"
             }
           ]
-        }
+        },
+        "grupoLayout": "7369f636",
+        "colunaSpan": 4
       },
       {
         "id": 93,
@@ -1566,7 +1679,9 @@
               "valor": "Sim"
             }
           ]
-        }
+        },
+        "grupoLayout": "7369f636",
+        "colunaSpan": 4
       },
       {
         "id": 87,
@@ -1598,7 +1713,9 @@
               "valor": "Sim"
             }
           ]
-        }
+        },
+        "grupoLayout": "e45bea3d",
+        "colunaSpan": 4
       },
       {
         "id": 91,
@@ -1657,7 +1774,9 @@
               "valor": "Sim"
             }
           ]
-        }
+        },
+        "grupoLayout": "e45bea3d",
+        "colunaSpan": 4
       },
       {
         "id": 94,
@@ -1692,7 +1811,9 @@
               "valor": "Sim"
             }
           ]
-        }
+        },
+        "grupoLayout": "e45bea3d",
+        "colunaSpan": 4
       },
       {
         "id": 85,
@@ -1724,7 +1845,9 @@
               "valor": "Sim"
             }
           ]
-        }
+        },
+        "grupoLayout": "32d9bb16",
+        "colunaSpan": 3
       },
       {
         "id": 92,
@@ -1783,7 +1906,9 @@
               "valor": "Sim"
             }
           ]
-        }
+        },
+        "grupoLayout": "32d9bb16",
+        "colunaSpan": 3
       },
       {
         "id": 96,
@@ -1818,7 +1943,9 @@
               "valor": "Sim"
             }
           ]
-        }
+        },
+        "grupoLayout": "32d9bb16",
+        "colunaSpan": 3
       },
       {
         "id": 338,
@@ -1844,7 +1971,9 @@
             "id": "338.2",
             "label": "Sim"
           }
-        ]
+        ],
+        "grupoLayout": "c6413505",
+        "colunaSpan": 12
       },
       {
         "id": 339,
@@ -1862,13 +1991,16 @@
               "valor": "Sim"
             }
           ]
-        }
+        },
+        "grupoLayout": "684b1240",
+        "colunaSpan": 12
       },
       {
         "id": 97,
         "tipo": "section",
         "label": "",
-        "obrigatorio": false
+        "obrigatorio": false,
+        "grupoLayout": "48a5c32b"
       },
       {
         "id": 104,
@@ -1884,7 +2016,9 @@
             "texto": "Sim",
             "valor": "Sim"
           }
-        ]
+        ],
+        "grupoLayout": "1d5970fe",
+        "colunaSpan": 12
       },
       {
         "id": 105,
@@ -1915,7 +2049,9 @@
               "valor": "Sim"
             }
           ]
-        }
+        },
+        "grupoLayout": "3e3b0332",
+        "colunaSpan": 12
       },
       {
         "id": 342,
@@ -1946,7 +2082,9 @@
               "valor": "Sim"
             }
           ]
-        }
+        },
+        "grupoLayout": "97a579c7",
+        "colunaSpan": 12
       },
       {
         "id": 106,
@@ -1964,13 +2102,16 @@
               "valor": "Sim"
             }
           ]
-        }
+        },
+        "grupoLayout": "3d303b2f",
+        "colunaSpan": 12
       },
       {
         "id": 102,
         "tipo": "section",
         "label": "",
-        "obrigatorio": false
+        "obrigatorio": false,
+        "grupoLayout": "bbc6a9b5"
       },
       {
         "id": 107,
@@ -1997,7 +2138,9 @@
               "valor": "Sim"
             }
           ]
-        }
+        },
+        "grupoLayout": "2c2bc7cb",
+        "colunaSpan": 12
       },
       {
         "id": 108,
@@ -2024,7 +2167,9 @@
               "valor": "Sim"
             }
           ]
-        }
+        },
+        "grupoLayout": "c72b0acb",
+        "colunaSpan": 12
       },
       {
         "id": 111,
@@ -2042,7 +2187,9 @@
               "valor": "Sim"
             }
           ]
-        }
+        },
+        "grupoLayout": "3403eefa",
+        "colunaSpan": 12
       },
       {
         "id": 112,
@@ -2059,7 +2206,9 @@
               "valor": "Sim"
             }
           ]
-        }
+        },
+        "grupoLayout": "484a9075",
+        "colunaSpan": 12
       },
       {
         "id": 114,
@@ -2075,7 +2224,9 @@
             "texto": "Sim",
             "valor": "Sim"
           }
-        ]
+        ],
+        "grupoLayout": "7fc5a03a",
+        "colunaSpan": 12
       },
       {
         "id": 115,
@@ -2092,7 +2243,9 @@
               "valor": "Sim"
             }
           ]
-        }
+        },
+        "grupoLayout": "d084939b",
+        "colunaSpan": 12
       },
       {
         "id": 340,
@@ -2122,7 +2275,9 @@
             "id": "340.3",
             "label": "Segunda opção"
           }
-        ]
+        ],
+        "grupoLayout": "8032c670",
+        "colunaSpan": 12
       },
       {
         "id": 341,
@@ -2139,7 +2294,9 @@
               "valor": "Sim"
             }
           ]
-        }
+        },
+        "grupoLayout": "85bdf92e",
+        "colunaSpan": 12
       },
       {
         "id": 354,
@@ -2176,13 +2333,16 @@
               "valor": "Sim"
             }
           ]
-        }
+        },
+        "grupoLayout": "07828cc2",
+        "colunaSpan": 12
       },
       {
         "id": 301,
         "tipo": "section",
         "label": "",
-        "obrigatorio": false
+        "obrigatorio": false,
+        "grupoLayout": "4d00f80c"
       },
       {
         "id": 116,
@@ -2198,7 +2358,9 @@
             "texto": "Sim",
             "valor": "Sim"
           }
-        ]
+        ],
+        "grupoLayout": "45a5cd84",
+        "colunaSpan": 12
       }
     ]
   },
@@ -2210,102 +2372,130 @@
         "id": 118,
         "tipo": "section",
         "label": "Endereço Residencial",
-        "obrigatorio": false
+        "obrigatorio": false,
+        "grupoLayout": "0edea6fb"
       },
       {
         "id": 119,
         "tipo": "text",
         "label": "Rua, nº, apto",
-        "obrigatorio": true
+        "obrigatorio": true,
+        "grupoLayout": "e3b6dc17",
+        "colunaSpan": 12
       },
       {
         "id": 120,
         "tipo": "text",
         "label": "Cidade",
-        "obrigatorio": true
+        "obrigatorio": true,
+        "grupoLayout": "d146e086",
+        "colunaSpan": 12
       },
       {
         "id": 121,
         "tipo": "text",
         "label": "Estado",
-        "obrigatorio": true
+        "obrigatorio": true,
+        "grupoLayout": "622891bd",
+        "colunaSpan": 12
       },
       {
         "id": 122,
         "tipo": "text",
         "label": "Cep",
-        "obrigatorio": true
+        "obrigatorio": true,
+        "grupoLayout": "a06ac6d6",
+        "colunaSpan": 12
       },
       {
         "id": 123,
         "tipo": "text",
         "label": "País",
-        "obrigatorio": true
+        "obrigatorio": true,
+        "grupoLayout": "dd979bed",
+        "colunaSpan": 12
       },
       {
         "id": 131,
         "tipo": "section",
         "label": "Telefone",
-        "obrigatorio": false
+        "obrigatorio": false,
+        "grupoLayout": "5ab798c2"
       },
       {
         "id": 132,
         "tipo": "number",
         "label": "Telefone Principal",
-        "obrigatorio": true
+        "obrigatorio": true,
+        "grupoLayout": "b36fb1b5",
+        "colunaSpan": 12
       },
       {
         "id": 133,
         "tipo": "number",
         "label": "Segundo Telefone",
         "obrigatorio": false,
-        "descricao": "Descreva apenas se tiver"
+        "descricao": "Descreva apenas se tiver",
+        "grupoLayout": "0190685a",
+        "colunaSpan": 12
       },
       {
         "id": 279,
         "tipo": "number",
         "label": "Telefone Comercial",
         "obrigatorio": false,
-        "descricao": "Descreva apenas se tiver"
+        "descricao": "Descreva apenas se tiver",
+        "grupoLayout": "5a0e6abd",
+        "colunaSpan": 12
       },
       {
         "id": 335,
         "tipo": "phone",
         "label": "Telefone Principal (DD) 0000-0000",
         "obrigatorio": true,
-        "descricao": "Preencher neste formato (DD) 0000-0000"
+        "descricao": "Preencher neste formato (DD) 0000-0000",
+        "grupoLayout": "f9fda8a2",
+        "colunaSpan": 12
       },
       {
         "id": 333,
         "tipo": "phone",
         "label": "Segundo Telefone  (DD) 0000-0000",
         "obrigatorio": true,
-        "descricao": "Preencher neste formato (DD) 0000-0000"
+        "descricao": "Preencher neste formato (DD) 0000-0000",
+        "grupoLayout": "6371d159",
+        "colunaSpan": 12
       },
       {
         "id": 336,
         "tipo": "phone",
         "label": "Telefone do Trabalho (DD) 0000-0000",
         "obrigatorio": true,
-        "descricao": "Preencher neste formato (DD) 0000-0000, se não tiver, preencher com \"0\" "
+        "descricao": "Preencher neste formato (DD) 0000-0000, se não tiver, preencher com \"0\" ",
+        "grupoLayout": "359fa3b2",
+        "colunaSpan": 12
       },
       {
         "id": 134,
         "tipo": "section",
         "label": "Endereço E-mail",
-        "obrigatorio": false
+        "obrigatorio": false,
+        "grupoLayout": "e4f795fc"
       },
       {
         "id": 135,
         "tipo": "text",
         "label": "Informe seu e-mail principal",
-        "obrigatorio": true
+        "obrigatorio": true,
+        "grupoLayout": "f8191e00",
+        "colunaSpan": 12
       },
       {
         "id": 136,
         "tipo": "section",
         "label": "Midia Social",
-        "obrigatorio": false
+        "obrigatorio": false,
+        "grupoLayout": "1d947959"
       },
       {
         "id": 137,
@@ -2330,7 +2520,9 @@
             "texto": "Linkedin",
             "valor": "Linkedin"
           }
-        ]
+        ],
+        "grupoLayout": "961426fd",
+        "colunaSpan": 12
       },
       {
         "id": 138,
@@ -2357,7 +2549,9 @@
               "valor": "Linkedin"
             }
           ]
-        }
+        },
+        "grupoLayout": "c4e8e8a6",
+        "colunaSpan": 12
       },
       {
         "id": 343,
@@ -2382,7 +2576,9 @@
             "texto": "Linkedin",
             "valor": "Linkedin"
           }
-        ]
+        ],
+        "grupoLayout": "881771d4",
+        "colunaSpan": 12
       },
       {
         "id": 344,
@@ -2409,7 +2605,9 @@
               "valor": "Linkedin"
             }
           ]
-        }
+        },
+        "grupoLayout": "51c37932",
+        "colunaSpan": 12
       }
     ]
   },
@@ -2421,7 +2619,8 @@
         "id": 141,
         "tipo": "section",
         "label": "Informações do passaporte",
-        "obrigatorio": false
+        "obrigatorio": false,
+        "grupoLayout": "e25f1920"
       },
       {
         "id": 143,
@@ -2437,7 +2636,9 @@
             "texto": "Outros",
             "valor": "Outros"
           }
-        ]
+        ],
+        "grupoLayout": "23f31ced",
+        "colunaSpan": 12
       },
       {
         "id": 144,
@@ -2454,14 +2655,18 @@
               "valor": "Outros"
             }
           ]
-        }
+        },
+        "grupoLayout": "8453cd88",
+        "colunaSpan": 12
       },
       {
         "id": 145,
         "tipo": "text",
         "label": "Número do passaporte (composto por 2 letras e 6 números)",
         "obrigatorio": true,
-        "descricao": "Caso não saiba, escreva \"NÃO SEI\""
+        "descricao": "Caso não saiba, escreva \"NÃO SEI\"",
+        "grupoLayout": "6ccc20d4",
+        "colunaSpan": 12
       },
       {
         "id": 146,
@@ -2477,7 +2682,9 @@
             "texto": "Outros",
             "valor": "Outros"
           }
-        ]
+        ],
+        "grupoLayout": "34d99338",
+        "colunaSpan": 12
       },
       {
         "id": 147,
@@ -2494,19 +2701,25 @@
               "valor": "Outros"
             }
           ]
-        }
+        },
+        "grupoLayout": "1c7ac386",
+        "colunaSpan": 12
       },
       {
         "id": 148,
         "tipo": "text",
         "label": "Cidade que emitiu o passaporte",
-        "obrigatorio": true
+        "obrigatorio": true,
+        "grupoLayout": "fa44f359",
+        "colunaSpan": 12
       },
       {
         "id": 149,
         "tipo": "text",
         "label": "Estado que emitiu o passaporte",
-        "obrigatorio": true
+        "obrigatorio": true,
+        "grupoLayout": "64ecd836",
+        "colunaSpan": 12
       },
       {
         "id": 150,
@@ -2526,7 +2739,9 @@
             "id": "150.3",
             "label": "Ano"
           }
-        ]
+        ],
+        "grupoLayout": "26963bc2",
+        "colunaSpan": 4
       },
       {
         "id": 151,
@@ -2546,13 +2761,16 @@
             "id": "151.3",
             "label": "Ano"
           }
-        ]
+        ],
+        "grupoLayout": "26963bc2",
+        "colunaSpan": 8
       },
       {
         "id": 302,
         "tipo": "section",
         "label": "",
-        "obrigatorio": false
+        "obrigatorio": false,
+        "grupoLayout": "d36353fc"
       },
       {
         "id": 152,
@@ -2568,7 +2786,9 @@
             "texto": "Sim",
             "valor": "Sim"
           }
-        ]
+        ],
+        "grupoLayout": "e30efca0",
+        "colunaSpan": 12
       },
       {
         "id": 153,
@@ -2585,7 +2805,9 @@
               "valor": "Sim"
             }
           ]
-        }
+        },
+        "grupoLayout": "bcca3e3a",
+        "colunaSpan": 5
       },
       {
         "id": 154,
@@ -2602,7 +2824,9 @@
               "valor": "Sim"
             }
           ]
-        }
+        },
+        "grupoLayout": "bcca3e3a",
+        "colunaSpan": 7
       },
       {
         "id": 155,
@@ -2619,7 +2843,9 @@
               "valor": "Sim"
             }
           ]
-        }
+        },
+        "grupoLayout": "0a32f4b4",
+        "colunaSpan": 12
       }
     ]
   },
@@ -2631,7 +2857,8 @@
         "id": 157,
         "tipo": "section",
         "label": "Informações sobre contato nos EUA",
-        "obrigatorio": false
+        "obrigatorio": false,
+        "grupoLayout": "9b30a162"
       },
       {
         "id": 158,
@@ -2655,7 +2882,9 @@
             "texto": "Não",
             "valor": "Não"
           }
-        ]
+        ],
+        "grupoLayout": "401d5b1c",
+        "colunaSpan": 12
       },
       {
         "id": 304,
@@ -2677,20 +2906,26 @@
               "valor": "Sim, conheço uma Empresa"
             }
           ]
-        }
+        },
+        "grupoLayout": "b58aa384",
+        "colunaSpan": 12
       },
       {
         "id": 347,
         "tipo": "text",
         "label": "Telefone da pessoa ou empresa",
         "obrigatorio": true,
-        "descricao": "Preencha corretamente este campo"
+        "descricao": "Preencha corretamente este campo",
+        "grupoLayout": "39f04342",
+        "colunaSpan": 12
       },
       {
         "id": 345,
         "tipo": "email",
         "label": "E-mail da pessoa ou empresa",
-        "obrigatorio": false
+        "obrigatorio": false,
+        "grupoLayout": "4fda7846",
+        "colunaSpan": 12
       },
       {
         "id": 303,
@@ -2738,7 +2973,9 @@
               "valor": "Sim, conheço uma Empresa"
             }
           ]
-        }
+        },
+        "grupoLayout": "471da656",
+        "colunaSpan": 12
       },
       {
         "id": 161,
@@ -2794,7 +3031,9 @@
               "valor": "Sim, conheço uma Empresa"
             }
           ]
-        }
+        },
+        "grupoLayout": "1c8e39a8",
+        "colunaSpan": 12
       },
       {
         "id": 305,
@@ -2811,7 +3050,9 @@
               "valor": "Outro"
             }
           ]
-        }
+        },
+        "grupoLayout": "3e9365fe",
+        "colunaSpan": 12
       }
     ]
   },
@@ -2823,13 +3064,16 @@
         "id": 163,
         "tipo": "section",
         "label": "Informação da Família (parentes)",
-        "obrigatorio": false
+        "obrigatorio": false,
+        "grupoLayout": "86be5fc8"
       },
       {
         "id": 164,
         "tipo": "text",
         "label": "Nome Completo do Pai",
-        "obrigatorio": true
+        "obrigatorio": true,
+        "grupoLayout": "425cc5eb",
+        "colunaSpan": 6
       },
       {
         "id": 165,
@@ -2849,7 +3093,9 @@
             "id": "165.3",
             "label": "Ano"
           }
-        ]
+        ],
+        "grupoLayout": "c8d9c47e",
+        "colunaSpan": 12
       },
       {
         "id": 168,
@@ -2865,7 +3111,9 @@
             "texto": "Sim",
             "valor": "Sim"
           }
-        ]
+        ],
+        "grupoLayout": "88e8e25b",
+        "colunaSpan": 12
       },
       {
         "id": 307,
@@ -2904,7 +3152,9 @@
               "valor": "Sim"
             }
           ]
-        }
+        },
+        "grupoLayout": "a1801169",
+        "colunaSpan": 12
       },
       {
         "id": 311,
@@ -2921,19 +3171,24 @@
               "valor": "Outro"
             }
           ]
-        }
+        },
+        "grupoLayout": "6da57cbf",
+        "colunaSpan": 12
       },
       {
         "id": 309,
         "tipo": "section",
         "label": "",
-        "obrigatorio": false
+        "obrigatorio": false,
+        "grupoLayout": "5011daca"
       },
       {
         "id": 166,
         "tipo": "text",
         "label": "Nome Completo da Mãe",
-        "obrigatorio": true
+        "obrigatorio": true,
+        "grupoLayout": "6f7b94e9",
+        "colunaSpan": 6
       },
       {
         "id": 167,
@@ -2953,7 +3208,9 @@
             "id": "167.3",
             "label": "Ano"
           }
-        ]
+        ],
+        "grupoLayout": "edde2d47",
+        "colunaSpan": 12
       },
       {
         "id": 169,
@@ -2969,7 +3226,9 @@
             "texto": "Sim",
             "valor": "Sim"
           }
-        ]
+        ],
+        "grupoLayout": "4c80fc16",
+        "colunaSpan": 12
       },
       {
         "id": 308,
@@ -3008,7 +3267,9 @@
               "valor": "Sim"
             }
           ]
-        }
+        },
+        "grupoLayout": "6996def8",
+        "colunaSpan": 12
       },
       {
         "id": 312,
@@ -3025,13 +3286,16 @@
               "valor": "Outro"
             }
           ]
-        }
+        },
+        "grupoLayout": "fa447920",
+        "colunaSpan": 12
       },
       {
         "id": 310,
         "tipo": "section",
         "label": "",
-        "obrigatorio": false
+        "obrigatorio": false,
+        "grupoLayout": "5f51ac6a"
       },
       {
         "id": 171,
@@ -3047,7 +3311,9 @@
             "texto": "Sim",
             "valor": "Sim"
           }
-        ]
+        ],
+        "grupoLayout": "e37650f5",
+        "colunaSpan": 12
       },
       {
         "id": 173,
@@ -3064,7 +3330,9 @@
               "valor": "Sim"
             }
           ]
-        }
+        },
+        "grupoLayout": "ef15ebe8",
+        "colunaSpan": 12
       },
       {
         "id": 172,
@@ -3103,7 +3371,9 @@
               "valor": "Sim"
             }
           ]
-        }
+        },
+        "grupoLayout": "f34955ac",
+        "colunaSpan": 12
       },
       {
         "id": 313,
@@ -3142,13 +3412,16 @@
               "valor": "Sim"
             }
           ]
-        }
+        },
+        "grupoLayout": "96f2739d",
+        "colunaSpan": 12
       },
       {
         "id": 314,
         "tipo": "section",
         "label": "",
-        "obrigatorio": false
+        "obrigatorio": false,
+        "grupoLayout": "128f60eb"
       },
       {
         "id": 315,
@@ -3164,7 +3437,9 @@
             "texto": "Não",
             "valor": "Não"
           }
-        ]
+        ],
+        "grupoLayout": "50fc36cf",
+        "colunaSpan": 12
       },
       {
         "id": 348,
@@ -3181,7 +3456,9 @@
               "valor": "Sim"
             }
           ]
-        }
+        },
+        "grupoLayout": "f291881f",
+        "colunaSpan": 12
       }
     ]
   },
@@ -3204,7 +3481,8 @@
               "valor": "Solteiro"
             }
           ]
-        }
+        },
+        "grupoLayout": "1811c454"
       },
       {
         "id": 176,
@@ -3243,7 +3521,9 @@
               "valor": "Solteiro"
             }
           ]
-        }
+        },
+        "grupoLayout": "a843d192",
+        "colunaSpan": 12
       },
       {
         "id": 187,
@@ -3270,7 +3550,9 @@
               "valor": "Separado/Divorciado"
             }
           ]
-        }
+        },
+        "grupoLayout": "a7a21598",
+        "colunaSpan": 12
       },
       {
         "id": 177,
@@ -3287,7 +3569,9 @@
               "valor": "Cônjuge"
             }
           ]
-        }
+        },
+        "grupoLayout": "c0540e14",
+        "colunaSpan": 12
       },
       {
         "id": 185,
@@ -3304,7 +3588,9 @@
               "valor": "Separado/Divorciado"
             }
           ]
-        }
+        },
+        "grupoLayout": "09020803",
+        "colunaSpan": 12
       },
       {
         "id": 188,
@@ -3321,7 +3607,9 @@
               "valor": "2"
             }
           ]
-        }
+        },
+        "grupoLayout": "2562a122",
+        "colunaSpan": 12
       },
       {
         "id": 184,
@@ -3338,7 +3626,9 @@
               "valor": "Viúvo"
             }
           ]
-        }
+        },
+        "grupoLayout": "a1e5f952",
+        "colunaSpan": 12
       },
       {
         "id": 179,
@@ -3379,7 +3669,9 @@
               "valor": "Viúvo"
             }
           ]
-        }
+        },
+        "grupoLayout": "a085608b",
+        "colunaSpan": 12
       },
       {
         "id": 189,
@@ -3410,7 +3702,9 @@
               "valor": "2"
             }
           ]
-        }
+        },
+        "grupoLayout": "c6e3aff5",
+        "colunaSpan": 12
       },
       {
         "id": 180,
@@ -3437,7 +3731,9 @@
               "valor": "Viúvo"
             }
           ]
-        }
+        },
+        "grupoLayout": "613a2c17",
+        "colunaSpan": 12
       },
       {
         "id": 190,
@@ -3454,7 +3750,9 @@
               "valor": "2"
             }
           ]
-        }
+        },
+        "grupoLayout": "63e3d2dd",
+        "colunaSpan": 12
       },
       {
         "id": 178,
@@ -3507,7 +3805,9 @@
               "valor": "Viúvo"
             }
           ]
-        }
+        },
+        "grupoLayout": "5528be26",
+        "colunaSpan": 12
       },
       {
         "id": 191,
@@ -3550,7 +3850,9 @@
               "valor": "2"
             }
           ]
-        }
+        },
+        "grupoLayout": "4fa52525",
+        "colunaSpan": 12
       },
       {
         "id": 193,
@@ -3581,7 +3883,9 @@
               "valor": "Separado/Divorciado"
             }
           ]
-        }
+        },
+        "grupoLayout": "ca546c91",
+        "colunaSpan": 4
       },
       {
         "id": 194,
@@ -3612,7 +3916,9 @@
               "valor": "Separado/Divorciado"
             }
           ]
-        }
+        },
+        "grupoLayout": "ca546c91",
+        "colunaSpan": 8
       },
       {
         "id": 195,
@@ -3648,7 +3954,9 @@
               "valor": "2"
             }
           ]
-        }
+        },
+        "grupoLayout": "82dae7b4",
+        "colunaSpan": 4
       },
       {
         "id": 196,
@@ -3684,7 +3992,9 @@
               "valor": "2"
             }
           ]
-        }
+        },
+        "grupoLayout": "82dae7b4",
+        "colunaSpan": 8
       },
       {
         "id": 181,
@@ -3724,7 +4034,9 @@
               "valor": "Separado/Divorciado"
             }
           ]
-        }
+        },
+        "grupoLayout": "1ef50987",
+        "colunaSpan": 12
       },
       {
         "id": 182,
@@ -3767,7 +4079,9 @@
               "valor": "Outro Endereço"
             }
           ]
-        }
+        },
+        "grupoLayout": "e9418650",
+        "colunaSpan": 12
       },
       {
         "id": 192,
@@ -3815,7 +4129,9 @@
               "valor": "2"
             }
           ]
-        }
+        },
+        "grupoLayout": "89e35a23",
+        "colunaSpan": 12
       }
     ]
   },
@@ -3827,7 +4143,8 @@
         "id": 199,
         "tipo": "section",
         "label": "INFORMAÇÕES SOBRE ATIVIDADE ATUAL (TRABALHO OU ESTUDO)",
-        "obrigatorio": false
+        "obrigatorio": false,
+        "grupoLayout": "bbaf8152"
       },
       {
         "id": 198,
@@ -3867,7 +4184,9 @@
             "texto": "Não se aplica",
             "valor": "Não se aplica"
           }
-        ]
+        ],
+        "grupoLayout": "f6a41413",
+        "colunaSpan": 12
       },
       {
         "id": 317,
@@ -3889,7 +4208,9 @@
               "valor": "Estudante"
             }
           ]
-        }
+        },
+        "grupoLayout": "1eef5fba",
+        "colunaSpan": 12
       },
       {
         "id": 203,
@@ -3935,7 +4256,9 @@
               "valor": "Estudante"
             }
           ]
-        }
+        },
+        "grupoLayout": "c450f719",
+        "colunaSpan": 12
       },
       {
         "id": 200,
@@ -3962,7 +4285,9 @@
               "valor": "Outras"
             }
           ]
-        }
+        },
+        "grupoLayout": "789b0e98",
+        "colunaSpan": 12
       },
       {
         "id": 316,
@@ -3994,7 +4319,9 @@
               "valor": "Estudante"
             }
           ]
-        }
+        },
+        "grupoLayout": "1fdf9dc3",
+        "colunaSpan": 12
       },
       {
         "id": 202,
@@ -4026,7 +4353,9 @@
               "valor": "Estudante"
             }
           ]
-        }
+        },
+        "grupoLayout": "533e6a96",
+        "colunaSpan": 12
       },
       {
         "id": 201,
@@ -4084,7 +4413,9 @@
               "valor": "Estudante"
             }
           ]
-        }
+        },
+        "grupoLayout": "20ab73f5",
+        "colunaSpan": 12
       },
       {
         "id": 349,
@@ -4110,14 +4441,18 @@
             "id": "349.2",
             "label": "Sim"
           }
-        ]
+        ],
+        "grupoLayout": "c1bd51a2",
+        "colunaSpan": 12
       },
       {
         "id": 350,
         "tipo": "textarea",
         "label": "Descreva os dados da empresa",
         "obrigatorio": false,
-        "descricao": "Nome completo da empresa, endereço, telefone e data de admissão"
+        "descricao": "Nome completo da empresa, endereço, telefone e data de admissão",
+        "grupoLayout": "803b0781",
+        "colunaSpan": 12
       }
     ]
   },
@@ -4129,7 +4464,8 @@
         "id": 205,
         "tipo": "section",
         "label": "Informações sobre Trabalhos Anteriores",
-        "obrigatorio": false
+        "obrigatorio": false,
+        "grupoLayout": "0dc7690c"
       },
       {
         "id": 207,
@@ -4145,7 +4481,9 @@
             "texto": "Sim",
             "valor": "Sim"
           }
-        ]
+        ],
+        "grupoLayout": "de1f4e51",
+        "colunaSpan": 12
       },
       {
         "id": 208,
@@ -4162,7 +4500,9 @@
               "valor": "Sim"
             }
           ]
-        }
+        },
+        "grupoLayout": "1fce682c",
+        "colunaSpan": 12
       },
       {
         "id": 321,
@@ -4179,7 +4519,9 @@
               "valor": "Sim"
             }
           ]
-        }
+        },
+        "grupoLayout": "66ae94f8",
+        "colunaSpan": 12
       },
       {
         "id": 211,
@@ -4196,13 +4538,17 @@
               "valor": "Sim"
             }
           ]
-        }
+        },
+        "grupoLayout": "d715fe85",
+        "colunaSpan": 12
       },
       {
         "id": 351,
         "tipo": "text",
         "label": "Telefone com DDD (00) 0000-0000",
-        "obrigatorio": true
+        "obrigatorio": true,
+        "grupoLayout": "b6dc7f12",
+        "colunaSpan": 12
       },
       {
         "id": 209,
@@ -4245,7 +4591,9 @@
               "valor": "Sim"
             }
           ]
-        }
+        },
+        "grupoLayout": "6b660768",
+        "colunaSpan": 12
       },
       {
         "id": 212,
@@ -4276,7 +4624,9 @@
               "valor": "Sim"
             }
           ]
-        }
+        },
+        "grupoLayout": "bfae1cda",
+        "colunaSpan": 4
       },
       {
         "id": 213,
@@ -4307,7 +4657,9 @@
               "valor": "Sim"
             }
           ]
-        }
+        },
+        "grupoLayout": "bfae1cda",
+        "colunaSpan": 8
       },
       {
         "id": 214,
@@ -4324,7 +4676,9 @@
               "valor": "Sim"
             }
           ]
-        }
+        },
+        "grupoLayout": "af4780b9",
+        "colunaSpan": 12
       },
       {
         "id": 319,
@@ -4341,7 +4695,8 @@
               "valor": "Sim"
             }
           ]
-        }
+        },
+        "grupoLayout": "6a823af4"
       },
       {
         "id": 318,
@@ -4358,7 +4713,9 @@
               "valor": "Sim"
             }
           ]
-        }
+        },
+        "grupoLayout": "d1252b13",
+        "colunaSpan": 12
       },
       {
         "id": 210,
@@ -4375,7 +4732,9 @@
               "valor": "Sim"
             }
           ]
-        }
+        },
+        "grupoLayout": "60fe73d8",
+        "colunaSpan": 12
       },
       {
         "id": 322,
@@ -4392,13 +4751,17 @@
               "valor": "Sim"
             }
           ]
-        }
+        },
+        "grupoLayout": "e0fc150e",
+        "colunaSpan": 12
       },
       {
         "id": 352,
         "tipo": "text",
         "label": "Telefone com DDD (00) 0000-0000",
-        "obrigatorio": true
+        "obrigatorio": true,
+        "grupoLayout": "79fb786e",
+        "colunaSpan": 12
       },
       {
         "id": 320,
@@ -4441,7 +4804,9 @@
               "valor": "Sim"
             }
           ]
-        }
+        },
+        "grupoLayout": "48b6aa7a",
+        "colunaSpan": 12
       },
       {
         "id": 323,
@@ -4472,7 +4837,9 @@
               "valor": "Sim"
             }
           ]
-        }
+        },
+        "grupoLayout": "582ce4c3",
+        "colunaSpan": 5
       },
       {
         "id": 324,
@@ -4503,7 +4870,9 @@
               "valor": "Sim"
             }
           ]
-        }
+        },
+        "grupoLayout": "582ce4c3",
+        "colunaSpan": 7
       },
       {
         "id": 325,
@@ -4520,7 +4889,9 @@
               "valor": "Sim"
             }
           ]
-        }
+        },
+        "grupoLayout": "21539a45",
+        "colunaSpan": 12
       }
     ]
   },
@@ -4532,7 +4903,8 @@
         "id": 216,
         "tipo": "section",
         "label": "Escolaridade",
-        "obrigatorio": false
+        "obrigatorio": false,
+        "grupoLayout": "805d3f2c"
       },
       {
         "id": 217,
@@ -4548,7 +4920,9 @@
             "texto": "Sim",
             "valor": "Sim"
           }
-        ]
+        ],
+        "grupoLayout": "3b949cca",
+        "colunaSpan": 12
       },
       {
         "id": 218,
@@ -4565,7 +4939,9 @@
               "valor": "Sim"
             }
           ]
-        }
+        },
+        "grupoLayout": "368ebc0c",
+        "colunaSpan": 12
       },
       {
         "id": 353,
@@ -4582,7 +4958,9 @@
               "valor": "Sim"
             }
           ]
-        }
+        },
+        "grupoLayout": "5a45f089",
+        "colunaSpan": 12
       },
       {
         "id": 219,
@@ -4625,7 +5003,9 @@
               "valor": "Sim"
             }
           ]
-        }
+        },
+        "grupoLayout": "7fcc59d7",
+        "colunaSpan": 12
       },
       {
         "id": 220,
@@ -4642,7 +5022,9 @@
               "valor": "Sim"
             }
           ]
-        }
+        },
+        "grupoLayout": "b621b972",
+        "colunaSpan": 12
       },
       {
         "id": 221,
@@ -4673,7 +5055,9 @@
               "valor": "Sim"
             }
           ]
-        }
+        },
+        "grupoLayout": "68bfb59c",
+        "colunaSpan": 6
       },
       {
         "id": 222,
@@ -4704,7 +5088,9 @@
               "valor": "Sim"
             }
           ]
-        }
+        },
+        "grupoLayout": "68bfb59c",
+        "colunaSpan": 6
       }
     ]
   },
@@ -4716,19 +5102,23 @@
         "id": 224,
         "tipo": "section",
         "label": "Informações adicionais sobre Educação, Trabalho, Treinamento",
-        "obrigatorio": false
+        "obrigatorio": false,
+        "grupoLayout": "ca3abaf0"
       },
       {
         "id": 227,
         "tipo": "text",
         "label": "Descreva todos Idiomas que você fala ( Informar somente se for Fluente no Idioma )",
-        "obrigatorio": true
+        "obrigatorio": true,
+        "grupoLayout": "adecf0cd",
+        "colunaSpan": 12
       },
       {
         "id": 229,
         "tipo": "section",
         "label": "Viagens Anteriores",
-        "obrigatorio": false
+        "obrigatorio": false,
+        "grupoLayout": "becf8e53"
       },
       {
         "id": 230,
@@ -4744,7 +5134,9 @@
             "texto": "Sim",
             "valor": "Sim"
           }
-        ]
+        ],
+        "grupoLayout": "9d45a390",
+        "colunaSpan": 12
       },
       {
         "id": 231,
@@ -4761,7 +5153,9 @@
               "valor": "Sim"
             }
           ]
-        }
+        },
+        "grupoLayout": "01ba4b72",
+        "colunaSpan": 12
       }
     ]
   },
@@ -4773,7 +5167,8 @@
         "id": 233,
         "tipo": "section",
         "label": "Informações Adicionais",
-        "obrigatorio": false
+        "obrigatorio": false,
+        "grupoLayout": "c7098e04"
       },
       {
         "id": 234,
@@ -4789,7 +5184,9 @@
             "texto": "Sim",
             "valor": "Sim"
           }
-        ]
+        ],
+        "grupoLayout": "b69aa3f8",
+        "colunaSpan": 12
       },
       {
         "id": 236,
@@ -4806,7 +5203,9 @@
               "valor": "Sim"
             }
           ]
-        }
+        },
+        "grupoLayout": "c90e3549",
+        "colunaSpan": 12
       },
       {
         "id": 235,
@@ -4822,7 +5221,9 @@
             "texto": "Sim",
             "valor": "Sim"
           }
-        ]
+        ],
+        "grupoLayout": "0e5fc947",
+        "colunaSpan": 12
       },
       {
         "id": 237,
@@ -4865,7 +5266,9 @@
               "valor": "Sim"
             }
           ]
-        }
+        },
+        "grupoLayout": "2e2e39a6",
+        "colunaSpan": 12
       },
       {
         "id": 238,
@@ -4882,7 +5285,9 @@
               "valor": "Sim"
             }
           ]
-        }
+        },
+        "grupoLayout": "6448913f",
+        "colunaSpan": 12
       },
       {
         "id": 239,
@@ -4899,7 +5304,9 @@
               "valor": "Sim"
             }
           ]
-        }
+        },
+        "grupoLayout": "4f25872d",
+        "colunaSpan": 12
       },
       {
         "id": 240,
@@ -4916,7 +5323,9 @@
               "valor": "Sim"
             }
           ]
-        }
+        },
+        "grupoLayout": "44847d34",
+        "colunaSpan": 12
       },
       {
         "id": 241,
@@ -4947,7 +5356,9 @@
               "valor": "Sim"
             }
           ]
-        }
+        },
+        "grupoLayout": "e6a2ec7b",
+        "colunaSpan": 4
       },
       {
         "id": 242,
@@ -4978,7 +5389,9 @@
               "valor": "Sim"
             }
           ]
-        }
+        },
+        "grupoLayout": "e6a2ec7b",
+        "colunaSpan": 8
       }
     ]
   },
@@ -4991,13 +5404,15 @@
         "tipo": "section",
         "label": "INFORMAÇÕES MÉDICAS, CRIMINAIS E DE SEGURANÇA",
         "obrigatorio": false,
-        "descricao": "NOTA: Forneça com segurança e as informações a seguir. Fornecer informações completas e precisas a todas as perguntas que exigem uma explicação. O visto não pode ser concedido a pessoas que estão dentro das categorias específicas definidas por lei como inadmissíveis para os Estados Unidos (exceto quando a renúncia é obtida com antecedência). São aplicáveis a qualquer um dos seguintes para você? Quando uma resposta é SIM não significa automaticamente inelegibilidade para um visto, se você responder SIM você pode ser obrigado a comparecer pessoalmente perante um oficial consular"
+        "descricao": "NOTA: Forneça com segurança e as informações a seguir. Fornecer informações completas e precisas a todas as perguntas que exigem uma explicação. O visto não pode ser concedido a pessoas que estão dentro das categorias específicas definidas por lei como inadmissíveis para os Estados Unidos (exceto quando a renúncia é obtida com antecedência). São aplicáveis a qualquer um dos seguintes para você? Quando uma resposta é SIM não significa automaticamente inelegibilidade para um visto, se você responder SIM você pode ser obrigado a comparecer pessoalmente perante um oficial consular",
+        "grupoLayout": "a6af9253"
       },
       {
         "id": 244,
         "tipo": "section",
         "label": "Segurança e Histórico Parte I",
-        "obrigatorio": false
+        "obrigatorio": false,
+        "grupoLayout": "2829337c"
       },
       {
         "id": 248,
@@ -5013,7 +5428,9 @@
             "texto": "Sim",
             "valor": "Sim"
           }
-        ]
+        ],
+        "grupoLayout": "58752360",
+        "colunaSpan": 12
       },
       {
         "id": 249,
@@ -5029,7 +5446,9 @@
             "texto": "Sim",
             "valor": "Sim"
           }
-        ]
+        ],
+        "grupoLayout": "8f9da242",
+        "colunaSpan": 12
       },
       {
         "id": 261,
@@ -5045,7 +5464,9 @@
             "texto": "Sim",
             "valor": "Sim"
           }
-        ]
+        ],
+        "grupoLayout": "ef5235d3",
+        "colunaSpan": 12
       }
     ]
   },
@@ -5057,7 +5478,8 @@
         "id": 253,
         "tipo": "section",
         "label": "Segurança e Histórico Parte II",
-        "obrigatorio": false
+        "obrigatorio": false,
+        "grupoLayout": "76e1fe6a"
       },
       {
         "id": 250,
@@ -5073,7 +5495,9 @@
             "texto": "Sim",
             "valor": "Sim"
           }
-        ]
+        ],
+        "grupoLayout": "e30114d9",
+        "colunaSpan": 12
       },
       {
         "id": 254,
@@ -5089,7 +5513,9 @@
             "texto": "Sim",
             "valor": "Sim"
           }
-        ]
+        ],
+        "grupoLayout": "d2ad6615",
+        "colunaSpan": 12
       },
       {
         "id": 255,
@@ -5105,7 +5531,9 @@
             "texto": "Sim",
             "valor": "Sim"
           }
-        ]
+        ],
+        "grupoLayout": "b2a6c99a",
+        "colunaSpan": 12
       },
       {
         "id": 256,
@@ -5121,7 +5549,9 @@
             "texto": "Sim",
             "valor": "Sim"
           }
-        ]
+        ],
+        "grupoLayout": "cb27c0d1",
+        "colunaSpan": 12
       },
       {
         "id": 257,
@@ -5137,7 +5567,9 @@
             "texto": "Sim",
             "valor": "Sim"
           }
-        ]
+        ],
+        "grupoLayout": "3e8dd556",
+        "colunaSpan": 12
       },
       {
         "id": 327,
@@ -5153,7 +5585,9 @@
             "texto": "Sim",
             "valor": "Sim"
           }
-        ]
+        ],
+        "grupoLayout": "b33bc12a",
+        "colunaSpan": 12
       },
       {
         "id": 328,
@@ -5169,7 +5603,9 @@
             "texto": "Sim",
             "valor": "Sim"
           }
-        ]
+        ],
+        "grupoLayout": "828d5076",
+        "colunaSpan": 12
       }
     ]
   },
@@ -5181,7 +5617,8 @@
         "id": 263,
         "tipo": "section",
         "label": "Segurança e Histórico Parte III",
-        "obrigatorio": false
+        "obrigatorio": false,
+        "grupoLayout": "11cfd0d5"
       },
       {
         "id": 329,
@@ -5197,7 +5634,9 @@
             "texto": "Sim",
             "valor": "Sim"
           }
-        ]
+        ],
+        "grupoLayout": "c4ad95ec",
+        "colunaSpan": 12
       },
       {
         "id": 258,
@@ -5213,7 +5652,9 @@
             "texto": "Sim",
             "valor": "Sim"
           }
-        ]
+        ],
+        "grupoLayout": "5692ac42",
+        "colunaSpan": 12
       },
       {
         "id": 259,
@@ -5229,7 +5670,9 @@
             "texto": "Sim",
             "valor": "Sim"
           }
-        ]
+        ],
+        "grupoLayout": "66a90ead",
+        "colunaSpan": 12
       },
       {
         "id": 260,
@@ -5245,7 +5688,9 @@
             "texto": "Sim",
             "valor": "Sim"
           }
-        ]
+        ],
+        "grupoLayout": "21e11632",
+        "colunaSpan": 12
       }
     ]
   },
@@ -5257,7 +5702,8 @@
         "id": 331,
         "tipo": "section",
         "label": "Segurança e Histórico Parte III",
-        "obrigatorio": false
+        "obrigatorio": false,
+        "grupoLayout": "1fb92482"
       },
       {
         "id": 264,
@@ -5273,7 +5719,9 @@
             "texto": "Sim",
             "valor": "Sim"
           }
-        ]
+        ],
+        "grupoLayout": "691b5774",
+        "colunaSpan": 12
       },
       {
         "id": 265,
@@ -5289,7 +5737,9 @@
             "texto": "Sim",
             "valor": "Sim"
           }
-        ]
+        ],
+        "grupoLayout": "90949721",
+        "colunaSpan": 12
       },
       {
         "id": 266,
@@ -5305,7 +5755,9 @@
             "texto": "Sim",
             "valor": "Sim"
           }
-        ]
+        ],
+        "grupoLayout": "4c2fd120",
+        "colunaSpan": 12
       },
       {
         "id": 267,
@@ -5321,7 +5773,9 @@
             "texto": "Sim",
             "valor": "Sim"
           }
-        ]
+        ],
+        "grupoLayout": "fe01d9e3",
+        "colunaSpan": 12
       },
       {
         "id": 268,
@@ -5337,7 +5791,9 @@
             "texto": "Sim",
             "valor": "Sim"
           }
-        ]
+        ],
+        "grupoLayout": "45e789eb",
+        "colunaSpan": 12
       },
       {
         "id": 269,
@@ -5353,7 +5809,9 @@
             "texto": "Sim",
             "valor": "Sim"
           }
-        ]
+        ],
+        "grupoLayout": "177f2dd3",
+        "colunaSpan": 12
       },
       {
         "id": 270,
@@ -5369,7 +5827,9 @@
             "texto": "Sim",
             "valor": "Sim"
           }
-        ]
+        ],
+        "grupoLayout": "05d3e80d",
+        "colunaSpan": 12
       },
       {
         "id": 271,
@@ -5385,7 +5845,9 @@
             "texto": "Sim",
             "valor": "Sim"
           }
-        ]
+        ],
+        "grupoLayout": "f6e5e699",
+        "colunaSpan": 12
       },
       {
         "id": 272,
@@ -5401,7 +5863,9 @@
             "texto": "Sim",
             "valor": "Sim"
           }
-        ]
+        ],
+        "grupoLayout": "ac56dcc7",
+        "colunaSpan": 12
       },
       {
         "id": 273,
@@ -5417,7 +5881,9 @@
             "texto": "Sim",
             "valor": "Sim"
           }
-        ]
+        ],
+        "grupoLayout": "9f15e3c8",
+        "colunaSpan": 12
       },
       {
         "id": 274,
@@ -5433,7 +5899,9 @@
             "texto": "Sim",
             "valor": "Sim"
           }
-        ]
+        ],
+        "grupoLayout": "1cd6713d",
+        "colunaSpan": 12
       }
     ]
   },
@@ -5445,7 +5913,9 @@
         "id": 332,
         "tipo": "phone",
         "label": "Telefone",
-        "obrigatorio": false
+        "obrigatorio": false,
+        "grupoLayout": "7201c3d6",
+        "colunaSpan": 12
       },
       {
         "id": 54,
@@ -5461,7 +5931,9 @@
             "id": "54.2",
             "label": "Confirmar e-mail"
           }
-        ]
+        ],
+        "grupoLayout": "100181da",
+        "colunaSpan": 12
       },
       {
         "id": 55,
@@ -5487,7 +5959,8 @@
             "id": "55.3",
             "label": "Descrição"
           }
-        ]
+        ],
+        "grupoLayout": "82f789d5"
       }
     ]
   }

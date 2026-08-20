@@ -16,6 +16,8 @@ type CampoOrigem = {
   description?: string;
   choices?: { text: string; value: string }[] | "";
   inputs?: { id: string; label: string }[] | null;
+  layoutGroupId?: string;
+  layoutGridColumnSpan?: number | "";
   conditionalLogic?:
     | ""
     | {
@@ -44,6 +46,8 @@ type CampoSchema = {
   opcoes?: OpcaoSchema[];
   subCampos?: SubCampoSchema[];
   condicional?: CondicionalSchema;
+  grupoLayout?: string; // campos com o mesmo valor ficam lado a lado, na mesma linha visual
+  colunaSpan?: number; // largura relativa dentro da linha (base 12), igual ao Gravity Forms
 };
 
 type PaginaSchema = {
@@ -83,6 +87,8 @@ function converterCampo(f: CampoOrigem): CampoSchema {
   }
   const cond = converterCondicional(f.conditionalLogic);
   if (cond) campo.condicional = cond;
+  if (f.layoutGroupId) campo.grupoLayout = f.layoutGroupId;
+  if (typeof f.layoutGridColumnSpan === "number") campo.colunaSpan = f.layoutGridColumnSpan;
   return campo;
 }
 

@@ -24,8 +24,6 @@ export default async function PaginaDoWizard(props: PageProps<"/preencher/[pagin
   const respostasIniciais = (cliente.respostas as Record<string, string | string[]>) ?? {};
 
   return (
-    <div className="mx-auto flex w-full max-w-2xl flex-1 flex-col gap-6 p-8">
-      <PaginaWizard pagina={pagina} totalPaginas={paginas.length} respostasIniciais={respostasIniciais} />
-    </div>
+    <PaginaWizard pagina={pagina} totalPaginas={paginas.length} respostasIniciais={respostasIniciais} />
   );
 }

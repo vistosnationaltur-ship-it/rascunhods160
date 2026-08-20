@@ -2,12 +2,34 @@
 
 import { useState, useTransition } from "react";
 import { useRouter } from "next/navigation";
-import type { Pagina } from "@/lib/formulario-schema";
+import type { Campo, Pagina } from "@/lib/formulario-schema";
 import { campoVisivel } from "@/lib/condicional";
 import { CampoRenderer } from "@/components/preencher/CampoRenderer";
 import { salvarPagina, concluirRascunho } from "../actions";
 
 type Valor = string | string[] | undefined;
+
+// Campos consecutivos com o mesmo grupoLayout ficam lado a lado, igual
+// no formulário original (ex: Sexo / Estado Civil / Data de nascimento
+// na mesma linha) — campos sem grupo ou "section" ficam sozinhos.
+function agruparEmLinhas(campos: Campo[]): Campo[][] {
+  const linhas: Campo[][] = [];
+  for (const campo of campos) {
+    const ultima = linhas[linhas.length - 1];
+    const podeJuntar =
+      campo.grupoLayout &&
+      campo.tipo !== "section" &&
+      ultima &&
+      ultima[0].grupoLayout === campo.grupoLayout &&
+      ultima[0].tipo !== "section";
+    if (podeJuntar) {
+      ultima.push(campo);
+    } else {
+      linhas.push([campo]);
+    }
+  }
+  return linhas;
+}
 
 export function PaginaWizard({
   pagina,
@@ -74,45 +96,49 @@ export function PaginaWizard({
     });
   }
 
+  const camposVisiveis = pagina.campos.filter((campo) => campoVisivel(campo, respostas));
+  const linhas = agruparEmLinhas(camposVisiveis);
+
   return (
     <form onSubmit={avancar} className="flex flex-col gap-6">
       <div className="flex flex-col gap-1.5">
-        <div className="h-1.5 w-full overflow-hidden rounded-full bg-white/10">
-          <div className="h-full bg-indigo-500 transition-all" style={{ width: `${progresso}%` }} />
-        </div>
-        <p className="text-xs text-zinc-500">
-          Página {pagina.indice + 1} de {totalPaginas}
-          {pagina.titulo !== `Página ${pagina.indice + 1}` && ` — ${pagina.titulo}`}
+        <p className="text-sm text-zinc-500">
+          Passo {pagina.indice + 1} de {totalPaginas}
         </p>
+        <div className="h-1.5 w-full overflow-hidden rounded-full bg-zinc-200">
+          <div className="h-full bg-blue-600 transition-all" style={{ width: `${progresso}%` }} />
+        </div>
       </div>
 
       <div className="flex flex-col gap-5">
-        {pagina.campos
-          .filter((campo) => campoVisivel(campo, respostas))
-          .map((campo) => (
-            <CampoRenderer key={campo.id} campo={campo} respostas={respostas} onChange={onChange} />
-          ))}
+        {linhas.map((linha) => (
+          <div key={linha[0].id} className="grid grid-cols-12 gap-4">
+            {linha.map((campo) => (
+              <div key={campo.id} style={{ gridColumn: `span ${campo.colunaSpan ?? 12} / span 12` }}>
+                <CampoRenderer campo={campo} respostas={respostas} onChange={onChange} />
+              </div>
+            ))}
+          </div>
+        ))}
       </div>
 
       {erro && (
-        <p className="rounded-lg border border-red-500/20 bg-red-500/[0.06] px-4 py-2.5 text-sm text-red-300">
-          {erro}
-        </p>
+        <p className="rounded-md border border-red-200 bg-red-50 px-4 py-2.5 text-sm text-red-700">{erro}</p>
       )}
 
-      <div className="flex items-center justify-between border-t border-white/10 pt-4">
+      <div className="flex items-center justify-between border-t border-zinc-200 pt-4">
         <button
           type="button"
           onClick={voltar}
           disabled={pagina.indice === 0 || pendente}
-          className="rounded-lg border border-white/10 px-4 py-2.5 text-sm text-zinc-300 transition-colors hover:border-white/20 disabled:opacity-40"
+          className="rounded-md border border-zinc-300 px-4 py-2.5 text-sm text-zinc-700 transition-colors hover:bg-zinc-50 disabled:opacity-40"
         >
           Anterior
         </button>
         <button
           type="submit"
           disabled={pendente}
-          className="rounded-lg bg-indigo-600 px-4 py-2.5 text-sm font-medium text-white hover:bg-indigo-500 disabled:opacity-60"
+          className="rounded-md bg-zinc-800 px-4 py-2.5 text-sm font-medium text-white hover:bg-zinc-700 disabled:opacity-60"
         >
           {ehUltimaPagina ? "Concluído" : "Seguinte"}
         </button>

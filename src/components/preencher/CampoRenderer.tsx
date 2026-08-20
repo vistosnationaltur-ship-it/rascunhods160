@@ -5,7 +5,7 @@ import type { Campo } from "@/lib/formulario-schema";
 type Valor = string | string[] | undefined;
 
 const estiloInput =
-  "rounded-lg border border-white/10 bg-zinc-950/60 px-3 py-2.5 text-sm text-zinc-100 outline-none transition-colors focus:border-indigo-500/60";
+  "w-full rounded-md border border-zinc-300 bg-white px-3 py-2.5 text-sm text-zinc-900 outline-none transition-colors focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20";
 
 export function CampoRenderer({
   campo,
@@ -21,17 +21,15 @@ export function CampoRenderer({
 
   if (campo.tipo === "section") {
     return (
-      <div className="border-t border-white/10 pt-4 text-sm font-medium text-zinc-400">
-        {campo.label}
-      </div>
+      <div className="border-t border-zinc-200 pt-4 text-sm font-semibold text-zinc-600">{campo.label}</div>
     );
   }
 
   return (
     <div className="flex flex-col gap-1.5">
-      <label className="text-sm text-zinc-300">
+      <label className="text-sm font-medium text-zinc-800">
         {campo.label}
-        {campo.obrigatorio && <span className="text-amber-400"> *</span>}
+        {campo.obrigatorio && <span className="text-red-600"> *</span>}
       </label>
       {campo.descricao && <p className="text-xs text-zinc-500">{campo.descricao}</p>}
 
@@ -69,14 +67,14 @@ function CorpoDoCampo({
       return (
         <div className="flex flex-wrap gap-4">
           {campo.opcoes?.map((op) => (
-            <label key={op.valor} className="flex items-center gap-2 text-sm text-zinc-200">
+            <label key={op.valor} className="flex items-center gap-2 text-sm text-zinc-700">
               <input
                 type="radio"
                 name={chave}
                 required={campo.obrigatorio}
                 checked={valor === op.valor}
                 onChange={() => onChange(chave, op.valor)}
-                className="accent-indigo-500"
+                className="accent-blue-600"
               />
               {op.texto}
             </label>
@@ -108,7 +106,7 @@ function CorpoDoCampo({
           {campo.opcoes?.map((op) => {
             const marcado = selecionados.includes(op.valor);
             return (
-              <label key={op.valor} className="flex items-center gap-2 text-sm text-zinc-200">
+              <label key={op.valor} className="flex items-center gap-2 text-sm text-zinc-700">
                 <input
                   type="checkbox"
                   checked={marcado}
@@ -118,7 +116,7 @@ function CorpoDoCampo({
                       : [...selecionados, op.valor];
                     onChange(chave, novo);
                   }}
-                  className="accent-indigo-500"
+                  className="accent-blue-600"
                 />
                 {op.texto}
               </label>
@@ -130,13 +128,13 @@ function CorpoDoCampo({
 
     case "consent":
       return (
-        <label className="flex items-center gap-2 text-sm text-zinc-200">
+        <label className="flex items-center gap-2 text-sm text-zinc-700">
           <input
             type="checkbox"
             required={campo.obrigatorio}
             checked={valor === "1"}
             onChange={(e) => onChange(chave, e.target.checked ? "1" : "")}
-            className="accent-indigo-500"
+            className="accent-blue-600"
           />
           Eu concordo.
         </label>

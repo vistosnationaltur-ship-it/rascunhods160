@@ -18,6 +18,8 @@ export type Campo = {
   opcoes?: Opcao[];
   subCampos?: SubCampo[];
   condicional?: Condicional;
+  grupoLayout?: string;
+  colunaSpan?: number;
 };
 
 export type Pagina = {
