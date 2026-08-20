@@ -9,6 +9,26 @@ import { salvarPagina, salvarESair, concluirRascunho } from "../actions";
 
 type Valor = string | string[] | undefined;
 
+// Campos lado a lado (colunaSpan, ex: Sexo/Estado Civil/Data de nascimento
+// na mesma linha) só valem a partir de telas médias — no celular cada
+// campo ocupa a linha inteira, senão fica espremido e desconfigurado.
+// Classes escritas por extenso (não geradas via template string) pro
+// Tailwind conseguir detectar em tempo de build.
+const SPAN_CLASSES: Record<number, string> = {
+  1: "col-span-12 sm:col-span-1",
+  2: "col-span-12 sm:col-span-2",
+  3: "col-span-12 sm:col-span-3",
+  4: "col-span-12 sm:col-span-4",
+  5: "col-span-12 sm:col-span-5",
+  6: "col-span-12 sm:col-span-6",
+  7: "col-span-12 sm:col-span-7",
+  8: "col-span-12 sm:col-span-8",
+  9: "col-span-12 sm:col-span-9",
+  10: "col-span-12 sm:col-span-10",
+  11: "col-span-12 sm:col-span-11",
+  12: "col-span-12",
+};
+
 // Campos consecutivos com o mesmo grupoLayout ficam lado a lado, igual
 // no formulário original (ex: Sexo / Estado Civil / Data de nascimento
 // na mesma linha) — campos sem grupo ou "section" ficam sozinhos.
@@ -126,7 +146,7 @@ export function PaginaWizard({
         {linhas.map((linha) => (
           <div key={linha[0].id} className="grid grid-cols-12 gap-4">
             {linha.map((campo) => (
-              <div key={campo.id} style={{ gridColumn: `span ${campo.colunaSpan ?? 12} / span 12` }}>
+              <div key={campo.id} className={SPAN_CLASSES[campo.colunaSpan ?? 12] ?? SPAN_CLASSES[12]}>
                 <CampoRenderer campo={campo} respostas={respostas} onChange={onChange} />
               </div>
             ))}

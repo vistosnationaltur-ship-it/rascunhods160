@@ -4,6 +4,51 @@ import { Suspense, useActionState } from "react";
 import { useSearchParams } from "next/navigation";
 import { loginCliente } from "./actions";
 
+function AvisoRascunho() {
+  return (
+    <div className="flex w-full flex-col gap-6 rounded-lg border border-zinc-200 bg-white p-6 sm:p-8">
+      <div className="flex flex-col gap-4 sm:flex-row sm:gap-8">
+        <div className="flex flex-1 flex-col gap-3">
+          <h1 className="text-xl font-bold text-zinc-900">Leia com atenção</h1>
+          <p className="text-sm leading-relaxed text-zinc-700">
+            As informações inseridas a seguir serão usadas para o preenchimento online do seu
+            pedido de visto, o Formulário DS-160, dentro do sistema americano.
+          </p>
+          <p className="text-sm leading-relaxed text-zinc-700">
+            Será através dele que sua solicitação de visto será analisada, por onde o cônsul fará
+            a análise e o cruzamento de informações junto ao sistema interno americano para
+            conceder ou negar seu pedido de visto.
+          </p>
+          <p className="text-sm leading-relaxed text-zinc-700">
+            Além de usar as informações para fazer as perguntas durante a entrevista. Portanto,
+            recomendamos que todos os campos sejam preenchidos e sempre com informações
+            verdadeiras.
+          </p>
+          <p className="text-sm leading-relaxed text-zinc-700">
+            Qualquer mentira ou divergência de informação poderá implicar em sua negativa.
+          </p>
+          <p className="text-sm leading-relaxed text-zinc-700">
+            O correto preenchimento é de sua inteira responsabilidade. Qualquer informação
+            errada, falsa ou divergente pode acarretar na recusa imediata da sua solicitação de
+            visto americano de turista.
+          </p>
+        </div>
+        {/* eslint-disable-next-line @next/next/no-img-element */}
+        <img
+          src="/aviso-rascunho.webp"
+          alt="Passaporte e confirmação do DS-160"
+          className="h-48 w-full rounded-lg object-cover sm:h-auto sm:w-64 sm:shrink-0"
+        />
+      </div>
+
+      <div className="flex justify-center rounded-lg bg-zinc-800 p-6">
+        {/* eslint-disable-next-line @next/next/no-img-element */}
+        <img src="/logo-2ntravel-aviso.jpg" alt="2N Travel" className="h-auto w-48" />
+      </div>
+    </div>
+  );
+}
+
 function FormularioLogin() {
   const [estado, formAction, pendente] = useActionState(loginCliente, {});
   const searchParams = useSearchParams();
@@ -63,7 +108,8 @@ function FormularioLogin() {
 
 export default function LoginClientePage() {
   return (
-    <div className="flex justify-center py-8">
+    <div className="flex flex-col items-center gap-8 py-8">
+      <AvisoRascunho />
       <Suspense fallback={null}>
         <FormularioLogin />
       </Suspense>
