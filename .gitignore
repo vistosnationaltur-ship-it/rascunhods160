@@ -33,6 +33,9 @@ yarn-error.log*
 # env files (can opt-in for committing if needed)
 .env*
 
+# documentação com senhas/chaves — nunca sobe pro GitHub
+DOCUMENTACAO-INFRAESTRUTURA.md
+
 # vercel
 .vercel
 
