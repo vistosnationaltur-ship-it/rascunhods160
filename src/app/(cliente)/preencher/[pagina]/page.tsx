@@ -1,13 +1,14 @@
 import { notFound, redirect } from "next/navigation";
 import { exigirCliente } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
-import { paginas } from "@/lib/formulario-schema";
+import { obterPaginas } from "@/lib/formulario-schema";
 import { PaginaWizard } from "./PaginaWizard";
 
 export default async function PaginaDoWizard(props: PageProps<"/preencher/[pagina]">) {
   const { pagina: paginaParam } = await props.params;
   const indice = Number(paginaParam);
 
+  const paginas = await obterPaginas();
   if (!Number.isInteger(indice) || indice < 0 || indice >= paginas.length) {
     notFound();
   }

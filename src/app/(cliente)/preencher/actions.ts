@@ -2,7 +2,7 @@
 
 import { exigirCliente } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
-import { paginas } from "@/lib/formulario-schema";
+import { obterPaginas } from "@/lib/formulario-schema";
 import { gerarPdfRascunho } from "@/lib/gerar-pdf";
 import { enviarPdfRascunho } from "@/lib/email";
 
@@ -46,6 +46,7 @@ export async function concluirRascunho(respostasPagina: Record<string, Valor>) {
   if (!cliente) throw new Error("Cliente não encontrado.");
   if (cliente.status === "CONCLUIDO") return;
 
+  const paginas = await obterPaginas();
   const respostasAtuais = (cliente.respostas as Record<string, Valor>) ?? {};
   const respostasNovas = { ...respostasAtuais, ...respostasPagina };
 

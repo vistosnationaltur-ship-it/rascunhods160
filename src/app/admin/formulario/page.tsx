@@ -1,8 +1,14 @@
 import Link from "next/link";
-import { paginas } from "@/lib/formulario-schema";
+import { obterPaginas } from "@/lib/formulario-schema";
 import { campoResumo, descreverCondicional, tipoLegivel } from "@/lib/formulario-labels";
 
-export default function VisualizarFormularioPage() {
+// O schema vem do banco e é editado pelo admin — sem isso, o Next
+// tentaria pré-renderizar essa página no build e as edições não
+// apareceriam até o próximo deploy.
+export const dynamic = "force-dynamic";
+
+export default async function VisualizarFormularioPage() {
+  const paginas = await obterPaginas();
   const totalCampos = paginas.reduce((n, p) => n + p.campos.length, 0);
   const totalCondicionais = paginas.reduce(
     (n, p) => n + p.campos.filter((c) => c.condicional).length,
@@ -13,10 +19,10 @@ export default function VisualizarFormularioPage() {
     <div className="mx-auto flex w-full max-w-4xl flex-1 flex-col gap-8 p-8">
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-lg font-semibold text-zinc-100">Formulário — visualização</h1>
+          <h1 className="text-lg font-semibold text-zinc-100">Formulário</h1>
           <p className="text-sm text-zinc-500">
             {paginas.length} páginas · {totalCampos} itens · {totalCondicionais} com condicional.
-            Isso é só leitura — pra mudar alguma condicional, me diga o que ajustar.
+            Clique numa pergunta pra editar.
           </p>
         </div>
         <Link className="text-sm text-indigo-400 underline-offset-4 hover:underline" href="/admin">
@@ -42,7 +48,11 @@ export default function VisualizarFormularioPage() {
                 }
                 const resumo = campoResumo(campo);
                 return (
-                  <div key={campo.id} className="flex flex-col gap-1 px-4 py-3">
+                  <Link
+                    key={campo.id}
+                    href={`/admin/formulario/${campo.id}/editar`}
+                    className="flex flex-col gap-1 px-4 py-3 transition-colors hover:bg-white/5"
+                  >
                     <div className="flex flex-wrap items-center gap-2">
                       <span className="text-sm text-zinc-100">{campo.label}</span>
                       <span className="rounded-full bg-white/10 px-2 py-0.5 text-[11px] text-zinc-400">
@@ -58,9 +68,11 @@ export default function VisualizarFormularioPage() {
                     {resumo && <p className="text-xs text-zinc-500">Opções: {resumo}</p>}
                     {campo.descricao && <p className="text-xs text-zinc-500">{campo.descricao}</p>}
                     {campo.condicional && (
-                      <p className="text-xs text-sky-400">↳ {descreverCondicional(campo.condicional)}</p>
+                      <p className="text-xs text-sky-400">
+                        ↳ {descreverCondicional(campo.condicional, paginas)}
+                      </p>
                     )}
-                  </div>
+                  </Link>
                 );
               })}
             </div>

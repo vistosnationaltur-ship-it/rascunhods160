@@ -2,6 +2,7 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { prisma } from "@/lib/prisma";
 import { respostasPorPagina, type Respostas } from "@/lib/formatar-respostas";
+import { obterPaginas } from "@/lib/formulario-schema";
 import { reenviarLinkComNovaSenha } from "./actions";
 
 export default async function ClienteDs160DetalhePage(
@@ -13,7 +14,8 @@ export default async function ClienteDs160DetalhePage(
   if (!cliente) notFound();
 
   const whatsapp = typeof sp.whatsapp === "string" ? sp.whatsapp : undefined;
-  const paginasComRespostas = respostasPorPagina((cliente.respostas as Respostas) ?? {});
+  const paginas = await obterPaginas();
+  const paginasComRespostas = respostasPorPagina(paginas, (cliente.respostas as Respostas) ?? {});
 
   return (
     <div className="mx-auto flex w-full max-w-3xl flex-1 flex-col gap-6 p-8">

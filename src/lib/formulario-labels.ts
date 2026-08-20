@@ -1,4 +1,4 @@
-import { buscarCampoPorId, type Campo, type Condicional } from "./formulario-schema";
+import { buscarCampoPorId, type Campo, type Condicional, type Pagina } from "./formulario-schema";
 
 export const TIPO_LEGIVEL: Record<string, string> = {
   text: "Texto curto",
@@ -27,10 +27,10 @@ export function tipoLegivel(tipo: string): string {
   return TIPO_LEGIVEL[tipo] ?? tipo;
 }
 
-export function descreverCondicional(condicional: Condicional): string {
+export function descreverCondicional(condicional: Condicional, paginas: Pagina[]): string {
   const conectivo = condicional.tipoLogica === "todas" ? " E " : " OU ";
   const partes = condicional.regras.map((r) => {
-    const campoOrigem = buscarCampoPorId(r.campoId);
+    const campoOrigem = buscarCampoPorId(paginas, r.campoId);
     const nomeCampo = campoOrigem ? `"${campoOrigem.label}"` : `#${r.campoId}`;
     const operador = OPERADOR_LEGIVEL[r.operador] ?? r.operador;
     return `${nomeCampo} ${operador} "${r.valor}"`;

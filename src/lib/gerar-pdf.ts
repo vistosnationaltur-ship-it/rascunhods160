@@ -1,15 +1,17 @@
 import PDFDocument from "pdfkit";
 import { respostasPorPagina, type Respostas } from "@/lib/formatar-respostas";
+import { obterPaginas } from "@/lib/formulario-schema";
 
 // Réplica em pdfkit (pure JS, roda em serverless sem binário nativo) —
 // não é pixel-a-pixel igual ao template mPDF "zadani" antigo, mas
 // reproduz estrutura (por página/seção), conteúdo completo e a mesma
 // proteção por senha que a equipe já usa. Ver PDF_PASSWORD no .env.
-export function gerarPdfRascunho(params: {
+export async function gerarPdfRascunho(params: {
   nomeCliente: string;
   email: string;
   respostas: Respostas;
 }): Promise<Buffer> {
+  const paginas = await obterPaginas();
   const senha = process.env.PDF_PASSWORD || "form2n";
 
   return new Promise((resolve, reject) => {
@@ -38,7 +40,7 @@ export function gerarPdfRascunho(params: {
       .fillColor("#000000")
       .moveDown(1.5);
 
-    for (const pagina of respostasPorPagina(params.respostas)) {
+    for (const pagina of respostasPorPagina(paginas, params.respostas)) {
       if (doc.y > doc.page.height - 150) doc.addPage();
 
       doc

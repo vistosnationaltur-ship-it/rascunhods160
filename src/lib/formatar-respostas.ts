@@ -1,4 +1,4 @@
-import { paginas, type Campo } from "@/lib/formulario-schema";
+import type { Campo, Pagina } from "@/lib/formulario-schema";
 import { campoVisivel } from "@/lib/condicional";
 
 type Valor = string | string[] | undefined;
@@ -9,7 +9,7 @@ export type PaginaComRespostas = { titulo: string; itens: ItemResposta[] };
 
 // Usado tanto no PDF (src/lib/gerar-pdf.ts) quanto na tela de detalhe do
 // cliente no admin — mesma lógica de "o que mostrar" em um só lugar.
-export function respostasPorPagina(respostas: Respostas): PaginaComRespostas[] {
+export function respostasPorPagina(paginas: Pagina[], respostas: Respostas): PaginaComRespostas[] {
   return paginas
     .map((pagina) => {
       const itens = pagina.campos

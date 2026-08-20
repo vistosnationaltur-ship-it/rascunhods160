@@ -28,6 +28,16 @@ model Usuario {
   criadoEm  DateTime @default(now())
 }
 
+// Linha única (singleton) guardando o schema do formulário — pages,
+// campos, opções e condicionais — como veio de
+// scripts/converter-schema.ts, mas editável depois pelo admin (ver
+// /admin/formulario) sem precisar de deploy de código.
+model FormularioSchema {
+  id           String   @id @default(cuid())
+  paginas      Json
+  atualizadoEm DateTime @updatedAt
+}
+
 model ClienteDs160 {
   id String @id @default(cuid())
 

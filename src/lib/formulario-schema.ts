@@ -1,4 +1,4 @@
-import dados from "./formulario-schema.json";
+import { prisma } from "@/lib/prisma";
 
 export type Opcao = { texto: string; valor: string };
 export type SubCampo = { id: string; label: string };
@@ -28,17 +28,23 @@ export type Pagina = {
   campos: Campo[];
 };
 
-// Gerado por scripts/converter-schema.ts a partir de
-// reference/gravityforms-export-*.json — não editar o .json na mão,
-// reconverter do original ou ajustar aqui direto (é só dado, não lógica).
-export const paginas: Pagina[] = dados as Pagina[];
+// O schema mora no banco (tabela FormularioSchema, linha única) desde
+// que o editor no admin (/admin/formulario) passou a permitir alterar
+// pergunta/opções/obrigatório/condicional sem precisar de deploy. A
+// carga inicial veio de scripts/converter-schema.ts a partir do
+// Gravity Forms original — ver scripts/importar-schema-inicial.ts.
+export async function obterPaginas(): Promise<Pagina[]> {
+  const registro = await prisma.formularioSchema.findFirst();
+  if (!registro) throw new Error("FormularioSchema não encontrado — rodar scripts/importar-schema-inicial.ts.");
+  return registro.paginas as unknown as Pagina[];
+}
 
-export const todosOsCampos: Campo[] = paginas.flatMap((p) => p.campos);
-
-const porId = new Map(todosOsCampos.map((c) => [c.id, c]));
-
-export function buscarCampoPorId(id: number): Campo | undefined {
-  return porId.get(id);
+export function buscarCampoPorId(paginas: Pagina[], id: number): Campo | undefined {
+  for (const pagina of paginas) {
+    const campo = pagina.campos.find((c) => c.id === id);
+    if (campo) return campo;
+  }
+  return undefined;
 }
 
 // "section" e "page" são apenas cabeçalhos visuais — não guardam resposta.
