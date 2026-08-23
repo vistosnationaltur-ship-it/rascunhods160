@@ -69,7 +69,10 @@ export async function GET(request: NextRequest, { params }: { params: Promise<{ 
   const paginas = await obterPaginas();
   const respostas = cliente.respostas as Record<string, unknown>;
 
-  const porId: Record<string, { label: string; tipo: string; valor: string | Record<string, string> }> = {};
+  const porId: Record<
+    string,
+    { label: string; tipo: string; valor: string | Record<string, string>; explicacao?: string }
+  > = {};
   for (const pagina of paginas) {
     for (const campo of pagina.campos) {
       if (campo.tipo === "section" || campo.tipo === "page") continue;
@@ -88,6 +91,24 @@ export async function GET(request: NextRequest, { params }: { params: Promise<{ 
       const bruto = respostas[idStr];
       if (typeof bruto === "string" && bruto !== "") {
         porId[idStr] = { label: campo.label, tipo: campo.tipo, valor: bruto };
+      }
+    }
+  }
+
+  // Campos textarea que só existem condicionados a outro campo = "Sim"
+  // (ex.: "Explique" das perguntas de segurança) contam como a
+  // explicação daquele campo — anexa em vez de devolver solto, pra não
+  // precisar o robô adivinhar qual explicação é de qual pergunta.
+  for (const pagina of paginas) {
+    for (const campo of pagina.campos) {
+      if (campo.tipo !== "textarea" || !campo.condicional) continue;
+      if (campo.condicional.regras.length !== 1) continue;
+      const [regra] = campo.condicional.regras;
+      if (regra.operador !== "is") continue;
+      const alvo = porId[String(regra.campoId)];
+      const textoExplicacao = respostas[String(campo.id)];
+      if (alvo && typeof textoExplicacao === "string" && textoExplicacao.trim()) {
+        alvo.explicacao = textoExplicacao.trim();
       }
     }
   }
