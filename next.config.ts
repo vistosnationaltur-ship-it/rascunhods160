@@ -6,9 +6,14 @@ const nextConfig: NextConfig = {
   // inclui esses arquivos no bundle da function serverless, e a geração
   // de PDF quebra em produção (Vercel) mesmo funcionando local, porque
   // localmente o node_modules inteiro já está disponível no disco.
+  // Aplicado a toda rota, de propósito — o padrão restrito por rota
+  // (ex.: "/preencher/**") não bateu certo com o path real da rota
+  // /admin/clientes/[id]/pdf na Vercel (continuou dando 500 mesmo depois
+  // do include específico), então foi trocado pelo curinga total, que é
+  // barato (só uns KB de dado de fonte) e elimina qualquer dúvida de
+  // path matching.
   outputFileTracingIncludes: {
-    "/preencher/**": ["./node_modules/pdfkit/js/data/**"],
-    "/admin/clientes/**": ["./node_modules/pdfkit/js/data/**"],
+    "/**": ["./node_modules/pdfkit/js/data/**"],
   },
 };
 
