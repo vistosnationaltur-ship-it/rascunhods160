@@ -36,6 +36,9 @@ yarn-error.log*
 # documentação com senhas/chaves — nunca sobe pro GitHub
 DOCUMENTACAO-INFRAESTRUTURA.md
 
+# backups locais do banco (dado sensível de cliente) — nunca sobe pro GitHub
+/backups
+
 # vercel
 .vercel
 
