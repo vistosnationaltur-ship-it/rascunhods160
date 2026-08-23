@@ -1,20 +1,15 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
-  // pdfkit lê os arquivos de métrica de fonte (.afm) do disco em tempo de
-  // execução (fs.readFileSync) — sem isso, o file tracing do Next não
-  // inclui esses arquivos no bundle da function serverless, e a geração
-  // de PDF quebra em produção (Vercel) mesmo funcionando local, porque
-  // localmente o node_modules inteiro já está disponível no disco.
-  // Aplicado a toda rota, de propósito — o padrão restrito por rota
-  // (ex.: "/preencher/**") não bateu certo com o path real da rota
-  // /admin/clientes/[id]/pdf na Vercel (continuou dando 500 mesmo depois
-  // do include específico), então foi trocado pelo curinga total, que é
-  // barato (só uns KB de dado de fonte) e elimina qualquer dúvida de
-  // path matching.
-  outputFileTracingIncludes: {
-    "/**": ["./node_modules/pdfkit/js/data/**"],
-  },
+  // pdfkit lê arquivos de métrica de fonte (.afm) do disco em tempo de
+  // execução, relativos à própria pasta do pacote — isso quebra quando o
+  // Next empacota o código (o .afm não viaja junto). serverExternalPackages
+  // faz o Next usar `require` nativo pro pdfkit em vez de empacotar,
+  // preservando a estrutura de arquivos do pacote em runtime (mesmo
+  // mecanismo que já resolve isso pra libs nativas tipo sharp/canvas).
+  // Tentativa anterior com outputFileTracingIncludes não funcionou —
+  // continuou dando ENOENT em produção mesmo com o include.
+  serverExternalPackages: ["pdfkit"],
 };
 
 export default nextConfig;
