@@ -71,30 +71,39 @@ export async function concluirRascunho(respostasPagina: Record<string, Valor>) {
     },
   });
 
-  const pdf = await gerarPdfRascunho({
-    nomeCliente: cliente.nome,
-    email: cliente.email,
-    respostas: respostasNovas,
-  });
+  // O rascunho já está salvo e concluído acima — daqui pra baixo é só
+  // "melhor esforço". Um erro no PDF/e-mail (ex.: caractere que o pdfkit
+  // não sabe desenhar, Resend fora do ar) não pode derrubar a Server
+  // Action inteira e fazer o cliente ver tela de erro depois de já ter
+  // concluído de verdade.
+  try {
+    const pdf = await gerarPdfRascunho({
+      nomeCliente: cliente.nome,
+      email: cliente.email,
+      respostas: respostasNovas,
+    });
 
-  const destinatarios = new Set<string>();
-  const emailEquipe = process.env.TEAM_EMAIL_DS160;
-  if (emailEquipe) destinatarios.add(emailEquipe);
-  const copiaCliente = respostasNovas["54"];
-  if (typeof copiaCliente === "string" && copiaCliente.trim()) destinatarios.add(copiaCliente.trim());
+    const destinatarios = new Set<string>();
+    const emailEquipe = process.env.TEAM_EMAIL_DS160;
+    if (emailEquipe) destinatarios.add(emailEquipe);
+    const copiaCliente = respostasNovas["54"];
+    if (typeof copiaCliente === "string" && copiaCliente.trim()) destinatarios.add(copiaCliente.trim());
 
-  const envio = await enviarPdfRascunho({
-    nomeCliente: cliente.nome,
-    destinatarios: [...destinatarios],
-    pdf,
-  });
+    const envio = await enviarPdfRascunho({
+      nomeCliente: cliente.nome,
+      destinatarios: [...destinatarios],
+      pdf,
+    });
 
-  await prisma.clienteDs160.update({
-    where: { id: sessao.id },
-    data: { pdfGeradoEm: new Date() },
-  });
+    await prisma.clienteDs160.update({
+      where: { id: sessao.id },
+      data: { pdfGeradoEm: new Date() },
+    });
 
-  if (!envio.ok) {
-    console.error(`Falha ao enviar PDF do cliente ${cliente.id}: ${envio.erro}`);
+    if (!envio.ok) {
+      console.error(`Falha ao enviar PDF do cliente ${cliente.id}: ${envio.erro}`);
+    }
+  } catch (erro) {
+    console.error(`Falha ao gerar/enviar PDF do cliente ${cliente.id}:`, erro);
   }
 }
