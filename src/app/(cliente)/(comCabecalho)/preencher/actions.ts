@@ -71,6 +71,24 @@ export async function concluirRascunho(respostasPagina: Record<string, Valor>) {
     },
   });
 
+  // Avisa o Flow que o rascunho foi concluído (melhor esforço — não
+  // pode travar a conclusão se o Flow estiver fora do ar).
+  if (cliente.flowClienteId) {
+    const flowUrl = process.env.FLOW_API_URL;
+    const flowSecret = process.env.FLOW_API_SECRET;
+    if (flowUrl && flowSecret) {
+      try {
+        await fetch(`${flowUrl}/api/ds160-rascunho/marcar-concluido`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json", Authorization: `Bearer ${flowSecret}` },
+          body: JSON.stringify({ clienteId: cliente.flowClienteId }),
+        });
+      } catch (erro) {
+        console.error(`Falha ao avisar o Flow da conclusão do cliente ${cliente.id}:`, erro);
+      }
+    }
+  }
+
   // O rascunho já está salvo e concluído acima — daqui pra baixo é só
   // "melhor esforço". Um erro no PDF/e-mail (ex.: caractere que o pdfkit
   // não sabe desenhar, Resend fora do ar) não pode derrubar a Server

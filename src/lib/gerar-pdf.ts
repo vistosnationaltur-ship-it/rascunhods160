@@ -4,23 +4,20 @@ import { obterPaginas } from "@/lib/formulario-schema";
 
 // Réplica em pdfkit (pure JS, roda em serverless sem binário nativo) —
 // não é pixel-a-pixel igual ao template mPDF "zadani" antigo, mas
-// reproduz estrutura (por página/seção), conteúdo completo e a mesma
-// proteção por senha que a equipe já usa. Ver PDF_PASSWORD no .env.
+// reproduz estrutura (por página/seção) e conteúdo completo. Sem senha
+// de propósito (pedido do usuário em 2026-08-23) — o PDF_PASSWORD era
+// só um resquício do sistema antigo.
 export async function gerarPdfRascunho(params: {
   nomeCliente: string;
   email: string;
   respostas: Respostas;
 }): Promise<Buffer> {
   const paginas = await obterPaginas();
-  const senha = process.env.PDF_PASSWORD || "form2n";
 
   return new Promise((resolve, reject) => {
     const doc = new PDFDocument({
       size: "A4",
       margin: 50,
-      userPassword: senha,
-      ownerPassword: senha,
-      permissions: { printing: "highResolution", modifying: false, copying: true },
     });
 
     const partes: Buffer[] = [];
