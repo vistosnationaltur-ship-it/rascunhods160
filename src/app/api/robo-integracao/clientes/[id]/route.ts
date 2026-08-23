@@ -97,25 +97,43 @@ export async function GET(request: NextRequest, { params }: { params: Promise<{ 
 
   // Campos textarea que só existem condicionados a outro campo = "Sim"
   // (ex.: "Explique" das perguntas de segurança) contam como a
-  // explicação daquele campo — anexa em vez de devolver solto, pra não
-  // precisar o robô adivinhar qual explicação é de qual pergunta.
+  // explicação daquele campo — anexa em vez de devolver solto (e remove
+  // do resultado principal, senão apareceria duplicado: uma vez como
+  // "Explique" avulso, outra já anexado no campo pai).
   for (const pagina of paginas) {
     for (const campo of pagina.campos) {
       if (campo.tipo !== "textarea" || !campo.condicional) continue;
       if (campo.condicional.regras.length !== 1) continue;
       const [regra] = campo.condicional.regras;
       if (regra.operador !== "is") continue;
+      const idStr = String(campo.id);
       const alvo = porId[String(regra.campoId)];
-      const textoExplicacao = respostas[String(campo.id)];
+      const textoExplicacao = respostas[idStr];
       if (alvo && typeof textoExplicacao === "string" && textoExplicacao.trim()) {
         alvo.explicacao = textoExplicacao.trim();
       }
+      delete porId[idStr];
+    }
+  }
+
+  // Object.entries/JSON.stringify reordenam chaves puramente numéricas em
+  // ordem crescente de valor, ignorando a ordem de inserção — como os ids
+  // do schema não seguem a ordem das páginas, isso embaralhava a ordem
+  // de exibição (ex.: pergunta de segurança, id baixo, aparecendo antes
+  // de uma pergunta de página bem anterior, id alto). `ordem` guarda a
+  // sequência real (página a página, campo a campo) pra quem for exibir.
+  const ordem: string[] = [];
+  for (const pagina of paginas) {
+    for (const campo of pagina.campos) {
+      const idStr = String(campo.id);
+      if (porId[idStr] && !ordem.includes(idStr)) ordem.push(idStr);
     }
   }
 
   return NextResponse.json({
     id: cliente.id,
     nome: cliente.nome,
+    ordem,
     cpf: cliente.cpf,
     telefone: cliente.telefone,
     flowClienteId: cliente.flowClienteId,
