@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { buscarClientesFlow } from "@/lib/flow-cliente";
 import { cadastrarCliente } from "./actions";
+import { SubmitButton } from "@/components/SubmitButton";
 
 type SearchParams = {
   q?: string;
@@ -145,12 +146,12 @@ export default async function CadastrarClientePage({
             >
               Voltar pra busca
             </Link>
-            <button
-              type="submit"
-              className="rounded-lg bg-indigo-600 px-4 py-2.5 text-sm font-medium text-white hover:bg-indigo-500"
+            <SubmitButton
+              pendingLabel="Cadastrando..."
+              className="rounded-lg bg-indigo-600 px-4 py-2.5 text-sm font-medium text-white hover:bg-indigo-500 disabled:cursor-not-allowed disabled:opacity-60"
             >
               Cadastrar
-            </button>
+            </SubmitButton>
           </div>
         </form>
       )}

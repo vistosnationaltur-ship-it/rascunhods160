@@ -21,12 +21,20 @@ export async function enviarLinkAcessoWhatsapp(params: {
         whatsapp_ds160: params.telefone,
         login: params.login,
       }),
+      // Sem isso, um n8n travado prendia o cadastro inteiro sem limite —
+      // o cliente já fica salvo no banco antes desta chamada, então é
+      // melhor desistir do WhatsApp rápido do que travar a tela do admin.
+      signal: AbortSignal.timeout(8000),
     });
     if (!resposta.ok) {
       return { ok: false, erro: `n8n respondeu ${resposta.status}` };
     }
     return { ok: true };
   } catch (erro) {
-    return { ok: false, erro: erro instanceof Error ? erro.message : "Falha desconhecida" };
+    const timeout = erro instanceof Error && erro.name === "TimeoutError";
+    return {
+      ok: false,
+      erro: timeout ? "n8n não respondeu em 8s (timeout)." : erro instanceof Error ? erro.message : "Falha desconhecida",
+    };
   }
 }
