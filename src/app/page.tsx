@@ -109,10 +109,8 @@ export default function HomePage() {
       </header>
 
       <main className="relative z-10 flex flex-1 flex-col items-center justify-center px-6 py-20 text-center">
-        <h1 className="max-w-3xl text-balance font-display text-[clamp(2.5rem,5vw,4.5rem)] font-semibold leading-[1.05] tracking-[-0.02em] text-[#F4EEE1]">
-          Rascunho DS160 — 2N Travel
-        </h1>
-        <p className="mt-6 max-w-xl text-balance text-[1.125rem] font-normal text-[#F4EEE1]/80 sm:text-[1.25rem]">
+        <h1 className="sr-only">Rascunho DS160 — 2N Travel</h1>
+        <p className="max-w-xl text-balance text-[1.125rem] font-normal text-[#F4EEE1]/80 sm:text-[1.25rem]">
           Seu caminho simplificado para vistos americanos. Moderno. Seguro. Eficiente.
         </p>
 
