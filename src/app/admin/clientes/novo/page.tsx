@@ -18,7 +18,11 @@ export default async function CadastrarClientePage({
   searchParams: Promise<SearchParams>;
 }) {
   const sp = await searchParams;
-  const dadosEscolhidos = Boolean(sp.nome);
+  // Boolean(sp.nome) falhava pro fluxo "preencher manualmente": o link
+  // manda nome="" (string vazia), e Boolean("") é falso — a página nunca
+  // trocava pro formulário. typeof checa só se o parâmetro veio na URL,
+  // não se tem conteúdo.
+  const dadosEscolhidos = typeof sp.nome === "string";
   const resultados = sp.q ? await buscarClientesFlow(sp.q) : [];
 
   return (
