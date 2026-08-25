@@ -65,6 +65,15 @@ export default async function ClienteDs160DetalhePage(
             {cliente.status === "CONCLUIDO" ? "Concluído" : "Em preenchimento"}
           </p>
         </div>
+        {cliente.concluidoEm && (
+          <div>
+            <p className="text-zinc-500">Preenchido em</p>
+            <p className="text-zinc-100">
+              {cliente.concluidoEm.toLocaleDateString("pt-BR")} às{" "}
+              {cliente.concluidoEm.toLocaleTimeString("pt-BR", { hour: "2-digit", minute: "2-digit" })}
+            </p>
+          </div>
+        )}
         {cliente.flowClienteId && (
           <div>
             <p className="text-zinc-500">Cliente no Flow</p>
@@ -108,32 +117,34 @@ export default async function ClienteDs160DetalhePage(
         </ConfirmSubmitButton>
       </form>
 
-      <div className="flex flex-col gap-6 border-t border-white/10 pt-6">
-        <h2 className="text-sm font-semibold text-zinc-100">
+      <details className="flex flex-col gap-6 border-t border-white/10 pt-6">
+        <summary className="cursor-pointer text-sm font-semibold text-zinc-100">
           Respostas do formulário
           {paginasComRespostas.length === 0 && (
             <span className="ml-2 font-normal text-zinc-500">(nada preenchido ainda)</span>
           )}
-        </h2>
+        </summary>
 
-        {paginasComRespostas.map((pagina, i) => (
-          <div key={i} className="flex flex-col gap-3">
-            <h3 className="text-xs font-semibold uppercase tracking-wide text-indigo-400">
-              {pagina.titulo}
-            </h3>
-            <div className="flex flex-col divide-y divide-white/10 rounded-xl border border-white/10 bg-zinc-900/40">
-              {pagina.itens.map(({ campo, texto }) => (
-                <div key={campo.id} className="px-4 py-3">
-                  <p className="text-xs text-zinc-500">{campo.label}</p>
-                  <p className={texto ? "text-sm text-zinc-100" : "text-sm italic text-zinc-600"}>
-                    {texto || "(não respondido)"}
-                  </p>
-                </div>
-              ))}
+        <div className="flex flex-col gap-6">
+          {paginasComRespostas.map((pagina, i) => (
+            <div key={i} className="flex flex-col gap-3">
+              <h3 className="text-xs font-semibold uppercase tracking-wide text-indigo-400">
+                {pagina.titulo}
+              </h3>
+              <div className="flex flex-col divide-y divide-white/10 rounded-xl border border-white/10 bg-zinc-900/40">
+                {pagina.itens.map(({ campo, texto }) => (
+                  <div key={campo.id} className="px-4 py-3">
+                    <p className="text-xs text-zinc-500">{campo.label}</p>
+                    <p className={texto ? "text-sm text-zinc-100" : "text-sm italic text-zinc-600"}>
+                      {texto || "(não respondido)"}
+                    </p>
+                  </div>
+                ))}
+              </div>
             </div>
-          </div>
-        ))}
-      </div>
+          ))}
+        </div>
+      </details>
     </div>
   );
 }

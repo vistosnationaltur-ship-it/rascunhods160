@@ -65,6 +65,7 @@ model ClienteDs160 {
 
   paginaAtual Int @default(0) // índice da última página vista, pra retomar exatamente de onde parou
 
+  concluidoEm DateTime? // quando o cliente marcou o rascunho como concluído
   pdfGeradoEm DateTime?
 
   criadoEm     DateTime @default(now())

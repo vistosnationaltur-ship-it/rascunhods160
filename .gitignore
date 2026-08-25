@@ -48,3 +48,6 @@ next-env.d.ts
 
 # prisma (gerado via `prisma generate`, roda no postinstall)
 /src/generated/prisma
+
+.vercel
+.env*

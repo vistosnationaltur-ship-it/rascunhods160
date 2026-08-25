@@ -68,6 +68,7 @@ export async function concluirRascunho(respostasPagina: Record<string, Valor>) {
       respostas: respostasNovas,
       paginaAtual: paginas.length - 1,
       status: "CONCLUIDO",
+      concluidoEm: new Date(),
     },
   });
 
