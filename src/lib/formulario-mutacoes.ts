@@ -187,6 +187,44 @@ export function substituirCampo(paginas: Pagina[], campoId: number, novo: Campo)
   return mapCampos(paginas, (campos) => campos.map((c) => (c.id === campoId ? novo : c)));
 }
 
+// ---------- Páginas ----------
+
+// `indice` tem que ser sempre 0..N-1 na ordem do array — é usado como
+// rota (/preencher/[n], /admin/formulario/pagina/[n]) e como posição do
+// cliente (ClienteDs160.paginaAtual). Toda mudança de página renumera.
+export function renumerarPaginas(paginas: Pagina[]): Pagina[] {
+  return paginas.map((p, i) => (p.indice === i ? p : { ...p, indice: i }));
+}
+
+export function adicionarPagina(paginas: Pagina[], titulo: string): Pagina[] {
+  const t = titulo.trim() || `Página ${paginas.length + 1}`;
+  return [...paginas, { indice: paginas.length, titulo: t, campos: [] }];
+}
+
+export function removerPagina(paginas: Pagina[], indice: number): Pagina[] {
+  return renumerarPaginas(paginas.filter((p) => p.indice !== indice));
+}
+
+export function moverPagina(
+  paginas: Pagina[],
+  indice: number,
+  direcao: "cima" | "baixo",
+): Pagina[] {
+  const i = paginas.findIndex((p) => p.indice === indice);
+  if (i === -1) return paginas;
+  const j = direcao === "cima" ? i - 1 : i + 1;
+  if (j < 0 || j >= paginas.length) return paginas;
+  const copia = [...paginas];
+  [copia[i], copia[j]] = [copia[j], copia[i]];
+  return renumerarPaginas(copia);
+}
+
+export function renomearPagina(paginas: Pagina[], indice: number, titulo: string): Pagina[] {
+  return paginas.map((p) =>
+    p.indice === indice ? { ...p, titulo: titulo.trim() || `Página ${indice + 1}` } : p,
+  );
+}
+
 // ---------- Validação ----------
 
 // Roda antes de todo save e aborta a gravação se falhar. Checa só os

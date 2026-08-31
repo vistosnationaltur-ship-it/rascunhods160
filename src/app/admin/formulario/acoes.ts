@@ -6,10 +6,14 @@ import type { Pagina } from "@/lib/formulario-schema";
 import { aplicarMudancaSchema } from "@/lib/formulario-persistencia";
 import {
   adicionarCampo,
+  adicionarPagina,
   criarCampo,
   moverCampo,
+  moverPagina,
   proximoIdCampo,
   removerCampo,
+  removerPagina,
+  renomearPagina,
   type TipoCampo,
   TIPOS_CAMPO,
 } from "@/lib/formulario-mutacoes";
@@ -38,6 +42,42 @@ export async function moverCampoAction(campoId: number, direcao: "cima" | "baixo
   await aplicarMudancaSchema(`mover campo #${campoId} para ${direcao}`, (paginas) =>
     moverCampo(paginas, campoId, direcao),
   );
+}
+
+// ---------- Páginas ----------
+
+export async function adicionarPaginaAction(titulo: string) {
+  await aplicarMudancaSchema("adicionar página", (paginas) => adicionarPagina(paginas, titulo));
+}
+
+export async function renomearPaginaAction(indice: number, titulo: string) {
+  await aplicarMudancaSchema(`renomear página ${indice + 1}`, (paginas) =>
+    renomearPagina(paginas, indice, titulo),
+  );
+}
+
+export async function moverPaginaAction(indice: number, direcao: "cima" | "baixo") {
+  await aplicarMudancaSchema(`mover página ${indice + 1} para ${direcao}`, (paginas) =>
+    moverPagina(paginas, indice, direcao),
+  );
+}
+
+export async function removerPaginaAction(indice: number) {
+  await aplicarMudancaSchema(`excluir página ${indice + 1}`, (paginas) => {
+    if (paginas.length <= 1) {
+      throw new Error("O formulário precisa de pelo menos uma página.");
+    }
+    return removerPagina(paginas, indice);
+  });
+
+  // Clientes com rascunho em andamento podem ter ficado com paginaAtual
+  // apontando pra um índice que não existe mais — traz de volta pro fim.
+  const registro = await prisma.formularioSchema.findFirst();
+  const total = (registro!.paginas as unknown as Pagina[]).length;
+  await prisma.clienteDs160.updateMany({
+    where: { paginaAtual: { gt: total - 1 } },
+    data: { paginaAtual: total - 1 },
+  });
 }
 
 // Restaura um snapshot inteiro. Antes de sobrescrever, guarda o estado
