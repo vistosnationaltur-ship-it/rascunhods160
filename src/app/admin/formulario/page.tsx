@@ -27,6 +27,12 @@ export default async function VisualizarFormularioPage() {
           </p>
         </div>
         <div className="flex items-center gap-4">
+          <a
+            className="text-sm text-indigo-400 underline-offset-4 hover:underline"
+            href="/admin/formulario/exportar"
+          >
+            Exportar JSON
+          </a>
           <Link
             className="text-sm text-indigo-400 underline-offset-4 hover:underline"
             href="/admin/formulario/backups"
