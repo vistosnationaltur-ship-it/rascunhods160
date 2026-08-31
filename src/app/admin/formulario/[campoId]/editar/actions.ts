@@ -1,56 +1,65 @@
 "use server";
 
-import { exigirAdmin } from "@/lib/auth";
-import { prisma } from "@/lib/prisma";
-import type { Campo, Condicional, Opcao, Pagina } from "@/lib/formulario-schema";
+import type { Campo, Condicional, Opcao, SubCampo } from "@/lib/formulario-schema";
+import { aplicarMudancaSchema } from "@/lib/formulario-persistencia";
+import {
+  substituirCampo,
+  trocarTipo,
+  TIPOS_CAMPO,
+  TIPOS_COM_OPCOES,
+  TIPOS_COM_SUBCAMPOS,
+  type TipoCampo,
+} from "@/lib/formulario-mutacoes";
 
 export type DadosEdicaoCampo = {
+  tipo: string;
   label: string;
   descricao: string;
   obrigatorio: boolean;
   opcoes: Opcao[];
+  subCampos: SubCampo[];
   condicional: Condicional | null;
 };
 
-// Edita só o que já existe (label, descrição, obrigatório, opções,
-// condicional) — não muda tipo, id, subCampos nem posição do campo.
-// Guarda tudo de volta no schema único (FormularioSchema).
+// Edita um campo existente: label, ajuda, obrigatório, opções,
+// sub-campos, tipo e condicional. Não muda id nem a posição do campo.
+// Passa pelo mesmo caminho das mudanças estruturais (valida + backup).
 export async function salvarCampo(campoId: number, dados: DadosEdicaoCampo) {
-  await exigirAdmin();
+  if (!TIPOS_CAMPO.includes(dados.tipo as TipoCampo)) {
+    throw new Error(`Tipo de campo inválido: ${dados.tipo}.`);
+  }
 
-  const registro = await prisma.formularioSchema.findFirst();
-  if (!registro) throw new Error("FormularioSchema não encontrado.");
+  await aplicarMudancaSchema(`editar campo #${campoId}`, (paginas) => {
+    const atual = paginas.flatMap((p) => p.campos).find((c) => c.id === campoId);
+    if (!atual) throw new Error(`Campo #${campoId} não encontrado.`);
 
-  const paginas = registro.paginas as unknown as Pagina[];
-  let encontrado = false;
+    // trocarTipo primeiro pra herdar defaults coerentes com o novo tipo,
+    // depois sobrescreve com o que veio do formulário.
+    const base = trocarTipo(atual, dados.tipo as TipoCampo);
+    const atualizado: Campo = {
+      ...base,
+      label: dados.label,
+      obrigatorio: dados.obrigatorio,
+    };
 
-  const paginasAtualizadas = paginas.map((pagina) => ({
-    ...pagina,
-    campos: pagina.campos.map((campo): Campo => {
-      if (campo.id !== campoId) return campo;
-      encontrado = true;
-      const atualizado: Campo = {
-        ...campo,
-        label: dados.label,
-        obrigatorio: dados.obrigatorio,
-      };
-      if (dados.descricao) atualizado.descricao = dados.descricao;
-      else delete atualizado.descricao;
+    if (dados.descricao) atualizado.descricao = dados.descricao;
+    else delete atualizado.descricao;
 
-      if (dados.opcoes.length > 0) atualizado.opcoes = dados.opcoes;
-      else delete atualizado.opcoes;
+    if (TIPOS_COM_OPCOES.includes(dados.tipo) && dados.opcoes.length > 0) {
+      atualizado.opcoes = dados.opcoes;
+    } else {
+      delete atualizado.opcoes;
+    }
 
-      if (dados.condicional) atualizado.condicional = dados.condicional;
-      else delete atualizado.condicional;
+    if (TIPOS_COM_SUBCAMPOS.includes(dados.tipo) && dados.subCampos.length > 0) {
+      atualizado.subCampos = dados.subCampos;
+    } else {
+      delete atualizado.subCampos;
+    }
 
-      return atualizado;
-    }),
-  }));
+    if (dados.condicional) atualizado.condicional = dados.condicional;
+    else delete atualizado.condicional;
 
-  if (!encontrado) throw new Error(`Campo #${campoId} não encontrado.`);
-
-  await prisma.formularioSchema.update({
-    where: { id: registro.id },
-    data: { paginas: paginasAtualizadas },
+    return substituirCampo(paginas, campoId, atualizado);
   });
 }

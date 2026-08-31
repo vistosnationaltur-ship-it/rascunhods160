@@ -1,19 +1,7 @@
 import { buscarCampoPorId, type Campo, type Condicional, type Pagina } from "./formulario-schema";
 
-export const TIPO_LEGIVEL: Record<string, string> = {
-  text: "Texto curto",
-  textarea: "Texto longo",
-  radio: "Múltipla escolha (uma opção)",
-  select: "Lista suspensa",
-  checkbox: "Caixas de marcar",
-  date: "Data",
-  address: "Endereço",
-  phone: "Telefone",
-  email: "E-mail",
-  number: "Número",
-  consent: "Consentimento",
-  section: "Seção",
-};
+export { TIPO_LEGIVEL } from "./formulario-mutacoes";
+import { TIPO_LEGIVEL } from "./formulario-mutacoes";
 
 const OPERADOR_LEGIVEL: Record<string, string> = {
   is: "for igual a",

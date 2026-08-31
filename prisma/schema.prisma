@@ -38,6 +38,21 @@ model FormularioSchema {
   atualizadoEm DateTime @updatedAt
 }
 
+// Snapshot do `paginas` do FormularioSchema tirado ANTES de cada
+// alteração estrutural feita pelo builder (/admin/formulario) — add,
+// exclusão, reordenação ou troca de tipo/sub-campos de campo. Edições
+// leves (label, obrigatório, opções, condicional) também geram snapshot.
+// Serve pra restaurar o formulário inteiro se um save quebrar algo.
+// Mantém no máximo os últimos MAX_BACKUPS (ver src/lib/formulario-backup.ts).
+model FormularioSchemaBackup {
+  id       String   @id @default(cuid())
+  paginas  Json
+  motivo   String
+  criadoEm DateTime @default(now())
+
+  @@index([criadoEm])
+}
+
 model ClienteDs160 {
   id String @id @default(cuid())
 
