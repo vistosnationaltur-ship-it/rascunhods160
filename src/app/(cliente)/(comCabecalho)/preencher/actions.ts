@@ -5,7 +5,7 @@ import { exigirCliente, SESSION_COOKIE_CLIENTE } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
 import { obterPaginas } from "@/lib/formulario-schema";
 import { gerarPdfRascunho } from "@/lib/gerar-pdf";
-import { enviarPdfRascunho } from "@/lib/email";
+import { enviarPdfRascunho, destinatariosRascunho } from "@/lib/email";
 
 type Valor = string | string[] | undefined;
 
@@ -102,24 +102,21 @@ export async function concluirRascunho(respostasPagina: Record<string, Valor>) {
       respostas: respostasNovas,
     });
 
-    const destinatarios = new Set<string>();
-    const emailEquipe = process.env.TEAM_EMAIL_DS160;
-    if (emailEquipe) destinatarios.add(emailEquipe);
-    const copiaCliente = respostasNovas["54"];
-    if (typeof copiaCliente === "string" && copiaCliente.trim()) destinatarios.add(copiaCliente.trim());
-
     const envio = await enviarPdfRascunho({
       nomeCliente: cliente.nome,
-      destinatarios: [...destinatarios],
+      destinatarios: destinatariosRascunho(cliente.email, respostasNovas),
       pdf,
     });
 
-    await prisma.clienteDs160.update({
-      where: { id: sessao.id },
-      data: { pdfGeradoEm: new Date() },
-    });
-
-    if (!envio.ok) {
+    if (envio.ok) {
+      await prisma.clienteDs160.update({
+        where: { id: sessao.id },
+        data: { pdfGeradoEm: new Date() },
+      });
+    } else {
+      // `pdfGeradoEm` fica nulo de propósito quando o envio falha — é o
+      // sinal que o admin usa pra mostrar "PDF ainda não enviado" e
+      // oferecer o reenvio manual (reenviarPdfRascunho).
       console.error(`Falha ao enviar PDF do cliente ${cliente.id}: ${envio.erro}`);
     }
   } catch (erro) {

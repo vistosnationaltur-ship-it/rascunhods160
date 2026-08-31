@@ -5,6 +5,8 @@ import { exigirAdmin } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
 import { apenasDigitos, hashSenha } from "@/lib/senha";
 import { enviarLinkAcessoWhatsapp } from "@/lib/whatsapp";
+import { gerarPdfRascunho } from "@/lib/gerar-pdf";
+import { enviarPdfRascunho, destinatariosRascunho } from "@/lib/email";
 
 // A senha de login é sempre o CPF do cliente (já salvo em texto puro no
 // cadastro dele), então reenviar o link não precisa de senha nova — só
@@ -24,6 +26,53 @@ export async function reenviarLinkAcesso(formData: FormData) {
   });
 
   redirect(`/admin/clientes/${clienteId}?whatsapp=${envio.ok ? "ok" : "falhou"}`);
+}
+
+// Reenvia (ou envia pela primeira vez) o PDF do rascunho já concluído —
+// mesmos destinatários do fluxo de conclusão (cliente + cópia pra
+// equipe, ver destinatariosRascunho). Serve pra quem concluiu antes de o
+// envio de e-mail estar configurado em produção, ou pra quando o envio
+// falhou silenciosamente na conclusão (aí `pdfGeradoEm` ficou nulo e o
+// admin mostra "ainda não enviado").
+export async function reenviarPdfRascunho(formData: FormData) {
+  await exigirAdmin();
+
+  const clienteId = (formData.get("clienteId") ?? "").toString();
+
+  const cliente = await prisma.clienteDs160.findUnique({ where: { id: clienteId } });
+  if (!cliente) throw new Error("Cliente não encontrado.");
+
+  const respostas = (cliente.respostas as Record<string, string | string[]>) ?? {};
+
+  let erro: string | undefined;
+  try {
+    const pdf = await gerarPdfRascunho({
+      nomeCliente: cliente.nome,
+      email: cliente.email,
+      respostas,
+    });
+
+    const envio = await enviarPdfRascunho({
+      nomeCliente: cliente.nome,
+      destinatarios: destinatariosRascunho(cliente.email, respostas),
+      pdf,
+    });
+
+    if (envio.ok) {
+      await prisma.clienteDs160.update({
+        where: { id: clienteId },
+        data: { pdfGeradoEm: new Date() },
+      });
+    } else {
+      erro = envio.erro ?? "Falha desconhecida no envio.";
+    }
+  } catch (e) {
+    erro = e instanceof Error ? e.message : "Falha desconhecida ao gerar/enviar o PDF.";
+  }
+
+  const params = new URLSearchParams({ pdf: erro ? "falhou" : "ok" });
+  if (erro) params.set("msg", erro);
+  redirect(`/admin/clientes/${clienteId}?${params}`);
 }
 
 // Edita os dados de contato/identificação (ex: telefone errado no

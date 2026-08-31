@@ -1,5 +1,26 @@
 import { Resend } from "resend";
 
+// Destinatários do PDF do rascunho: sempre o cliente que preencheu
+// (e-mail de login) + cópia pra equipe (TEAM_EMAIL_DS160). O campo 54
+// ("Receber uma cópia pelo e-mail") entra junto quando preenchido — é um
+// segundo endereço opcional (ex: despachante), não substitui o cliente.
+export function destinatariosRascunho(
+  emailCliente: string | null | undefined,
+  respostas: Record<string, string | string[] | undefined>,
+): string[] {
+  const dest = new Set<string>();
+
+  if (emailCliente && emailCliente.trim()) dest.add(emailCliente.trim().toLowerCase());
+
+  const emailEquipe = process.env.TEAM_EMAIL_DS160;
+  if (emailEquipe) dest.add(emailEquipe.trim().toLowerCase());
+
+  const copiaExtra = respostas["54"];
+  if (typeof copiaExtra === "string" && copiaExtra.trim()) dest.add(copiaExtra.trim().toLowerCase());
+
+  return [...dest];
+}
+
 // Mesmo espírito do src/lib/whatsapp.ts: se a env var não estiver
 // configurada, devolve erro claro em vez de quebrar o fluxo de
 // conclusão do rascunho — o cliente já pode ver "concluído" mesmo que o
@@ -25,7 +46,7 @@ export async function enviarPdfRascunho(params: {
       from,
       to: params.destinatarios,
       subject: `Rascunho DS-160 concluído — ${params.nomeCliente}`,
-      text: `Segue em anexo o rascunho do DS-160 preenchido por ${params.nomeCliente}.\n\nO PDF está protegido por senha.`,
+      text: `Segue em anexo o rascunho do DS-160 preenchido por ${params.nomeCliente}.`,
       attachments: [{ filename: "rascunho-ds160.pdf", content: params.pdf }],
     });
     if (error) return { ok: false, erro: error.message };

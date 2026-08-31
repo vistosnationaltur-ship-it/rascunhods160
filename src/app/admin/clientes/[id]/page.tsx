@@ -3,7 +3,7 @@ import { notFound } from "next/navigation";
 import { prisma } from "@/lib/prisma";
 import { respostasPorPagina, type Respostas } from "@/lib/formatar-respostas";
 import { obterPaginas } from "@/lib/formulario-schema";
-import { reenviarLinkAcesso, excluirCliente } from "./actions";
+import { reenviarLinkAcesso, reenviarPdfRascunho, excluirCliente } from "./actions";
 import { ConfirmSubmitButton } from "@/components/ConfirmSubmitButton";
 
 export default async function ClienteDs160DetalhePage(
@@ -15,6 +15,9 @@ export default async function ClienteDs160DetalhePage(
   if (!cliente) notFound();
 
   const whatsapp = typeof sp.whatsapp === "string" ? sp.whatsapp : undefined;
+  const pdf = typeof sp.pdf === "string" ? sp.pdf : undefined;
+  const pdfMsg = typeof sp.msg === "string" ? sp.msg : undefined;
+  const pdfPendente = cliente.status === "CONCLUIDO" && !cliente.pdfGeradoEm;
   const paginas = await obterPaginas();
   const paginasComRespostas = respostasPorPagina(paginas, (cliente.respostas as Respostas) ?? {});
 
@@ -46,6 +49,23 @@ export default async function ClienteDs160DetalhePage(
         </p>
       )}
 
+      {pdf === "ok" && (
+        <p className="rounded-lg border border-emerald-500/20 bg-emerald-500/[0.06] px-4 py-2.5 text-sm text-emerald-300">
+          PDF enviado por e-mail para o cliente ({cliente.email}) com cópia pra equipe.
+        </p>
+      )}
+      {pdf === "falhou" && (
+        <p className="rounded-lg border border-red-500/20 bg-red-500/[0.06] px-4 py-2.5 text-sm text-red-300">
+          Não foi possível enviar o PDF por e-mail{pdfMsg ? `: ${pdfMsg}` : "."}
+        </p>
+      )}
+      {pdfPendente && pdf !== "ok" && (
+        <p className="rounded-lg border border-amber-500/20 bg-amber-500/[0.06] px-4 py-2.5 text-sm text-amber-300">
+          Este rascunho foi concluído, mas o PDF nunca foi enviado por e-mail. Use “Reenviar
+          PDF por e-mail” abaixo.
+        </p>
+      )}
+
       <div className="grid grid-cols-2 gap-4 rounded-xl border border-white/10 bg-zinc-900/40 p-4 text-sm">
         <div>
           <p className="text-zinc-500">CPF</p>
@@ -74,6 +94,16 @@ export default async function ClienteDs160DetalhePage(
             </p>
           </div>
         )}
+        {cliente.status === "CONCLUIDO" && (
+          <div>
+            <p className="text-zinc-500">PDF enviado por e-mail</p>
+            <p className={cliente.pdfGeradoEm ? "text-zinc-100" : "text-amber-300"}>
+              {cliente.pdfGeradoEm
+                ? `${cliente.pdfGeradoEm.toLocaleDateString("pt-BR")} às ${cliente.pdfGeradoEm.toLocaleTimeString("pt-BR", { hour: "2-digit", minute: "2-digit" })}`
+                : "Ainda não enviado"}
+            </p>
+          </div>
+        )}
         {cliente.flowClienteId && (
           <div>
             <p className="text-zinc-500">Cliente no Flow</p>
@@ -86,8 +116,24 @@ export default async function ClienteDs160DetalhePage(
         href={`/admin/clientes/${cliente.id}/pdf`}
         className="w-fit rounded-lg border border-white/10 px-4 py-2.5 text-sm text-zinc-100 transition-colors hover:border-indigo-500/50"
       >
-        Baixar PDF (protegido por senha)
+        Baixar PDF
       </a>
+
+      {cliente.status === "CONCLUIDO" && (
+        <form action={reenviarPdfRascunho} className="flex flex-col gap-3">
+          <input type="hidden" name="clienteId" value={cliente.id} />
+          <p className="text-sm text-zinc-400">
+            Reenviar o PDF do rascunho por e-mail para o cliente ({cliente.email}) com cópia
+            pra equipe. Útil se o cliente concluiu antes de o envio de e-mail estar configurado.
+          </p>
+          <button
+            type="submit"
+            className="w-fit rounded-lg border border-white/10 px-4 py-2.5 text-sm text-zinc-100 transition-colors hover:border-indigo-500/50"
+          >
+            Reenviar PDF por e-mail
+          </button>
+        </form>
+      )}
 
       <form action={reenviarLinkAcesso} className="flex flex-col gap-3">
         <input type="hidden" name="clienteId" value={cliente.id} />
