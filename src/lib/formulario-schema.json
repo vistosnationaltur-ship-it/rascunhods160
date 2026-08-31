@@ -3757,32 +3757,12 @@
       {
         "id": 178,
         "tipo": "address",
-        "label": "Local de Nascimento",
+        "label": "Cidade de Nascimento do Cônjuge",
         "obrigatorio": true,
         "subCampos": [
           {
-            "id": "178.1",
-            "label": "Rua"
-          },
-          {
-            "id": "178.2",
-            "label": "Bairro e Complemento"
-          },
-          {
             "id": "178.3",
             "label": "Cidade"
-          },
-          {
-            "id": "178.4",
-            "label": "Estado"
-          },
-          {
-            "id": "178.5",
-            "label": "Código postal"
-          },
-          {
-            "id": "178.6",
-            "label": "País"
           }
         ],
         "condicional": {
@@ -3812,32 +3792,12 @@
       {
         "id": 191,
         "tipo": "address",
-        "label": "Local de Nascimento 2",
+        "label": "Cidade de Nascimento 2",
         "obrigatorio": false,
         "subCampos": [
           {
-            "id": "191.1",
-            "label": "Rua"
-          },
-          {
-            "id": "191.2",
-            "label": "Bairro e Complemento"
-          },
-          {
             "id": "191.3",
             "label": "Cidade"
-          },
-          {
-            "id": "191.4",
-            "label": "Estado"
-          },
-          {
-            "id": "191.5",
-            "label": "Código postal"
-          },
-          {
-            "id": "191.6",
-            "label": "País"
           }
         ],
         "condicional": {
@@ -3995,143 +3955,6 @@
         },
         "grupoLayout": "82dae7b4",
         "colunaSpan": 8
-      },
-      {
-        "id": 181,
-        "tipo": "select",
-        "label": "Endereço",
-        "obrigatorio": true,
-        "opcoes": [
-          {
-            "texto": "Selecionar",
-            "valor": "Primeira opção"
-          },
-          {
-            "texto": "Mesmo que o Aplicante do Visto",
-            "valor": "Segunda opção"
-          },
-          {
-            "texto": "Outro Endereço",
-            "valor": "Outro Endereço"
-          },
-          {
-            "texto": "Não Sei Informar",
-            "valor": "Não Sei Informar"
-          }
-        ],
-        "condicional": {
-          "acao": "mostrar",
-          "tipoLogica": "qualquer",
-          "regras": [
-            {
-              "campoId": 176,
-              "operador": "is",
-              "valor": "Cônjuge"
-            },
-            {
-              "campoId": 176,
-              "operador": "is",
-              "valor": "Separado/Divorciado"
-            }
-          ]
-        },
-        "grupoLayout": "1ef50987",
-        "colunaSpan": 12
-      },
-      {
-        "id": 182,
-        "tipo": "address",
-        "label": "Endereço Completo",
-        "obrigatorio": false,
-        "subCampos": [
-          {
-            "id": "182.1",
-            "label": "Rua"
-          },
-          {
-            "id": "182.2",
-            "label": "Bairro e Complemento"
-          },
-          {
-            "id": "182.3",
-            "label": "Cidade"
-          },
-          {
-            "id": "182.4",
-            "label": "Estado"
-          },
-          {
-            "id": "182.5",
-            "label": "Código postal"
-          },
-          {
-            "id": "182.6",
-            "label": "País"
-          }
-        ],
-        "condicional": {
-          "acao": "mostrar",
-          "tipoLogica": "todas",
-          "regras": [
-            {
-              "campoId": 181,
-              "operador": "is",
-              "valor": "Outro Endereço"
-            }
-          ]
-        },
-        "grupoLayout": "e9418650",
-        "colunaSpan": 12
-      },
-      {
-        "id": 192,
-        "tipo": "address",
-        "label": "Endereço Completo 2",
-        "obrigatorio": false,
-        "subCampos": [
-          {
-            "id": "192.1",
-            "label": "Rua"
-          },
-          {
-            "id": "192.2",
-            "label": "Bairro e Complemento"
-          },
-          {
-            "id": "192.3",
-            "label": "Cidade"
-          },
-          {
-            "id": "192.4",
-            "label": "Estado"
-          },
-          {
-            "id": "192.5",
-            "label": "Código postal"
-          },
-          {
-            "id": "192.6",
-            "label": "País"
-          }
-        ],
-        "condicional": {
-          "acao": "mostrar",
-          "tipoLogica": "todas",
-          "regras": [
-            {
-              "campoId": 181,
-              "operador": "is",
-              "valor": "Outro Endereço"
-            },
-            {
-              "campoId": 187,
-              "operador": "is",
-              "valor": "2"
-            }
-          ]
-        },
-        "grupoLayout": "89e35a23",
-        "colunaSpan": 12
       }
     ]
   },
