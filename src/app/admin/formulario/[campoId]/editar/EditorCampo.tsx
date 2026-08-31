@@ -4,6 +4,7 @@ import { useState, useTransition } from "react";
 import { useRouter } from "next/navigation";
 import type { Campo, Opcao, Regra, SubCampo } from "@/lib/formulario-schema";
 import {
+  LARGURA_OPCOES,
   TIPO_LEGIVEL,
   TIPOS_CAMPO,
   TIPOS_COM_OPCOES,
@@ -25,12 +26,18 @@ const estiloInput =
 export function EditorCampo({
   campo,
   todosOsCampos,
+  campoAnterior,
 }: {
   campo: Campo;
   todosOsCampos: Campo[];
+  campoAnterior: Campo | null;
 }) {
   const router = useRouter();
   const [tipo, setTipo] = useState(campo.tipo);
+  const [colunaSpan, setColunaSpan] = useState<number>(campo.colunaSpan ?? 12);
+  const [juntarNaLinha, setJuntarNaLinha] = useState(
+    Boolean(campo.grupoLayout && campoAnterior?.grupoLayout === campo.grupoLayout),
+  );
   const [label, setLabel] = useState(campo.label);
   const [descricao, setDescricao] = useState(campo.descricao ?? "");
   const [obrigatorio, setObrigatorio] = useState(campo.obrigatorio);
@@ -74,6 +81,8 @@ export function EditorCampo({
           opcoes,
           subCampos,
           condicional: temCondicional && regras.length > 0 ? { acao, tipoLogica, regras } : null,
+          colunaSpan: ehSecao ? null : colunaSpan,
+          juntarNaLinhaAnterior: !ehSecao && Boolean(campoAnterior) && juntarNaLinha,
         });
         router.push("/admin/formulario");
         router.refresh();
@@ -203,7 +212,45 @@ export function EditorCampo({
 
       {!ehSecao && (
         <div className="flex flex-col gap-3 border-t border-white/10 pt-4">
-          <label className="flex items-center gap-2 text-sm text-zinc-300">
+          <span className="text-sm text-zinc-400">Layout</span>
+
+          <label className="flex flex-col gap-1.5 text-sm">
+            <span className="text-zinc-500">Largura do campo</span>
+            <select
+              value={colunaSpan}
+              onChange={(e) => setColunaSpan(Number(e.target.value))}
+              className={estiloInput}
+            >
+              {LARGURA_OPCOES.some((o) => o.span === colunaSpan) ? null : (
+                <option value={colunaSpan}>{colunaSpan}/12</option>
+              )}
+              {LARGURA_OPCOES.map((o) => (
+                <option key={o.span} value={o.span}>
+                  {o.label}
+                </option>
+              ))}
+            </select>
+          </label>
+
+          {campoAnterior && (
+            <label className="flex items-start gap-2 text-sm text-zinc-300">
+              <input
+                type="checkbox"
+                checked={juntarNaLinha}
+                onChange={(e) => setJuntarNaLinha(e.target.checked)}
+                className="mt-0.5 accent-indigo-500"
+              />
+              <span>
+                Na mesma linha que o campo de cima{" "}
+                <span className="text-zinc-500">
+                  (#{campoAnterior.id} {campoAnterior.label || "sem texto"})
+                </span>
+                . Pra caber, dê uma largura menor que “linha inteira” nos dois campos.
+              </span>
+            </label>
+          )}
+
+          <label className="mt-1 flex items-center gap-2 border-t border-white/10 pt-3 text-sm text-zinc-300">
             <input
               type="checkbox"
               checked={temCondicional}

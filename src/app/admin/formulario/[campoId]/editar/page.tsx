@@ -13,6 +13,13 @@ export default async function EditarCampoPage(props: PageProps<"/admin/formulari
 
   const todosOsCampos = paginas.flatMap((p) => p.campos);
 
+  // Campo imediatamente acima na mesma página — pra opção "mesma linha
+  // que o campo de cima" no editor de layout.
+  const paginaDoCampo = paginas.find((p) => p.campos.some((c) => c.id === id));
+  const idxNaPagina = paginaDoCampo?.campos.findIndex((c) => c.id === id) ?? -1;
+  const campoAnterior =
+    paginaDoCampo && idxNaPagina > 0 ? paginaDoCampo.campos[idxNaPagina - 1] : null;
+
   return (
     <div className="mx-auto flex w-full max-w-2xl flex-1 flex-col gap-6 p-8">
       <div className="flex items-center justify-between">
@@ -23,7 +30,7 @@ export default async function EditarCampoPage(props: PageProps<"/admin/formulari
           Voltar
         </Link>
       </div>
-      <EditorCampo campo={campo} todosOsCampos={todosOsCampos} />
+      <EditorCampo campo={campo} todosOsCampos={todosOsCampos} campoAnterior={campoAnterior} />
     </div>
   );
 }

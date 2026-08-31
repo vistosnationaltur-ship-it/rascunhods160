@@ -3,7 +3,7 @@
 import type { Campo, Condicional, Opcao, SubCampo } from "@/lib/formulario-schema";
 import { aplicarMudancaSchema } from "@/lib/formulario-persistencia";
 import {
-  substituirCampo,
+  novoGrupoLayout,
   trocarTipo,
   TIPOS_CAMPO,
   TIPOS_COM_OPCOES,
@@ -19,19 +19,33 @@ export type DadosEdicaoCampo = {
   opcoes: Opcao[];
   subCampos: SubCampo[];
   condicional: Condicional | null;
+  colunaSpan: number | null;
+  juntarNaLinhaAnterior: boolean;
 };
 
 // Edita um campo existente: label, ajuda, obrigatório, opções,
-// sub-campos, tipo e condicional. Não muda id nem a posição do campo.
-// Passa pelo mesmo caminho das mudanças estruturais (valida + backup).
+// sub-campos, tipo, condicional e layout (largura + linha compartilhada
+// com o campo de cima). Não muda id nem a posição do campo. Passa pelo
+// mesmo caminho das mudanças estruturais (valida + backup).
 export async function salvarCampo(campoId: number, dados: DadosEdicaoCampo) {
   if (!TIPOS_CAMPO.includes(dados.tipo as TipoCampo)) {
     throw new Error(`Tipo de campo inválido: ${dados.tipo}.`);
   }
 
   await aplicarMudancaSchema(`editar campo #${campoId}`, (paginas) => {
-    const atual = paginas.flatMap((p) => p.campos).find((c) => c.id === campoId);
-    if (!atual) throw new Error(`Campo #${campoId} não encontrado.`);
+    let paginaIdx = -1;
+    let campoIdx = -1;
+    paginas.forEach((pg, pi) => {
+      const ci = pg.campos.findIndex((c) => c.id === campoId);
+      if (ci !== -1) {
+        paginaIdx = pi;
+        campoIdx = ci;
+      }
+    });
+    if (paginaIdx === -1) throw new Error(`Campo #${campoId} não encontrado.`);
+
+    const pagina = paginas[paginaIdx];
+    const atual = pagina.campos[campoIdx];
 
     // trocarTipo primeiro pra herdar defaults coerentes com o novo tipo,
     // depois sobrescreve com o que veio do formulário.
@@ -60,6 +74,45 @@ export async function salvarCampo(campoId: number, dados: DadosEdicaoCampo) {
     if (dados.condicional) atualizado.condicional = dados.condicional;
     else delete atualizado.condicional;
 
-    return substituirCampo(paginas, campoId, atualizado);
+    // largura: só guarda quando é diferente de "linha inteira" (12).
+    if (
+      dados.colunaSpan &&
+      dados.colunaSpan >= 1 &&
+      dados.colunaSpan <= 11
+    ) {
+      atualizado.colunaSpan = dados.colunaSpan;
+    } else {
+      delete atualizado.colunaSpan;
+    }
+
+    // "mesma linha que o campo de cima": os dois precisam compartilhar o
+    // grupoLayout. Seção não entra em grupo (o formulário do cliente pula).
+    const anterior = campoIdx > 0 ? pagina.campos[campoIdx - 1] : undefined;
+    const podeJuntar =
+      dados.juntarNaLinhaAnterior &&
+      dados.tipo !== "section" &&
+      !!anterior &&
+      anterior.tipo !== "section";
+
+    let anteriorComGrupo: Campo | undefined;
+    if (podeJuntar) {
+      const grupo = anterior!.grupoLayout ?? novoGrupoLayout();
+      atualizado.grupoLayout = grupo;
+      if (!anterior!.grupoLayout) anteriorComGrupo = { ...anterior!, grupoLayout: grupo };
+    } else {
+      delete atualizado.grupoLayout;
+    }
+
+    return paginas.map((pg, pi) => {
+      if (pi !== paginaIdx) return pg;
+      return {
+        ...pg,
+        campos: pg.campos.map((c, ci) => {
+          if (ci === campoIdx) return atualizado;
+          if (anteriorComGrupo && ci === campoIdx - 1) return anteriorComGrupo;
+          return c;
+        }),
+      };
+    });
   });
 }

@@ -41,6 +41,30 @@ export const TIPO_LEGIVEL: Record<string, string> = {
 export const TIPOS_COM_OPCOES: readonly string[] = ["radio", "select", "checkbox"];
 export const TIPOS_COM_SUBCAMPOS: readonly string[] = ["date", "address"];
 
+// Larguras que o formulário do cliente sabe renderizar (grid de 12
+// colunas — ver PaginaWizard). "Linha inteira" = campo sozinho na linha;
+// as frações só ficam lado a lado quando os campos estão no mesmo grupo
+// (ver "juntar na linha anterior" no editor de campo).
+export const LARGURA_OPCOES: { span: number; label: string }[] = [
+  { span: 12, label: "Linha inteira" },
+  { span: 6, label: "Metade (1/2)" },
+  { span: 8, label: "Dois terços (2/3)" },
+  { span: 4, label: "Um terço (1/3)" },
+  { span: 9, label: "Três quartos (3/4)" },
+  { span: 3, label: "Um quarto (1/4)" },
+];
+
+export function larguraLegivel(span: number | undefined): string {
+  if (!span || span === 12) return "Linha inteira";
+  return LARGURA_OPCOES.find((o) => o.span === span)?.label ?? `${span}/12`;
+}
+
+// String arbitrária que marca campos consecutivos como "mesma linha".
+// Curta e no estilo dos hashes que vieram do Gravity Forms.
+export function novoGrupoLayout(): string {
+  return Math.random().toString(36).slice(2, 10);
+}
+
 // IDs de campo são numéricos herdados do Gravity Forms; sub-campos usam
 // "<id>.<n>" (ex.: "50.1"). Próximo id = maior id inteiro visto + 1,
 // nunca reaproveita — respostas salvas (ClienteDs160.respostas) são

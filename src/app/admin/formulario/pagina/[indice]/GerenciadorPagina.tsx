@@ -4,7 +4,7 @@ import { useMemo, useState, useTransition } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import type { Campo, Pagina } from "@/lib/formulario-schema";
-import { TIPO_LEGIVEL, TIPOS_CAMPO } from "@/lib/formulario-mutacoes";
+import { TIPO_LEGIVEL, TIPOS_CAMPO, larguraLegivel } from "@/lib/formulario-mutacoes";
 import { adicionarCampoAction, moverCampoAction, removerCampoAction } from "../../acoes";
 
 export function GerenciadorPagina({
@@ -57,6 +57,13 @@ export function GerenciadorPagina({
         {pagina.campos.map((campo, i) => {
           const dependentes = dependentesPorCampo.get(campo.id) ?? [];
           const ehSecao = campo.tipo === "section";
+          const anterior = i > 0 ? pagina.campos[i - 1] : undefined;
+          const mesmaLinha =
+            !ehSecao &&
+            !!campo.grupoLayout &&
+            !!anterior &&
+            anterior.tipo !== "section" &&
+            anterior.grupoLayout === campo.grupoLayout;
           return (
             <div
               key={campo.id}
@@ -104,6 +111,16 @@ export function GerenciadorPagina({
                   {campo.condicional && (
                     <span className="rounded-full bg-sky-500/10 px-2 py-0.5 text-[11px] text-sky-400">
                       condicional
+                    </span>
+                  )}
+                  {!ehSecao && campo.colunaSpan && campo.colunaSpan !== 12 && (
+                    <span className="rounded-full bg-white/10 px-2 py-0.5 text-[11px] text-zinc-400">
+                      {larguraLegivel(campo.colunaSpan)}
+                    </span>
+                  )}
+                  {mesmaLinha && (
+                    <span className="rounded-full bg-white/10 px-2 py-0.5 text-[11px] text-zinc-400">
+                      ↳ mesma linha
                     </span>
                   )}
                   <span className="text-[11px] text-zinc-600">#{campo.id}</span>
