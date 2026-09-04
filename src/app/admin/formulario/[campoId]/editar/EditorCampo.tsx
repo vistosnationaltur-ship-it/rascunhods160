@@ -49,13 +49,24 @@ export function EditorCampo({
     campo.condicional?.tipoLogica ?? "todas",
   );
   const [regras, setRegras] = useState<Regra[]>(campo.condicional?.regras ?? []);
+  const [buscaCampoPorRegra, setBuscaCampoPorRegra] = useState<Record<number, string>>({});
   const [pendente, iniciarTransicao] = useTransition();
   const [erro, setErro] = useState<string | null>(null);
 
   const podeTerOpcoes = TIPOS_COM_OPCOES.includes(tipo);
   const podeTerSubCampos = TIPOS_COM_SUBCAMPOS.includes(tipo);
   const ehSecao = tipo === "section";
-  const candidatosGatilho = todosOsCampos.filter((c) => c.id !== campo.id && c.tipo !== "section");
+  const candidatosGatilho = todosOsCampos
+    .filter((c) => c.id !== campo.id && c.tipo !== "section")
+    .sort((a, b) => a.id - b.id);
+
+  function candidatosFiltrados(busca: string): Campo[] {
+    const termo = busca.trim().toLowerCase();
+    if (!termo) return candidatosGatilho;
+    return candidatosGatilho.filter((c) =>
+      `#${c.id} ${c.label}`.toLowerCase().includes(termo),
+    );
+  }
 
   function opcoesDoGatilho(campoId: number): Opcao[] {
     return candidatosGatilho.find((c) => c.id === campoId)?.opcoes ?? [];
@@ -285,22 +296,34 @@ export function EditorCampo({
                 const opcoesGatilho = opcoesDoGatilho(regra.campoId);
                 return (
                   <div key={i} className="flex flex-wrap items-center gap-2">
-                    <select
-                      value={regra.campoId}
-                      onChange={(e) => {
-                        const novo = [...regras];
-                        novo[i] = { ...novo[i], campoId: Number(e.target.value), valor: "" };
-                        setRegras(novo);
-                      }}
-                      className={estiloInput}
-                    >
-                      <option value="">Selecione o campo...</option>
-                      {candidatosGatilho.map((c) => (
-                        <option key={c.id} value={c.id}>
-                          #{c.id} {c.label}
-                        </option>
-                      ))}
-                    </select>
+                    <div className="flex w-64 flex-col gap-1">
+                      <input
+                        type="text"
+                        value={buscaCampoPorRegra[i] ?? ""}
+                        onChange={(e) =>
+                          setBuscaCampoPorRegra({ ...buscaCampoPorRegra, [i]: e.target.value })
+                        }
+                        placeholder="Buscar pergunta por nº ou texto..."
+                        className={estiloInput}
+                      />
+                      <select
+                        size={6}
+                        value={regra.campoId || ""}
+                        onChange={(e) => {
+                          const novo = [...regras];
+                          novo[i] = { ...novo[i], campoId: Number(e.target.value), valor: "" };
+                          setRegras(novo);
+                        }}
+                        className={estiloInput}
+                      >
+                        <option value="">Selecione o campo...</option>
+                        {candidatosFiltrados(buscaCampoPorRegra[i] ?? "").map((c) => (
+                          <option key={c.id} value={c.id}>
+                            #{c.id} {c.label}
+                          </option>
+                        ))}
+                      </select>
+                    </div>
                     <select
                       value={regra.operador}
                       onChange={(e) => {
