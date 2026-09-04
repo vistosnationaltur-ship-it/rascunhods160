@@ -29,6 +29,35 @@ const SPAN_CLASSES: Record<number, string> = {
   12: "col-span-12",
 };
 
+// Quando o gatilho de uma condicional muda de resposta, a pergunta que
+// dependia dele pode deixar de aparecer — mas o valor antigo continua
+// em `respostas` se não for limpo, e aí uma condicional em cadeia (ex:
+// #288 depende da resposta de #289, que por sua vez depende de #281)
+// fica "presa" mostrando #288 mesmo com #289 escondido. Roda em loop
+// até estabilizar pra cobrir cadeias de mais de um nível.
+function limparRespostasDeCamposEscondidos(
+  respostas: Record<string, Valor>,
+  campos: Campo[],
+): Record<string, Valor> {
+  let atual = respostas;
+  let mudou = true;
+  while (mudou) {
+    mudou = false;
+    for (const campo of campos) {
+      if (campoVisivel(campo, atual)) continue;
+      const chaves = [String(campo.id), ...(campo.subCampos?.map((s) => s.id) ?? [])];
+      for (const chave of chaves) {
+        if (chave in atual) {
+          const { [chave]: _removida, ...resto } = atual;
+          atual = resto;
+          mudou = true;
+        }
+      }
+    }
+  }
+  return atual;
+}
+
 // Campos consecutivos com o mesmo grupoLayout ficam lado a lado, igual
 // no formulário original (ex: Sexo / Estado Civil / Data de nascimento
 // na mesma linha) — campos sem grupo ou "section" ficam sozinhos.
@@ -61,7 +90,11 @@ export function PaginaWizard({
   respostasIniciais: Record<string, Valor>;
 }) {
   const router = useRouter();
-  const [respostas, setRespostas] = useState<Record<string, Valor>>(respostasIniciais);
+  // Limpa já na carga: rascunhos salvos antes desse fix podem ter
+  // resposta de um campo que hoje está escondido (trigger mudou depois).
+  const [respostas, setRespostas] = useState<Record<string, Valor>>(() =>
+    limparRespostasDeCamposEscondidos(respostasIniciais, pagina.campos),
+  );
   const [erro, setErro] = useState<string | null>(null);
   const [pendente, iniciarTransicao] = useTransition();
 
@@ -69,7 +102,9 @@ export function PaginaWizard({
   const progresso = Math.round(((pagina.indice + 1) / totalPaginas) * 100);
 
   function onChange(chave: string, valor: Valor) {
-    setRespostas((atual) => ({ ...atual, [chave]: valor }));
+    setRespostas((atual) =>
+      limparRespostasDeCamposEscondidos({ ...atual, [chave]: valor }, pagina.campos),
+    );
   }
 
   function respostasDestaPagina(): Record<string, Valor> {
