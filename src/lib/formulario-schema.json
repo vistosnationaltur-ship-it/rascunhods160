@@ -166,16 +166,66 @@
     "campos": [
       {
         "id": 35,
-        "tipo": "radio",
+        "tipo": "select",
         "label": "Nacionalidade (País de Origem)",
         "obrigatorio": true,
         "opcoes": [
           {
             "texto": "Brasil",
             "valor": "Brasil"
+          },
+          {
+            "texto": "Argentina",
+            "valor": "Argentina"
+          },
+          {
+            "texto": "Paraguai",
+            "valor": "Paraguai"
+          },
+          {
+            "texto": "Uruguai",
+            "valor": "Uruguai"
+          },
+          {
+            "texto": "Bolívia",
+            "valor": "Bolívia"
+          },
+          {
+            "texto": "Chile",
+            "valor": "Chile"
+          },
+          {
+            "texto": "Peru",
+            "valor": "Peru"
+          },
+          {
+            "texto": "Colômbia",
+            "valor": "Colômbia"
+          },
+          {
+            "texto": "Outro",
+            "valor": "Outro"
           }
         ],
         "grupoLayout": "d7812a72"
+      },
+      {
+        "id": 355,
+        "tipo": "text",
+        "label": "Informe seu País de Origem",
+        "obrigatorio": true,
+        "condicional": {
+          "acao": "mostrar",
+          "tipoLogica": "todas",
+          "regras": [
+            {
+              "campoId": 35,
+              "operador": "is",
+              "valor": "Outro"
+            }
+          ]
+        },
+        "grupoLayout": "a35outro1"
       },
       {
         "id": 36,
