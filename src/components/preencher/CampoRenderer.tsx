@@ -7,6 +7,13 @@ type Valor = string | string[] | undefined;
 const estiloInput =
   "w-full rounded-md border border-zinc-300 bg-white px-3 py-2.5 text-sm text-zinc-900 outline-none transition-colors focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20";
 
+// "required" sozinho aceita um valor só de espaços como preenchido (o
+// HTML só olha se a string não está vazia). Esse pattern força ter
+// pelo menos um caractere que não seja espaço, pra "obrigatório"
+// realmente bloquear o avanço quando o campo só tem espaço em branco.
+const PATTERN_NAO_SO_ESPACO = ".*\\S.*";
+const TITULO_NAO_SO_ESPACO = "Preencha com um valor, não só espaços em branco.";
+
 export function CampoRenderer({
   campo,
   respostas,
@@ -147,6 +154,8 @@ function CorpoDoCampo({
           <input
             type="text"
             required={campo.obrigatorio}
+            pattern={campo.obrigatorio ? PATTERN_NAO_SO_ESPACO : undefined}
+            title={campo.obrigatorio ? TITULO_NAO_SO_ESPACO : undefined}
             value={(valor as string) ?? ""}
             onChange={(e) => onChange(chave, e.target.value)}
             className={estiloInput}
@@ -161,6 +170,8 @@ function CorpoDoCampo({
               <input
                 type="text"
                 required={campo.obrigatorio}
+                pattern={campo.obrigatorio ? PATTERN_NAO_SO_ESPACO : undefined}
+                title={campo.obrigatorio ? TITULO_NAO_SO_ESPACO : undefined}
                 value={(respostas[sub.id] as string) ?? ""}
                 onChange={(e) => onChange(sub.id, e.target.value)}
                 className={estiloInput}
@@ -176,6 +187,8 @@ function CorpoDoCampo({
         <input
           type="email"
           required={campo.obrigatorio}
+          pattern={campo.obrigatorio ? PATTERN_NAO_SO_ESPACO : undefined}
+          title={campo.obrigatorio ? TITULO_NAO_SO_ESPACO : undefined}
           value={(valor as string) ?? ""}
           onChange={(e) => onChange(chave, e.target.value)}
           className={estiloInput}
@@ -187,6 +200,8 @@ function CorpoDoCampo({
         <input
           type="tel"
           required={campo.obrigatorio}
+          pattern={campo.obrigatorio ? PATTERN_NAO_SO_ESPACO : undefined}
+          title={campo.obrigatorio ? TITULO_NAO_SO_ESPACO : undefined}
           value={(valor as string) ?? ""}
           onChange={(e) => onChange(chave, e.target.value)}
           className={estiloInput}
@@ -199,6 +214,8 @@ function CorpoDoCampo({
           type="text"
           inputMode="numeric"
           required={campo.obrigatorio}
+          pattern={campo.obrigatorio ? PATTERN_NAO_SO_ESPACO : undefined}
+          title={campo.obrigatorio ? TITULO_NAO_SO_ESPACO : undefined}
           value={(valor as string) ?? ""}
           onChange={(e) => onChange(chave, e.target.value)}
           className={estiloInput}
@@ -211,6 +228,8 @@ function CorpoDoCampo({
         <input
           type="text"
           required={campo.obrigatorio}
+          pattern={campo.obrigatorio ? PATTERN_NAO_SO_ESPACO : undefined}
+          title={campo.obrigatorio ? TITULO_NAO_SO_ESPACO : undefined}
           value={(valor as string) ?? ""}
           onChange={(e) => onChange(chave, e.target.value)}
           className={estiloInput}
