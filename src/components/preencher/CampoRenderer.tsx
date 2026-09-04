@@ -160,6 +160,7 @@ function CorpoDoCampo({
               {sub.label}
               <input
                 type="text"
+                required={campo.obrigatorio}
                 value={(respostas[sub.id] as string) ?? ""}
                 onChange={(e) => onChange(sub.id, e.target.value)}
                 className={estiloInput}
