@@ -5,6 +5,7 @@ import { redirect } from "next/navigation";
 import { prisma } from "@/lib/prisma";
 import { SESSION_COOKIE_CLIENTE, criarTokenCliente } from "@/lib/auth";
 import { apenasDigitos, senhaConfere } from "@/lib/senha";
+import { verificarBloqueio, registrarTentativaFalha, registrarLoginOk, mensagemBloqueio } from "@/lib/rate-limit-login";
 
 export type EstadoLoginCliente = { erro?: string };
 
@@ -14,6 +15,11 @@ export async function loginCliente(
 ): Promise<EstadoLoginCliente> {
   const email = (formData.get("email") ?? "").toString().trim().toLowerCase();
   const senhaDigitada = (formData.get("senha") ?? "").toString();
+
+  const statusBloqueio = await verificarBloqueio(email, "cliente");
+  if (statusBloqueio.bloqueado) {
+    return { erro: mensagemBloqueio(statusBloqueio) };
+  }
 
   // E-mail não é mais único (mesma família pode compartilhar), então um
   // e-mail pode bater com vários cadastros — a senha (CPF) é quem
@@ -25,8 +31,10 @@ export async function loginCliente(
     (c) => senhaConfere(senhaDigitada, c.senhaHash) || senhaConfere(apenasDigitos(senhaDigitada), c.senhaHash),
   );
   if (!cliente) {
+    await registrarTentativaFalha(email, "cliente");
     return { erro: "E-mail ou senha incorretos." };
   }
+  await registrarLoginOk(email, "cliente");
 
   const cookieStore = await cookies();
   cookieStore.set(

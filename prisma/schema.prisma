@@ -53,6 +53,20 @@ model FormularioSchemaBackup {
   @@index([criadoEm])
 }
 
+// Controle de tentativas de login erradas (força-bruta de CPF ou senha
+// admin) — uma linha por identificador+contexto (e-mail do cliente ou
+// username do admin). Ver src/lib/rate-limit-login.ts.
+model TentativaLogin {
+  id            String    @id @default(cuid())
+  identificador String // e-mail (cliente) ou username (staff), sempre em minúsculas
+  contexto      String // "cliente" | "staff"
+  tentativas    Int       @default(0)
+  bloqueadoAte  DateTime?
+  atualizadoEm  DateTime  @updatedAt
+
+  @@unique([identificador, contexto])
+}
+
 model ClienteDs160 {
   id String @id @default(cuid())
 

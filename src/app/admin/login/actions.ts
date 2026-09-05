@@ -5,6 +5,7 @@ import { redirect } from "next/navigation";
 import { prisma } from "@/lib/prisma";
 import { SESSION_COOKIE_STAFF, criarTokenStaff } from "@/lib/auth";
 import { senhaConfere } from "@/lib/senha";
+import { verificarBloqueio, registrarTentativaFalha, registrarLoginOk, mensagemBloqueio } from "@/lib/rate-limit-login";
 
 export type EstadoLoginStaff = { erro?: string };
 
@@ -15,10 +16,17 @@ export async function loginStaff(
   const username = (formData.get("username") ?? "").toString().trim();
   const senha = (formData.get("senha") ?? "").toString();
 
+  const statusBloqueio = await verificarBloqueio(username, "staff");
+  if (statusBloqueio.bloqueado) {
+    return { erro: mensagemBloqueio(statusBloqueio) };
+  }
+
   const usuario = await prisma.usuario.findUnique({ where: { username } });
   if (!usuario || !senhaConfere(senha, usuario.senhaHash)) {
+    await registrarTentativaFalha(username, "staff");
     return { erro: "Usuário ou senha incorretos." };
   }
+  await registrarLoginOk(username, "staff");
 
   const cookieStore = await cookies();
   cookieStore.set(
