@@ -45,18 +45,29 @@ onde no código, e o porquê quando não é óbvio.
     inteiro (`partes_data()`).
   - **`scripts/migrar-data-nascimento.ts`** (novo): migra as respostas
     antigas do campo "Data de nascimento" (flat) pro formato com
-    sub-campos, depois que alguém adicionar os 3 sub-campos (Mês/Dia/Ano)
-    em `/admin/formulario`. Roda em modo simulação por padrão; `--aplicar`
-    grava de verdade. Só migra valores limpos (`DDMMAAAA`, 8 dígitos) — o
-    do Enzo (`"01/022003"`) cai no relatório de "precisa corrigir manual",
-    de propósito (não adivinha data de nascimento em documento de visto).
-- **Pendente (não fiz — precisa de acesso que não tenho daqui):**
-  1. Adicionar os sub-campos Mês/Dia/Ano ao campo "Data de nascimento" via
-     `/admin/formulario` (a live do schema mora no banco, não no
+    sub-campos. Roda em modo simulação por padrão; `--aplicar` grava de
+    verdade. Aceita valor antigo em dois formatos: `DDMMAAAA` (8 dígitos
+    grudados, o padrão original do wizard) ou `DD/MM/AAAA` (já com barras
+    — apareceu em alguns clientes). Qualquer outra coisa (ex.: o do Enzo,
+    `"01/022003"`, faltando uma barra) cai no relatório de "precisa
+    corrigir manual" — não adivinha data de nascimento em documento de
+    visto.
+- **Feito em produção (mesma sessão):**
+  1. Sub-campos Mês/Dia/Ano adicionados ao campo #25 "Data de nascimento"
+     via `/admin/formulario` (a live do schema mora no banco, não no
      `formulario-schema.json` — esse arquivo é só a semente inicial).
-  2. Rodar `scripts/migrar-data-nascimento.ts --aplicar` contra produção.
-  3. Corrigir manualmente a data de nascimento do Enzo (e qualquer outro
-     nome que aparecer no relatório da migração).
+  2. Migração aplicada contra produção via uma rota admin temporária
+     (`/api/admin/migrar-data-nascimento`, GET simula/POST aplica — criada
+     porque não há acesso direto ao banco de produção deste computador, de
+     propósito, ver `DOCUMENTACAO-INFRAESTRUTURA.md`). **7 clientes
+     migrados** (Dayane, Alex Cruz, Janaina Pires, Teste Envio E2E,
+     Michelle Rahd Sanches, Maria Teste Da Silva, Hayanara Nascimento).
+     Confirmado idempotente (rodar de novo não duplica/reescreve). Rota
+     removida do código depois de usada (era de uso único).
+  3. **Enzo Bordini Garutti continua sem data de nascimento migrada** —
+     valor antigo (`"01/022003"`) é irrecuperável com segurança. Falta
+     alguém da equipe corrigir manualmente na ficha dele (agora com Mês em
+     lista fixa, não erra de novo).
 
 ---
 
