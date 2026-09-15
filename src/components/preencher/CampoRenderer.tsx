@@ -14,6 +14,16 @@ const estiloInput =
 const PATTERN_NAO_SO_ESPACO = ".*\\S.*";
 const TITULO_NAO_SO_ESPACO = "Preencha com um valor, não só espaços em branco.";
 
+// Nomes fixos (não texto livre) pro sub-campo "Mês" de qualquer campo de
+// data — antes era uma caixa de texto solta, e já aconteceu de alguém
+// digitar o mês errado (faltando dígito, com espaço sobrando, etc.),
+// passando dado ruim pro robô de preenchimento do DS-160. Uma lista fechada
+// de 12 opções torna esse erro impossível de acontecer de novo.
+const MESES = [
+  "Janeiro", "Fevereiro", "Março", "Abril", "Maio", "Junho",
+  "Julho", "Agosto", "Setembro", "Outubro", "Novembro", "Dezembro",
+];
+
 export function CampoRenderer({
   campo,
   respostas,
@@ -147,7 +157,67 @@ function CorpoDoCampo({
         </label>
       );
 
-    case "date":
+    case "date": {
+      if (!campo.subCampos || campo.subCampos.length === 0) {
+        return (
+          <input
+            type="text"
+            required={campo.obrigatorio}
+            pattern={campo.obrigatorio ? PATTERN_NAO_SO_ESPACO : undefined}
+            title={campo.obrigatorio ? TITULO_NAO_SO_ESPACO : undefined}
+            value={(valor as string) ?? ""}
+            onChange={(e) => onChange(chave, e.target.value)}
+            className={estiloInput}
+          />
+        );
+      }
+      return (
+        <div className="grid grid-cols-2 gap-3 sm:grid-cols-3">
+          {campo.subCampos.map((sub) => {
+            // "Mês" é lista fixa (nunca texto livre) — ver comentário da
+            // constante MESES acima do porquê.
+            const ehMes = sub.label.trim().toLowerCase().startsWith("mês") ||
+              sub.label.trim().toLowerCase().startsWith("mes");
+            if (ehMes) {
+              return (
+                <label key={sub.id} className="flex flex-col gap-1 text-xs text-zinc-500">
+                  {sub.label}
+                  <select
+                    required={campo.obrigatorio}
+                    value={(respostas[sub.id] as string) ?? ""}
+                    onChange={(e) => onChange(sub.id, e.target.value)}
+                    className={estiloInput}
+                  >
+                    <option value="">Selecione...</option>
+                    {MESES.map((m) => (
+                      <option key={m} value={m}>
+                        {m}
+                      </option>
+                    ))}
+                  </select>
+                </label>
+              );
+            }
+            return (
+              <label key={sub.id} className="flex flex-col gap-1 text-xs text-zinc-500">
+                {sub.label}
+                <input
+                  type="text"
+                  inputMode="numeric"
+                  required={campo.obrigatorio}
+                  pattern={campo.obrigatorio ? PATTERN_NAO_SO_ESPACO : undefined}
+                  title={campo.obrigatorio ? TITULO_NAO_SO_ESPACO : undefined}
+                  value={(respostas[sub.id] as string) ?? ""}
+                  onChange={(e) => onChange(sub.id, e.target.value)}
+                  className={estiloInput}
+                />
+              </label>
+            );
+          })}
+        </div>
+      );
+    }
+
     case "address": {
       if (!campo.subCampos || campo.subCampos.length === 0) {
         return (

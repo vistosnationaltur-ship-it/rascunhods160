@@ -5,6 +5,61 @@ onde no código, e o porquê quando não é óbvio.
 
 ---
 
+## 2026-09-15 — Mês vira lista fixa nos campos de data (bug do robô)
+
+- Gatilho: robô de automação (`Automação_DS160/fonte_dados_api.py`) travou
+  buscando os dados do cliente Enzo Bordini Garutti — `data_nasc.split("/")`
+  esperava 3 partes e achou 2. Causa: o campo "Data de nascimento" (único
+  campo de data do schema **sem** sub-campos Dia/Mês/Ano — é uma caixa de
+  texto única) tinha `"01/022003"` salvo (faltando uma barra), digitado à
+  mão por alguém mexendo direto no cadastro do cliente.
+- Investigando mais, achei um segundo problema do mesmo tipo no mesmo
+  cliente: "Data Prevista da Viagem aos EUA" (que JÁ tem sub-campos Dia/
+  Mês/Ano) tinha `"Janeiro "` (com espaço sobrando) no sub-campo Mês — que
+  também é texto livre. Não travava o robô (só o campo de nascimento faz
+  isso), mas passava dado errado silenciosamente.
+- **Causa raiz comum:** todo sub-campo de data (inclusive "Mês") é um
+  `<input type="text">` sem máscara em `CampoRenderer.tsx` — dá pra digitar
+  qualquer coisa.
+- **Correções:**
+  - `src/components/preencher/CampoRenderer.tsx`: separado o `case "date"`
+    do `case "address"` (antes compartilhavam o mesmo bloco). Sub-campo
+    "Mês" (detectado pelo rótulo) agora é `<select>` com os 12 nomes em
+    português — impossível digitar errado a partir de agora. Dia/Ano viram
+    `inputMode="numeric"`.
+  - `src/app/api/robo-integracao/clientes/[id]/route.ts`
+    (`normalizarData`): campo de data **sem** sub-campos (só "Data de
+    nascimento" se encaixa nisso hoje) devolvia o valor bruto sem validar
+    quando não batia com `DDMMAAAA` (8 dígitos) — agora devolve `""`, mesmo
+    comportamento que o caminho com sub-campos já tinha. Leitura dos
+    sub-campos ganhou `.trim()` (cobre respostas antigas tipo "Janeiro "
+    com espaço sobrando).
+  - `Automação_DS160/fonte_dados_api.py`: duplicada a função
+    `mes_para_numero()` que já existia em `robo.py` (criada numa sessão
+    anterior pro mesmo tipo de problema — "o ds160-rascunho às vezes manda
+    o nome do mês em vez do número"), usada nos 2 pontos que faziam
+    `int(mes)`/`mes.lstrip("0")` direto (data de nascimento e data de
+    viagem — os únicos 2 campos que esse script decompõe manualmente; os
+    outros passam a string inteira pro `robo.py`, que já tratava certo).
+    Split malformado agora avisa e usa o padrão em vez de derrubar o script
+    inteiro (`partes_data()`).
+  - **`scripts/migrar-data-nascimento.ts`** (novo): migra as respostas
+    antigas do campo "Data de nascimento" (flat) pro formato com
+    sub-campos, depois que alguém adicionar os 3 sub-campos (Mês/Dia/Ano)
+    em `/admin/formulario`. Roda em modo simulação por padrão; `--aplicar`
+    grava de verdade. Só migra valores limpos (`DDMMAAAA`, 8 dígitos) — o
+    do Enzo (`"01/022003"`) cai no relatório de "precisa corrigir manual",
+    de propósito (não adivinha data de nascimento em documento de visto).
+- **Pendente (não fiz — precisa de acesso que não tenho daqui):**
+  1. Adicionar os sub-campos Mês/Dia/Ano ao campo "Data de nascimento" via
+     `/admin/formulario` (a live do schema mora no banco, não no
+     `formulario-schema.json` — esse arquivo é só a semente inicial).
+  2. Rodar `scripts/migrar-data-nascimento.ts --aplicar` contra produção.
+  3. Corrigir manualmente a data de nascimento do Enzo (e qualquer outro
+     nome que aparecer no relatório da migração).
+
+---
+
 ## 2026-09-04 — Segurança (lockout + retenção LGPD) e correções de validação
 
 Commits `83686c5` → `ddbe88e` no `main`.

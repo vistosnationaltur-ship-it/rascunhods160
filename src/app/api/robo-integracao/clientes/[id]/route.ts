@@ -23,7 +23,10 @@ function normalizarData(campo: Campo, valorBruto: unknown, respostas: Record<str
     const porLabel: Record<string, string> = {};
     for (const sub of campo.subCampos) {
       const v = respostas[sub.id];
-      if (typeof v === "string" && v) porLabel[sub.label.toLowerCase()] = v;
+      // .trim(): o sub-campo "Mês" era texto livre até aqui — respostas
+      // antigas podem ter espaço sobrando (ex.: "Janeiro " digitado à
+      // mão), o que quebrava o robô de automação mais adiante.
+      if (typeof v === "string" && v.trim()) porLabel[sub.label.toLowerCase()] = v.trim();
     }
     const dia = porLabel["dia"] ?? "";
     const mes = porLabel["mês"] ?? porLabel["mes"] ?? "";
@@ -31,11 +34,18 @@ function normalizarData(campo: Campo, valorBruto: unknown, respostas: Record<str
     if (!dia || !mes || !ano) return "";
     return `${dia.padStart(2, "0")}/${mes.padStart(2, "0")}/${ano}`;
   }
-  // Campo de data "flat" (sem subCampos): gravado como "DDMMAAAA" pelo wizard.
+  // Campo de data "flat" (sem subCampos): esperado "DDMMAAAA" (8 dígitos),
+  // mas o input é um <input type="text"> livre (CampoRenderer.tsx), sem
+  // máscara — alguém pode digitar qualquer coisa (ex.: "15/09" faltando o
+  // ano) ao editar manualmente. Nesses casos, devolver o valor bruto sem
+  // validar já quebrou o robô de automação, que assume "DD/MM/AAAA" sempre
+  // bem-formado. Por segurança, um valor fora do padrão vira "" (mesmo
+  // comportamento do campo com subCampos incompleto acima) em vez de
+  // propagar lixo pra quem consome essa API.
   if (typeof valorBruto === "string" && /^\d{8}$/.test(valorBruto)) {
     return `${valorBruto.slice(0, 2)}/${valorBruto.slice(2, 4)}/${valorBruto.slice(4, 8)}`;
   }
-  return typeof valorBruto === "string" ? valorBruto : "";
+  return "";
 }
 
 function normalizarEndereco(campo: Campo, respostas: Record<string, unknown>): Record<string, string> {
