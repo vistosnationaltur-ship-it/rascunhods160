@@ -67,7 +67,14 @@ async function main() {
       continue;
     }
 
-    const match = /^(\d{2})(\d{2})(\d{4})$/.exec(antigo.trim());
+    const valor = antigo.trim();
+    // Duas formas conhecidas de valor antigo bem-formado: "DDMMAAAA" (8
+    // dígitos grudados, o padrão original do wizard) ou "DD/MM/AAAA" (já
+    // com barras — apareceu em alguns clientes). Qualquer outra coisa
+    // (ex.: "01/022003", faltando uma barra) vira "problema".
+    const matchFlat = /^(\d{2})(\d{2})(\d{4})$/.exec(valor);
+    const matchComBarras = /^(\d{2})\/(\d{2})\/(\d{4})$/.exec(valor);
+    const match = matchFlat ?? matchComBarras;
     if (!match) {
       problemas.push({ nome: cliente.nome, cpf: cliente.cpf, valorBruto: antigo });
       continue;
