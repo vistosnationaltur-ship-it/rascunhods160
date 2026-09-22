@@ -1,7 +1,6 @@
 import Link from "next/link";
 import { buscarClientesFlow } from "@/lib/flow-cliente";
-import { cadastrarCliente } from "./actions";
-import { SubmitButton } from "@/components/SubmitButton";
+import { CadastroForm } from "./CadastroForm";
 
 type SearchParams = {
   q?: string;
@@ -96,68 +95,13 @@ export default async function CadastrarClientePage({
       )}
 
       {dadosEscolhidos && (
-        <form action={cadastrarCliente} className="flex flex-col gap-4">
-          {sp.flowClienteId && (
-            <p className="text-xs text-emerald-400">Vinculado ao cliente do Flow (id {sp.flowClienteId}).</p>
-          )}
-          <input type="hidden" name="flowClienteId" defaultValue={sp.flowClienteId} />
-
-          <label className="flex flex-col gap-1.5 text-sm">
-            <span className="text-zinc-400">Nome completo</span>
-            <input
-              name="nome"
-              required
-              defaultValue={sp.nome}
-              className="rounded-lg border border-white/10 bg-zinc-950/60 px-3 py-2.5 text-zinc-100 outline-none focus:border-indigo-500/60"
-            />
-          </label>
-          <div className="grid grid-cols-2 gap-4">
-            <label className="flex flex-col gap-1.5 text-sm">
-              <span className="text-zinc-400">CPF (é a senha de login)</span>
-              <input
-                name="cpf"
-                required
-                defaultValue={sp.cpf}
-                className="rounded-lg border border-white/10 bg-zinc-950/60 px-3 py-2.5 text-zinc-100 outline-none focus:border-indigo-500/60"
-              />
-            </label>
-            <label className="flex flex-col gap-1.5 text-sm">
-              <span className="text-zinc-400">E-mail (é o login)</span>
-              <input
-                name="email"
-                type="email"
-                required
-                defaultValue={sp.email}
-                className="rounded-lg border border-white/10 bg-zinc-950/60 px-3 py-2.5 text-zinc-100 outline-none focus:border-indigo-500/60"
-              />
-            </label>
-          </div>
-          <label className="flex flex-col gap-1.5 text-sm">
-            <span className="text-zinc-400">WhatsApp (com DDD)</span>
-            <input
-              name="telefone"
-              required
-              defaultValue={sp.telefone}
-              placeholder="(17) 98838-0346"
-              className="rounded-lg border border-white/10 bg-zinc-950/60 px-3 py-2.5 text-zinc-100 outline-none focus:border-indigo-500/60"
-            />
-          </label>
-
-          <div className="flex items-center justify-between pt-2">
-            <Link
-              href="/admin/clientes/novo"
-              className="text-sm text-zinc-500 underline-offset-4 hover:underline"
-            >
-              Voltar pra busca
-            </Link>
-            <SubmitButton
-              pendingLabel="Cadastrando..."
-              className="rounded-lg bg-indigo-600 px-4 py-2.5 text-sm font-medium text-white hover:bg-indigo-500 disabled:cursor-not-allowed disabled:opacity-60"
-            >
-              Cadastrar
-            </SubmitButton>
-          </div>
-        </form>
+        <CadastroForm
+          flowClienteId={sp.flowClienteId}
+          nome={sp.nome}
+          cpf={sp.cpf}
+          email={sp.email}
+          telefone={sp.telefone}
+        />
       )}
     </div>
   );

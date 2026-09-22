@@ -5,6 +5,22 @@ onde no código, e o porquê quando não é óbvio.
 
 ---
 
+## 2026-09-22 — Cadastro manual de cliente quebrava a tela inteira (React error #441)
+
+- Gatilho: usuário tentou cadastrar um cliente manualmente em `/admin/clientes/novo` e caiu na tela genérica
+  "Algo deu errado" (minified React error #441 = "erro não tratado durante o render de um Server Component").
+  Não tinha relação com nenhuma mudança desta sessão - já existia antes, só não tinha aparecido ainda.
+- Causa: `cadastrarCliente` (`src/app/admin/clientes/novo/actions.ts`) validava os campos e a duplicidade de CPF
+  com `throw new Error(...)` direto, mas o form usava `<form action={cadastrarCliente}>` SEM `useActionState` -
+  então qualquer uma dessas validações falhando (campo obrigatório faltando, ou CPF já cadastrado - bem comum,
+  já que é a senha de login e tem que ser único) virava uma exceção não tratada, subia pro error boundary do Next
+  e derrubava a tela inteira em vez de mostrar uma mensagem.
+- Correção: `cadastrarCliente` agora segue o mesmo padrão já usado no login (`src/app/admin/login/actions.ts`) -
+  recebe `useActionState` e RETORNA `{ erro: "..." }` em vez de lançar exceção. O JSX do formulário saiu de
+  `page.tsx` (Server Component) pra um Client Component novo, `CadastroForm.tsx`, que usa `useActionState` e
+  mostra o erro na tela (mesma caixinha vermelha do login), deixando o admin corrigir e tentar de novo sem
+  recarregar a página.
+
 ## 2026-09-22 — Radio "Não" salvando como "Sim" (pergunta 315, wizard de preenchimento)
 
 - Gatilho: usuário relatou que a pergunta "Você tem algum outro parente nos Estados Unidos?" (campo 315, página 9

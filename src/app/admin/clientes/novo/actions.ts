@@ -6,7 +6,19 @@ import { prisma } from "@/lib/prisma";
 import { apenasDigitos, hashSenha } from "@/lib/senha";
 import { enviarLinkAcessoWhatsapp } from "@/lib/whatsapp";
 
-export async function cadastrarCliente(formData: FormData) {
+export type EstadoCadastroCliente = { erro?: string };
+
+// Antes lançava (`throw`) direto nos casos de validação/duplicidade - como
+// o form usa `action={cadastrarCliente}` sem useActionState, uma exceção
+// aqui não vira uma mensagem bonitinha: sobe pro error boundary do Next e
+// mostra a tela genérica "Algo deu errado" (React error #441), sem dizer
+// qual foi o problema. Retornando um estado com `erro` (mesmo padrão do
+// login, ver src/app/admin/login/actions.ts) o form mostra a mensagem
+// certa e deixa o admin corrigir e tentar de novo.
+export async function cadastrarCliente(
+  _estadoAnterior: EstadoCadastroCliente,
+  formData: FormData,
+): Promise<EstadoCadastroCliente> {
   await exigirAdmin();
 
   const nome = (formData.get("nome") ?? "").toString().trim();
@@ -16,10 +28,10 @@ export async function cadastrarCliente(formData: FormData) {
   const flowClienteId = (formData.get("flowClienteId") ?? "").toString().trim() || null;
 
   if (!nome || !email || !cpf) {
-    throw new Error("Nome, e-mail e CPF são obrigatórios — o CPF é a senha de login do cliente.");
+    return { erro: "Nome, e-mail e CPF são obrigatórios — o CPF é a senha de login do cliente." };
   }
   if (!telefone) {
-    throw new Error("Telefone é obrigatório — é pra ele que o link de acesso vai ser enviado.");
+    return { erro: "Telefone é obrigatório — é pra ele que o link de acesso vai ser enviado." };
   }
 
   // E-mail pode se repetir (ex: pai cadastrando o filho com o próprio
@@ -27,7 +39,7 @@ export async function cadastrarCliente(formData: FormData) {
   // pessoa.
   const cpfExistente = await prisma.clienteDs160.findUnique({ where: { cpf } });
   if (cpfExistente) {
-    throw new Error(`Já existe um cliente cadastrado com o CPF "${cpf}".`);
+    return { erro: `Já existe um cliente cadastrado com o CPF "${cpf}".` };
   }
 
   const cliente = await prisma.clienteDs160.create({
