@@ -23,6 +23,21 @@ function regraSatisfeita(regra: Regra, respostas: Respostas): boolean {
       return valorAtual.startsWith(regra.valor);
     case "ends_with":
       return valorAtual.endsWith(regra.valor);
+    // Únicos operadores numéricos daqui — usados pela condicional de
+    // idade mínima (ver src/lib/idade.ts, CAMPO_ID_IDADE) pra esconder
+    // trabalho/escola/viagens de menores de 14 anos. NaN em qualquer lado
+    // (idade ainda não calculada, ou valor da regra mal configurado) dá
+    // falso, nunca trata "não sei" como "bateu".
+    case "maior_ou_igual": {
+      const atual = Number(valorAtual);
+      const alvo = Number(regra.valor);
+      return !Number.isNaN(atual) && !Number.isNaN(alvo) && atual >= alvo;
+    }
+    case "menor_que": {
+      const atual = Number(valorAtual);
+      const alvo = Number(regra.valor);
+      return !Number.isNaN(atual) && !Number.isNaN(alvo) && atual < alvo;
+    }
     default:
       return false;
   }

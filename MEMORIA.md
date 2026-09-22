@@ -5,6 +5,37 @@ onde no código, e o porquê quando não é óbvio.
 
 ---
 
+## 2026-09-23 — Trabalho/escolaridade/viagens escondidos automaticamente pra menor de 14 anos
+
+- Gatilho: usuário reportou que, ao preencher pra uma criança, as perguntas de escola, profissão e viagens dos
+  últimos 5 anos (páginas 11 a 14 do wizard: "Atividade Atual", "Trabalhos Anteriores", "Escolaridade",
+  "Informações adicionais... / Viagens Anteriores") somem - o que é o comportamento CERTO (confirmado pelo
+  usuário: no DS-160 oficial do consulado essas perguntas realmente não se aplicam a menor de 14 anos), só que
+  hoje isso só funciona de vez em quando, dependendo de qual opção alguém escolhe manualmente em "Atividade
+  Atual" - pediu pra automatizar isso de verdade usando a data de nascimento (campo 25) lançada no início do
+  formulário.
+- `src/lib/idade.ts` (novo): `calcularIdade(campoNascimento, respostas)` calcula a idade completa a partir da
+  resposta de Dia/Mês/Ano do campo 25 (a data de nascimento JÁ é um campo com sub-campos desde a migração de
+  2026-09-15 - achar os ids de Dia/Mês/Ano é por rótulo, igual `scripts/migrar-data-nascimento.ts` já fazia,
+  porque os ids são gerados pelo admin e variam). Devolve `null` se a data ainda não foi respondida - nesse caso
+  as perguntas de trabalho/escola continuam aparecendo normalmente (nunca trata "não sei" como "é menor").
+  `comIdadeInjetada(paginas, respostas)` injeta a idade calculada em `respostas` sob uma chave reservada
+  (`CAMPO_ID_IDADE = -1`, nenhum campo real do schema chega perto disso) - assim as condicionais existentes
+  (`campoVisivel`, `src/lib/condicional.ts`) conseguem comparar com ela sem precisar mudar a assinatura de
+  `Regra.campoId` (é `number`) nem duplicar a data de nascimento como se fosse resposta de verdade.
+- `condicional.ts` ganhou 2 operadores numéricos: `maior_ou_igual` e `menor_que` (NaN de qualquer lado = falso,
+  nunca "bateu" por engano).
+- `comIdadeInjetada` é chamado nos 3 lugares que avaliam visibilidade de campo: `preencher/[pagina]/page.tsx`
+  (o wizard em si), `admin/clientes/[id]/page.tsx` (resumo no admin) e `gerar-pdf.ts` (o PDF) - os três agora
+  escondem a mesma coisa pro mesmo cliente.
+- A idade em si é só CALCULADA em código - o schema (que mora no banco, `FormularioSchema`, não em código) ainda
+  precisa ganhar a condicional "esconder se menor de 14" nos campos-gatilho de cada bloco (Atividade Atual,
+  Trabalhou em outra empresa, Concluiu ensino médio/superior, Viajou pra algum país). Como não há acesso local ao
+  banco de produção (por design do projeto), isso é feito por uma rota de uso único,
+  `src/app/api/admin/aplicar-idade-minima-trabalho/route.ts` (GET simula, POST grava e faz backup automático em
+  `FormularioSchemaBackup` antes) - mesmo padrão já usado antes pra migrar a data de nascimento. PENDENTE: rodar
+  essa rota em produção (precisa estar logado como admin) e depois REMOVER a rota, igual sempre.
+
 ## 2026-09-22 — Cadastro manual de cliente quebrava a tela inteira (React error #441)
 
 - Gatilho: usuário tentou cadastrar um cliente manualmente em `/admin/clientes/novo` e caiu na tela genérica

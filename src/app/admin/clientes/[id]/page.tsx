@@ -3,6 +3,7 @@ import { notFound } from "next/navigation";
 import { prisma } from "@/lib/prisma";
 import { respostasPorPagina, type Respostas } from "@/lib/formatar-respostas";
 import { obterPaginas } from "@/lib/formulario-schema";
+import { comIdadeInjetada } from "@/lib/idade";
 import { reenviarLinkAcesso, reenviarPdfRascunho, excluirCliente } from "./actions";
 import { ConfirmSubmitButton } from "@/components/ConfirmSubmitButton";
 
@@ -19,7 +20,8 @@ export default async function ClienteDs160DetalhePage(
   const pdfMsg = typeof sp.msg === "string" ? sp.msg : undefined;
   const pdfPendente = cliente.status === "CONCLUIDO" && !cliente.pdfGeradoEm;
   const paginas = await obterPaginas();
-  const paginasComRespostas = respostasPorPagina(paginas, (cliente.respostas as Respostas) ?? {});
+  const respostas = comIdadeInjetada(paginas, (cliente.respostas as Respostas) ?? {});
+  const paginasComRespostas = respostasPorPagina(paginas, respostas);
 
   return (
     <div className="mx-auto flex w-full max-w-3xl flex-1 flex-col gap-6 p-8">

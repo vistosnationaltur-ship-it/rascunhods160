@@ -1,6 +1,7 @@
 import PDFDocument from "pdfkit";
 import { respostasPorPagina, type Respostas } from "@/lib/formatar-respostas";
 import { obterPaginas } from "@/lib/formulario-schema";
+import { comIdadeInjetada } from "@/lib/idade";
 
 // Réplica em pdfkit (pure JS, roda em serverless sem binário nativo) —
 // não é pixel-a-pixel igual ao template mPDF "zadani" antigo, mas
@@ -37,7 +38,8 @@ export async function gerarPdfRascunho(params: {
       .fillColor("#000000")
       .moveDown(1.5);
 
-    for (const pagina of respostasPorPagina(paginas, params.respostas)) {
+    const respostas = comIdadeInjetada(paginas, params.respostas);
+    for (const pagina of respostasPorPagina(paginas, respostas)) {
       if (doc.y > doc.page.height - 150) doc.addPage();
 
       doc

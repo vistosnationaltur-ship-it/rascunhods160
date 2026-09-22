@@ -2,6 +2,7 @@ import { notFound, redirect } from "next/navigation";
 import { exigirCliente } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
 import { obterPaginas } from "@/lib/formulario-schema";
+import { comIdadeInjetada } from "@/lib/idade";
 import { PaginaWizard } from "./PaginaWizard";
 
 export default async function PaginaDoWizard(props: PageProps<"/preencher/[pagina]">) {
@@ -22,7 +23,14 @@ export default async function PaginaDoWizard(props: PageProps<"/preencher/[pagin
   }
 
   const pagina = paginas[indice];
-  const respostasIniciais = (cliente.respostas as Record<string, string | string[]>) ?? {};
+  // comIdadeInjetada: acrescenta a idade calculada (a partir da data de
+  // nascimento respondida na página 0) pra condicionais tipo "esconder
+  // trabalho/escola/viagens se menor de 14 anos" funcionarem (ver
+  // src/lib/idade.ts). Não é uma resposta de verdade - nunca é salva.
+  const respostasIniciais = comIdadeInjetada(
+    paginas,
+    (cliente.respostas as Record<string, string | string[]>) ?? {},
+  );
 
   return (
     // key força o React a REMONTAR o wizard a cada página (em vez de só
