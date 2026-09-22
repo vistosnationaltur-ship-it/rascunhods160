@@ -25,6 +25,19 @@ export default async function PaginaDoWizard(props: PageProps<"/preencher/[pagin
   const respostasIniciais = (cliente.respostas as Record<string, string | string[]>) ?? {};
 
   return (
-    <PaginaWizard pagina={pagina} totalPaginas={paginas.length} respostasIniciais={respostasIniciais} />
+    // key força o React a REMONTAR o wizard a cada página (em vez de só
+    // re-renderizar o mesmo componente com props novas): sem isso, o
+    // useState de PaginaWizard só lê `respostasIniciais` na primeira
+    // página visitada na sessão, e o "respostas" em memória do cliente
+    // segue rodando por cima disso pra sempre - se o Next reaproveitar uma
+    // versão em cache de uma página antiga (ver staleTimes em
+    // next.config.ts), o wizard fica com uma foto desatualizada do banco
+    // que nunca se corrige sozinha.
+    <PaginaWizard
+      key={indice}
+      pagina={pagina}
+      totalPaginas={paginas.length}
+      respostasIniciais={respostasIniciais}
+    />
   );
 }

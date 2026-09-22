@@ -5,6 +5,34 @@ onde no código, e o porquê quando não é óbvio.
 
 ---
 
+## 2026-09-22 — Radio "Não" salvando como "Sim" (pergunta 315, wizard de preenchimento)
+
+- Gatilho: usuário relatou que a pergunta "Você tem algum outro parente nos Estados Unidos?" (campo 315, página 9
+  do wizard - "Informação da Família (parentes)") mostrava "Sim" no resumo/PDF, mesmo ele tendo certeza de ter
+  selecionado "Não". Diferente do bug do checkbox (só exibição), aqui o dado gravado no banco em si estava errado
+  - o campo 315 é um radio simples, sem subCampos, e `formatarResposta`/`campoVisivel` leem ele do jeito certo.
+- Causa raiz (duas juntas): `PaginaWizard.tsx` guarda as respostas da página em `useState`, inicializado só na
+  PRIMEIRA vez que o componente monta (`useState(() => limparRespostasDeCamposEscondidos(respostasIniciais, ...))`).
+  Só que `src/app/(cliente)/(comCabecalho)/preencher/[pagina]/page.tsx` renderizava `<PaginaWizard>` SEM `key`, e
+  como é o mesmo componente na mesma posição da árvore em toda navegação entre páginas do wizard, o React nunca
+  REMONTA - só re-renderiza com props novas. Resultado: depois da primeira página, o `useState` nunca mais lê
+  `respostasIniciais` de novo, e o wizard passa a rodar só em cima do que está em memória no navegador. Combinado
+  com o cache de rota do Next (`staleTimes.dynamic`, 30s por padrão), usar o botão "Voltar" do PRÓPRIO NAVEGADOR
+  (ou navegar rápido demais) podia reexibir uma versão em cache de uma página de ANTES do cliente corrigir a
+  resposta - e como `salvarPagina()` faz merge (`{...respostasAtuais, ...respostasPagina}`), um "Seguinte" clicado
+  em cima dessa tela desatualizada sobrescrevia a resposta certa (já salva) com a errada que tinha ficado em cache
+  na memória do navegador.
+- Correção (`next.config.ts` + `preencher/[pagina]/page.tsx`):
+  1. `staleTimes: { dynamic: 0 }` em `next.config.ts` - zera o cache de rota do Next pra páginas dinâmicas, então
+     toda navegação do wizard (inclusive "Voltar" do navegador) busca os dados de novo no servidor.
+  2. `<PaginaWizard key={indice} .../>` - força o React a remontar o wizard a cada página, garantindo que o
+     `useState` sempre releia `respostasIniciais` fresco do banco em vez de arrastar estado de uma página anterior.
+- Como é um bug de GRAVAÇÃO (não só exibição), rascunhos que já passaram por esse cenário antes do deploy podem
+  ter essa pergunta (ou outras, o bug não era exclusivo do campo 315) gravada errada de verdade no banco - vale
+  conferir manualmente com o cliente se a resposta que aparece bate com o que ele realmente escolheu, e corrigir
+  pela tela de edição do admin se não bater. Não há como saber quais clientes foram afetados sem essa conferência
+  manual (o bug não deixa rastro - sobrescreve silenciosamente).
+
 ## 2026-09-22 — Checkbox "Não" aparecia como "não respondido" (PDF + admin)
 
 - Gatilho: usuário relatou que 2 perguntas do rascunho de um cliente apareciam como "(não respondido)" no
