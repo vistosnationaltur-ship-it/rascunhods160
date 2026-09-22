@@ -5,6 +5,32 @@ onde no código, e o porquê quando não é óbvio.
 
 ---
 
+## 2026-09-22 — Checkbox "Não" aparecia como "não respondido" (PDF + admin)
+
+- Gatilho: usuário relatou que 2 perguntas do rascunho de um cliente apareciam como "(não respondido)" no
+  resumo/PDF mesmo o cliente tendo marcado "Não". Só de código, dado do cliente sempre esteve certo.
+- Causa: `formatarResposta` (`src/lib/formatar-respostas.ts`), usada tanto pelo PDF (`gerar-pdf.ts`) quanto pela
+  tela de detalhe do cliente no admin, tinha um ramo especial pra campos com `subCampos` (pensado pra "date" e
+  "address", que REALMENTE guardam a resposta em `respostas[sub.id]` - dia/mês/ano, rua/número...). O problema:
+  as 4 perguntas do tipo `checkbox` do schema (herdado do Gravity Forms original) TAMBÉM carregam um `subCampos`
+  (ex.: `338.1`/`338.2` pra "Não"/"Sim"), mas isso é metadado morto - o `CampoRenderer.tsx` do checkbox sempre
+  salva a resposta como um ARRAY sob a chave do próprio campo (`respostas["338"] = ["Não"]`), nunca nos
+  sub-campos. Resultado: pra essas 4 perguntas, o código sempre lia chaves vazias e mostrava "não respondido",
+  não importa o que o cliente tivesse marcado.
+- Perguntas afetadas (todas do tipo checkbox): "Você já teve Habilitação Americana" (338), "Você já teve um
+  Visto Americano recusado, ou teve a entrada negada nos Estados Unidos?" (340), "Você já teve sua autorização
+  de viagem negada por meio do sistema ESTA" (354), "Possui mais de uma empresa ou mais de um emprego?" (349).
+- Correção: o ramo de `subCampos` agora ignora campos do tipo `checkbox` (`campo.tipo !== "checkbox" && ...`),
+  caindo no caminho normal (lê `respostas[campo.id]`, que é um array, e troca cada valor pelo texto da opção).
+  Verificado com um script reproduzindo o campo 338 de verdade (resposta `["Não"]` -> texto "Não"; sem resposta
+  -> ""; "date" com subCampos de verdade continua funcionando).
+- Como é um bug só de EXIBIÇÃO (nunca gravou nada errado no banco), o deploy já corrige na hora, pra
+  clientes antigos e novos - sem precisar de rota de correção nem reprocessar dado nenhum. Se algum PDF já foi
+  baixado/enviado a um cliente ANTES deste deploy com essas perguntas mostrando "não respondido", vale gerar de
+  novo pra esse cliente específico (o rascunho em si, no banco, sempre esteve correto).
+
+---
+
 ## 2026-09-15 — Mês vira lista fixa nos campos de data (bug do robô)
 
 - Gatilho: robô de automação (`Automação_DS160/fonte_dados_api.py`) travou

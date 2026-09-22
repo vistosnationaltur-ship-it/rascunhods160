@@ -21,7 +21,14 @@ export function respostasPorPagina(paginas: Pagina[], respostas: Respostas): Pag
 }
 
 export function formatarResposta(campo: Campo, respostas: Respostas): string {
-  if (campo.subCampos && campo.subCampos.length > 0) {
+  // subCampos só guarda a resposta de verdade em "date" e "address" (dia/mês/ano, rua/número...:
+  // CampoRenderer.tsx escreve em respostas[sub.id] pra esses dois). Em "checkbox" o campo inteiro é herdado
+  // do Gravity Forms original e carrega um "subCampos" que NUNCA é escrito - quem guarda a resposta é o
+  // próprio campo.id, como um array das opções marcadas. Achando subCampos aqui pra um checkbox, o código
+  // sempre lia chaves vazias (338.1, 338.2...) e mostrava "não respondido" mesmo com a resposta salva
+  // certinha (bug real, achado e corrigido em 2026-09-22: afetava as 4 perguntas do tipo checkbox do
+  // formulário - "Habilitação Americana", "Visto recusado", "ESTA negado" e "mais de uma empresa/emprego").
+  if (campo.tipo !== "checkbox" && campo.subCampos && campo.subCampos.length > 0) {
     return campo.subCampos
       .map((sub) => {
         const v = respostas[sub.id];
@@ -33,7 +40,13 @@ export function formatarResposta(campo: Campo, respostas: Respostas): string {
 
   const valor = respostas[String(campo.id)];
   if (valor === undefined || valor === null || valor === "") return "";
-  if (Array.isArray(valor)) return valor.join(", ");
+  if (Array.isArray(valor)) {
+    if (valor.length === 0) return "";
+    if (campo.opcoes) {
+      return valor.map((v) => campo.opcoes!.find((o) => o.valor === v)?.texto ?? v).join(", ");
+    }
+    return valor.join(", ");
+  }
 
   if (campo.opcoes) {
     const opcao = campo.opcoes.find((o) => o.valor === valor);
