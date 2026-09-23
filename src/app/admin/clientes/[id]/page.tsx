@@ -4,7 +4,7 @@ import { prisma } from "@/lib/prisma";
 import { respostasPorPagina, type Respostas } from "@/lib/formatar-respostas";
 import { obterPaginas } from "@/lib/formulario-schema";
 import { comIdadeInjetada } from "@/lib/idade";
-import { reenviarLinkAcesso, reenviarPdfRascunho, excluirCliente } from "./actions";
+import { reenviarLinkAcesso, reenviarPdfRascunho, reabrirRascunho, excluirCliente } from "./actions";
 import { ConfirmSubmitButton } from "@/components/ConfirmSubmitButton";
 
 export default async function ClienteDs160DetalhePage(
@@ -150,6 +150,23 @@ export default async function ClienteDs160DetalhePage(
           Reenviar link
         </button>
       </form>
+
+      {cliente.status === "CONCLUIDO" && (
+        <form action={reabrirRascunho} className="flex flex-col gap-3">
+          <input type="hidden" name="clienteId" value={cliente.id} />
+          <p className="text-sm text-zinc-400">
+            Reabrir o rascunho (volta pra &quot;Em preenchimento&quot;). As respostas já salvas
+            continuam intactas — o cliente (ou o admin, testando) pode navegar pelas páginas e
+            corrigir o que precisar.
+          </p>
+          <button
+            type="submit"
+            className="w-fit rounded-lg border border-amber-500/30 px-4 py-2.5 text-sm font-medium text-amber-300 transition-colors hover:bg-amber-500/10"
+          >
+            Reabrir rascunho
+          </button>
+        </form>
+      )}
 
       <form action={excluirCliente} className="flex flex-col gap-3 border-t border-white/10 pt-6">
         <input type="hidden" name="clienteId" value={cliente.id} />

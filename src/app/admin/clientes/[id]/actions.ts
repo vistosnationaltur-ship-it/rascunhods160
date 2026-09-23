@@ -109,6 +109,23 @@ export async function editarCliente(formData: FormData) {
   redirect(`/admin/clientes/${clienteId}`);
 }
 
+// Volta um rascunho já concluído pro estado "em preenchimento", sem
+// mexer nas respostas já salvas — útil pra corrigir algo que o cliente
+// errou depois de concluir, ou pra reproduzir/testar um bug usando um
+// cadastro que já tem dados reais preenchidos.
+export async function reabrirRascunho(formData: FormData) {
+  await exigirAdmin();
+
+  const clienteId = (formData.get("clienteId") ?? "").toString();
+
+  await prisma.clienteDs160.update({
+    where: { id: clienteId },
+    data: { status: "EM_PREENCHIMENTO", concluidoEm: null },
+  });
+
+  redirect(`/admin/clientes/${clienteId}`);
+}
+
 // Permite excluir um cliente já cadastrado (ex: acesso enviado errado,
 // teste, ou pra recadastrar do zero a partir do Flow) — libera o e-mail
 // pra um cadastro novo, já que é único.
