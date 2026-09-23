@@ -31,7 +31,7 @@ export function secoesAviso(): SecaoAviso[] {
     {
       titulo: "1. Quem é responsável pelos seus dados",
       paragrafos: [
-        `A 2N Travel presta assessoria para pedidos de visto americano de turista. A responsável pelo tratamento dos seus dados (controladora) é ${CONTROLADORA_NOME}, inscrita no CNPJ ${CONTROLADORA_CNPJ}.`,
+        `A assessoria para pedidos de visto americano de turista é prestada por ${CONTROLADORA_NOME}, inscrita no CNPJ ${CONTROLADORA_CNPJ}, que é a responsável pelo tratamento dos seus dados (controladora).`,
         ...(ENCARREGADO
           ? [
               `Encarregado(a) pelo tratamento de dados pessoais: ${ENCARREGADO}, contato ${emailPrivacidade()}.`,
@@ -58,7 +58,7 @@ export function secoesAviso(): SecaoAviso[] {
     {
       titulo: "4. Com quem compartilhamos",
       paragrafos: [
-        "Apenas o necessário para o serviço: a equipe autorizada da 2N Travel; fornecedores de tecnologia que operam o sistema sob nossas instruções (hospedagem, banco de dados, envio de e-mail e de mensagens); e o sistema oficial do governo dos Estados Unidos (CEAC), para onde o formulário é enviado em seu nome. Por isso seus dados podem ser transferidos para fora do Brasil.",
+        "Apenas o necessário para o serviço: a equipe autorizada; fornecedores de tecnologia que operam o sistema sob nossas instruções (hospedagem, banco de dados, envio de e-mail e de mensagens); e o sistema oficial do governo dos Estados Unidos (CEAC), para onde o formulário é enviado em seu nome. Por isso seus dados podem ser transferidos para fora do Brasil.",
       ],
     },
     {
