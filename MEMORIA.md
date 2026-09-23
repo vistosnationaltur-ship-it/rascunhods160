@@ -29,12 +29,14 @@ onde no código, e o porquê quando não é óbvio.
   (o wizard em si), `admin/clientes/[id]/page.tsx` (resumo no admin) e `gerar-pdf.ts` (o PDF) - os três agora
   escondem a mesma coisa pro mesmo cliente.
 - A idade em si é só CALCULADA em código - o schema (que mora no banco, `FormularioSchema`, não em código) ainda
-  precisa ganhar a condicional "esconder se menor de 14" nos campos-gatilho de cada bloco (Atividade Atual,
+  precisava ganhar a condicional "esconder se menor de 14" nos campos-gatilho de cada bloco (Atividade Atual,
   Trabalhou em outra empresa, Concluiu ensino médio/superior, Viajou pra algum país). Como não há acesso local ao
-  banco de produção (por design do projeto), isso é feito por uma rota de uso único,
-  `src/app/api/admin/aplicar-idade-minima-trabalho/route.ts` (GET simula, POST grava e faz backup automático em
-  `FormularioSchemaBackup` antes) - mesmo padrão já usado antes pra migrar a data de nascimento. PENDENTE: rodar
-  essa rota em produção (precisa estar logado como admin) e depois REMOVER a rota, igual sempre.
+  banco de produção (por design do projeto), isso foi feito por uma rota de uso único,
+  `src/app/api/admin/aplicar-idade-minima-trabalho/route.ts` (GET simulava, POST gravava e fazia backup automático
+  em `FormularioSchemaBackup` antes) - mesmo padrão já usado antes pra migrar a data de nascimento. Rodada com
+  sucesso em produção em 2026-09-23 (14 campos: 11 ganharam condicional nova, 3 tiveram a regra de idade
+  acrescentada numa condicional já existente - "Descreva os dados da empresa" e os 2 telefones de empresa
+  anterior -, 0 não encontrados) e a rota foi removida logo depois, como sempre.
 
 ## 2026-09-22 — Cadastro manual de cliente quebrava a tela inteira (React error #441)
 
