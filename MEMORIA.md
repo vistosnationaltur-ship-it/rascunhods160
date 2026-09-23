@@ -5,6 +5,23 @@ onde no código, e o porquê quando não é óbvio.
 
 ---
 
+## 2026-09-23 — Pergunta de Cônjuge também esconde pra menor de 14 anos; botão "Salvar e continuar" mais visível
+
+- Gatilho: testando com uma criança, a página do Cônjuge (10) apareceu mesmo sendo o último passo antes das
+  páginas de trabalho/escolaridade/viagens (essas sim já escondiam certinho). Investigação: os campos 175/176
+  já tinham uma condicional pra esconder quando "Estado Civil" (campo 30) é "Solteiro" (`acao: "esconder"`,
+  `tipoLogica: "qualquer"`), mas nada relacionado a idade - se o Estado Civil não estiver EXATAMENTE "Solteiro"
+  (ex.: ainda não respondido, ou outro valor no teste), a pergunta aparece mesmo sendo um menor.
+- Como a condicional já era "esconder" + "qualquer" (é um OR de condições-pra-esconder), bastou ACRESCENTAR mais
+  uma regra no mesmo array (`menor_que 14`) em vez de criar uma condicional nova - "esconde se Solteiro OU se
+  menor de 14" continua sendo só uma lista de ORs, compõe direito (diferente do caso de trabalho/escolaridade,
+  que era "mostrar" + "todas"/AND, onde só dava pra acrescentar em condicionais que já fossem "todas").
+  Rota de uso único `src/app/api/admin/aplicar-idade-minima-conjuge/route.ts` (mesmo padrão de sempre: GET
+  simula, POST grava com backup automático) - REMOVER depois de usada.
+- `PaginaWizard.tsx`: botão "Salvar e continuar depois" tinha texto cinza clarinho quase invisível
+  (`text-xs text-zinc-400`) - usuário pediu mais destaque. Virou um botão de verdade (borda + texto azul,
+  `border-blue-200 text-blue-700`), mesmo tamanho dos outros dois botões da página.
+
 ## 2026-09-23 — Aviso quando nenhuma pergunta da página se aplica ao cliente
 
 - Gatilho: usuário testando o corte de idade mínima (14 anos) chegou numa página do wizard sem NENHUM campo

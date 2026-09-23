@@ -228,7 +228,7 @@ export function PaginaWizard({
           type="button"
           onClick={salvarESairAgora}
           disabled={pendente}
-          className="self-center rounded-md px-3 py-1.5 text-xs font-normal text-zinc-400 transition-colors hover:bg-zinc-50 hover:text-zinc-600 disabled:opacity-40"
+          className="self-center rounded-md border border-blue-200 px-4 py-2 text-sm font-medium text-blue-700 transition-colors hover:bg-blue-50 disabled:opacity-40"
         >
           Salvar e continuar depois
         </button>
