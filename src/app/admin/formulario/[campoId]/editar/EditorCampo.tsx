@@ -191,6 +191,34 @@ export function EditorCampo({
           </p>
           {subCampos.map((sub, i) => (
             <div key={sub.id} className="flex items-center gap-2">
+              <div className="flex shrink-0 flex-col">
+                <button
+                  type="button"
+                  disabled={i === 0}
+                  onClick={() => {
+                    const novo = [...subCampos];
+                    [novo[i - 1], novo[i]] = [novo[i], novo[i - 1]];
+                    setSubCampos(novo);
+                  }}
+                  className="px-1 text-xs text-zinc-400 hover:text-indigo-400 disabled:opacity-20"
+                  title="Mover pra cima"
+                >
+                  ▲
+                </button>
+                <button
+                  type="button"
+                  disabled={i === subCampos.length - 1}
+                  onClick={() => {
+                    const novo = [...subCampos];
+                    [novo[i], novo[i + 1]] = [novo[i + 1], novo[i]];
+                    setSubCampos(novo);
+                  }}
+                  className="px-1 text-xs text-zinc-400 hover:text-indigo-400 disabled:opacity-20"
+                  title="Mover pra baixo"
+                >
+                  ▼
+                </button>
+              </div>
               <span className="w-14 shrink-0 text-xs text-zinc-600">{sub.id}</span>
               <input
                 value={sub.label}

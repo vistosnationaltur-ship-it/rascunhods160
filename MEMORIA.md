@@ -5,6 +5,16 @@ onde no código, e o porquê quando não é óbvio.
 
 ---
 
+## 2026-09-23 — Botão de reordenar sub-campos no editor de pergunta
+
+- Gatilho: usuário testando a idade mínima reparou que o campo "Data de nascimento" mostra Mês/Dia/Ano nessa
+  ordem, mas o certo é Dia/Mês/Ano. A ordem de exibição segue exatamente a ordem do array `subCampos` no schema,
+  e o editor (`/admin/formulario/[campoId]/editar`) não tinha como reordenar - só dava pra adicionar (sempre no
+  fim da lista) ou remover.
+- `EditorCampo.tsx`: cada sub-campo ganhou botões ▲/▼ que trocam sua posição com o vizinho no array em memória;
+  salva junto com o resto do formulário (botão "Salvar" já mandava o array `subCampos` como estava). Sem rota de
+  uso único dessa vez - é uma correção de ORDEM, então o próprio usuário resolve direto pela tela do admin.
+
 ## 2026-09-23 — Trabalho/escolaridade/viagens escondidos automaticamente pra menor de 14 anos
 
 - Gatilho: usuário reportou que, ao preencher pra uma criança, as perguntas de escola, profissão e viagens dos
