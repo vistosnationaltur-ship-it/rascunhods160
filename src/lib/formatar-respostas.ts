@@ -22,13 +22,15 @@ export function respostasPorPagina(paginas: Pagina[], respostas: Respostas): Pag
 
 export function formatarResposta(campo: Campo, respostas: Respostas): string {
   // subCampos só guarda a resposta de verdade em "date" e "address" (dia/mês/ano, rua/número...:
-  // CampoRenderer.tsx escreve em respostas[sub.id] pra esses dois). Em "checkbox" o campo inteiro é herdado
-  // do Gravity Forms original e carrega um "subCampos" que NUNCA é escrito - quem guarda a resposta é o
-  // próprio campo.id, como um array das opções marcadas. Achando subCampos aqui pra um checkbox, o código
-  // sempre lia chaves vazias (338.1, 338.2...) e mostrava "não respondido" mesmo com a resposta salva
-  // certinha (bug real, achado e corrigido em 2026-09-22: afetava as 4 perguntas do tipo checkbox do
-  // formulário - "Habilitação Americana", "Visto recusado", "ESTA negado" e "mais de uma empresa/emprego").
-  if (campo.tipo !== "checkbox" && campo.subCampos && campo.subCampos.length > 0) {
+  // CampoRenderer.tsx escreve em respostas[sub.id] pra esses dois). Vários campos "radio"/"checkbox"
+  // herdados do Gravity Forms original carregam um "subCampos" que NUNCA é escrito - quem guarda a
+  // resposta é o próprio campo.id (valor único pra radio, array pra checkbox). Achando subCampos aqui
+  // pra esses campos, o código sempre lia chaves vazias (338.1, 338.2...) e mostrava "não respondido"
+  // mesmo com a resposta salva certinha. A correção de 2026-09-22 só excluiu "checkbox" dessa lógica,
+  // mas os campos afetados na prática ("Habilitação Americana", "Visto recusado", "ESTA negado") são
+  // do tipo "radio" — por isso a tentativa anterior não teve efeito. Corrigido em 2026-09-23 trocando
+  // a blacklist por uma whitelist dos únicos dois tipos que de fato usam subCampos.
+  if ((campo.tipo === "date" || campo.tipo === "address") && campo.subCampos && campo.subCampos.length > 0) {
     return campo.subCampos
       .map((sub) => {
         const v = respostas[sub.id];
