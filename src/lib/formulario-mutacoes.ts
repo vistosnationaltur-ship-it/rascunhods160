@@ -1,4 +1,5 @@
 import type { Campo, Pagina, SubCampo } from "./formulario-schema";
+import { CAMPO_ID_IDADE } from "./idade-constantes";
 
 // Transformações puras sobre o array de páginas do formulário, usadas
 // pelo builder no admin. Nenhuma fala com o banco — quem persiste é
@@ -245,6 +246,10 @@ export function validarSchema(paginas: Pagina[]): string[] {
   const idsExistentes = new Set(ids);
   for (const campo of todosOsCampos) {
     for (const regra of campo.condicional?.regras ?? []) {
+      // CAMPO_ID_IDADE (-1) é uma chave reservada pra "idade calculada"
+      // (ver src/lib/idade.ts) - nunca existe como campo de verdade no
+      // schema, então fica de fora dessa checagem de referência quebrada.
+      if (regra.campoId === CAMPO_ID_IDADE) continue;
       if (!idsExistentes.has(regra.campoId)) {
         erros.push(
           `Campo #${campo.id} ("${campo.label}") tem condicional que depende do campo #${regra.campoId}, que não existe (mais). Ajuste ou remova essa condicional antes.`,

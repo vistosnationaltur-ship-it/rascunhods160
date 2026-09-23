@@ -5,6 +5,30 @@ onde no código, e o porquê quando não é óbvio.
 
 ---
 
+## 2026-09-23 — Salvar QUALQUER pergunta no admin quebrava (validação achava referência quebrada)
+
+- Gatilho: usuário reordenou os sub-campos de "Data de nascimento" (Dia acima de Mês, ver entrada de reordenar
+  sub-campos abaixo) e, ao clicar Salvar, caiu num erro genérico "Minified React error #441" - igual ao bug do
+  cadastro manual de cliente (ver entrada de 2026-09-22), mas dessa vez o culpado era outro.
+- Causa: `validarSchema` (`src/lib/formulario-mutacoes.ts`) roda em TODO save do builder (`aplicarMudancaSchema`)
+  e rejeita qualquer condicional cujo `campoId` não exista mais como campo de verdade no schema - proteção
+  correta contra referência quebrada (campo excluído). O problema: a chave reservada `CAMPO_ID_IDADE` (-1, ver
+  `src/lib/idade.ts`) usada pelas condicionais de idade mínima (trabalho/escolaridade/viagens/cônjuge, ver
+  entradas anteriores) NUNCA existe como campo de verdade - então TODA edição de QUALQUER pergunta no admin
+  passou a falhar essa validação (o erro listava os ~16 campos com regra de idade), e como a Server Action lança
+  a exceção com `throw` (sem `useActionState`), a mensagem de verdade nunca chegava na tela - só o texto genérico
+  do Next em produção (mesma causa raiz do bug do cadastro manual: `throw` direto numa Server Action chamada sem
+  `useActionState` esconde a mensagem real em produção - **isso é um padrão a evitar no projeto todo daqui pra
+  frente**, ver actions.ts do cadastro de cliente e do login pra ver o padrão certo de retornar `{ erro }`).
+- Correção: `validarSchema` agora ignora `CAMPO_ID_IDADE` na checagem de referência quebrada (continua pegando
+  referência a campo removido de verdade normalmente).
+- Efeito colateral encontrado e corrigido de graça: `formulario-mutacoes.ts` é importado por `EditorCampo.tsx`
+  (Client Component) e é deliberadamente livre de Prisma; importar a constante direto de `idade.ts` quebrava
+  isso (`idade.ts` importa `formulario-schema.ts`, que carrega o Prisma no topo) e o build falhava
+  ("Module not found" pro pacote `pg` no bundle do navegador). Solução: `CAMPO_ID_IDADE`/`CAMPO_ID_NASCIMENTO`
+  moraram pra um arquivo novo sem nenhuma dependência, `src/lib/idade-constantes.ts`, que tanto `idade.ts`
+  quanto `formulario-mutacoes.ts` importam.
+
 ## 2026-09-23 — Pergunta de Cônjuge também esconde pra menor de 14 anos; botão "Salvar e continuar" mais visível
 
 - Gatilho: testando com uma criança, a página do Cônjuge (10) apareceu mesmo sendo o último passo antes das
@@ -17,7 +41,7 @@ onde no código, e o porquê quando não é óbvio.
   menor de 14" continua sendo só uma lista de ORs, compõe direito (diferente do caso de trabalho/escolaridade,
   que era "mostrar" + "todas"/AND, onde só dava pra acrescentar em condicionais que já fossem "todas").
   Rota de uso único `src/app/api/admin/aplicar-idade-minima-conjuge/route.ts` (mesmo padrão de sempre: GET
-  simula, POST grava com backup automático) - REMOVER depois de usada.
+  simula, POST grava com backup automático) - rodada com sucesso e removida logo depois.
 - `PaginaWizard.tsx`: botão "Salvar e continuar depois" tinha texto cinza clarinho quase invisível
   (`text-xs text-zinc-400`) - usuário pediu mais destaque. Virou um botão de verdade (borda + texto azul,
   `border-blue-200 text-blue-700`), mesmo tamanho dos outros dois botões da página.

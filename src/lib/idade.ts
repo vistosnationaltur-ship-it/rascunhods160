@@ -1,16 +1,10 @@
 import type { Campo, Pagina } from "./formulario-schema";
 import { buscarCampoPorId } from "./formulario-schema";
+import { CAMPO_ID_IDADE, CAMPO_ID_NASCIMENTO } from "./idade-constantes";
+
+export { CAMPO_ID_IDADE, CAMPO_ID_NASCIMENTO };
 
 type Respostas = Record<string, string | string[] | undefined>;
-
-export const CAMPO_ID_NASCIMENTO = 25;
-
-// Sentinela reservado pra representar "idade calculada" nas condicionais
-// (ver condicional.ts, operadores "maior_ou_igual"/"menor_que") sem
-// precisar mudar o tipo de Regra.campoId (é number) nem duplicar a data
-// de nascimento como se fosse um campo de verdade em `respostas`. Nenhum
-// campo real do schema chega perto de um id negativo.
-export const CAMPO_ID_IDADE = -1;
 
 const MESES = [
   "",
