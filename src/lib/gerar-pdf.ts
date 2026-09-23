@@ -1,3 +1,4 @@
+import { randomBytes } from "crypto";
 import PDFDocument from "pdfkit";
 import { respostasPorPagina, type Respostas } from "@/lib/formatar-respostas";
 import { obterPaginas } from "@/lib/formulario-schema";
@@ -5,13 +6,23 @@ import { comIdadeInjetada } from "@/lib/idade";
 
 // Réplica em pdfkit (pure JS, roda em serverless sem binário nativo) —
 // não é pixel-a-pixel igual ao template mPDF "zadani" antigo, mas
-// reproduz estrutura (por página/seção) e conteúdo completo. Sem senha
-// de propósito (pedido do usuário em 2026-08-23) — o PDF_PASSWORD era
-// só um resquício do sistema antigo.
+// reproduz estrutura (por página/seção) e conteúdo completo.
+//
+// Senha (2026-09-23, revertendo a decisão de 2026-08-23 de mandar sem senha): o PDF que vai por
+// e-mail tem todas as respostas (passaporte etc.), então sai protegido. A senha é o CPF de quem
+// preencheu (só números) — o cliente já sabe (é o que ele digita pra entrar) e a equipe tem na
+// ficha. Sem CPF, usa a env PDF_PASSWORD se existir; sem nenhum dos dois, sai sem senha.
+export function senhaDoPdf(cpf: string | null | undefined): string | undefined {
+  const digitos = (cpf ?? "").replace(/\D/g, "");
+  return digitos || process.env.PDF_PASSWORD || undefined;
+}
+
 export async function gerarPdfRascunho(params: {
   nomeCliente: string;
   email: string;
   respostas: Respostas;
+  /** Quando informada, o PDF sai criptografado (AES-256) e só abre com ela. */
+  senha?: string;
 }): Promise<Buffer> {
   const paginas = await obterPaginas();
 
@@ -19,6 +30,13 @@ export async function gerarPdfRascunho(params: {
     const doc = new PDFDocument({
       size: "A4",
       margin: 50,
+      ...(params.senha
+        ? {
+            userPassword: params.senha,
+            ownerPassword: randomBytes(16).toString("hex"),
+            pdfVersion: "1.7ext3" as const,
+          }
+        : {}),
     });
 
     const partes: Buffer[] = [];

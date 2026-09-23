@@ -5,7 +5,7 @@ import { exigirAdmin } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
 import { apenasDigitos, hashSenha } from "@/lib/senha";
 import { enviarLinkAcessoWhatsapp } from "@/lib/whatsapp";
-import { gerarPdfRascunho } from "@/lib/gerar-pdf";
+import { gerarPdfRascunho, senhaDoPdf } from "@/lib/gerar-pdf";
 import { enviarPdfRascunho, destinatariosRascunho } from "@/lib/email";
 
 // A senha de login é sempre o CPF do cliente (já salvo em texto puro no
@@ -46,16 +46,19 @@ export async function reenviarPdfRascunho(formData: FormData) {
 
   let erro: string | undefined;
   try {
+    const senha = senhaDoPdf(cliente.cpf);
     const pdf = await gerarPdfRascunho({
       nomeCliente: cliente.nome,
       email: cliente.email,
       respostas,
+      senha,
     });
 
     const envio = await enviarPdfRascunho({
       nomeCliente: cliente.nome,
       destinatarios: destinatariosRascunho(cliente.email, respostas),
       pdf,
+      protegido: Boolean(senha),
     });
 
     if (envio.ok) {

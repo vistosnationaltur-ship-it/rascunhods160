@@ -90,6 +90,24 @@ function FormularioLogin() {
           className="rounded-md border border-zinc-300 px-3 py-2.5 text-zinc-900 outline-none transition-colors focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20"
         />
       </label>
+      <label className="flex items-start gap-2 text-xs leading-relaxed text-zinc-600">
+        <input type="checkbox" name="aceitePrivacidade" className="mt-0.5 h-4 w-4 shrink-0" />
+        <span>
+          Li e concordo com o{" "}
+          <a
+            href="/privacidade"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="text-blue-700 underline underline-offset-2"
+          >
+            Aviso de Privacidade
+          </a>{" "}
+          e autorizo o uso dos meus dados, inclusive os dados sensíveis exigidos pelo formulário DS-160, para o
+          preenchimento do pedido de visto. Se estou preenchendo por outra pessoa (por exemplo, um filho menor),
+          declaro ter autorização ou representação legal para isso.{" "}
+          <span className="text-zinc-400">(Necessário no primeiro acesso.)</span>
+        </span>
+      </label>
       {estado?.erro && (
         <p className="rounded-md border border-red-200 bg-red-50 px-3 py-2 text-sm text-red-700">
           {estado.erro}

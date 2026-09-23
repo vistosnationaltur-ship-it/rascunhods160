@@ -30,6 +30,8 @@ export async function enviarPdfRascunho(params: {
   nomeCliente: string;
   destinatarios: string[];
   pdf: Buffer;
+  /** true quando o PDF foi gerado com senha (a senha é o CPF — o texto do e-mail avisa). */
+  protegido?: boolean;
 }): Promise<{ ok: boolean; erro?: string }> {
   const apiKey = process.env.RESEND_API_KEY;
   const from = process.env.RESEND_FROM;
@@ -46,7 +48,11 @@ export async function enviarPdfRascunho(params: {
       from,
       to: params.destinatarios,
       subject: `Rascunho DS-160 concluído — ${params.nomeCliente}`,
-      text: `Segue em anexo o rascunho do DS-160 preenchido por ${params.nomeCliente}.`,
+      text:
+        `Segue em anexo o rascunho do DS-160 preenchido por ${params.nomeCliente}.` +
+        (params.protegido
+          ? "\n\nPor segurança, o PDF está protegido por senha: a senha é o CPF de quem preencheu (somente números)."
+          : ""),
       attachments: [{ filename: "rascunho-ds160.pdf", content: params.pdf }],
     });
     if (error) return { ok: false, erro: error.message };

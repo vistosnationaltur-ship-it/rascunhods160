@@ -4,6 +4,7 @@ import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 import { prisma } from "@/lib/prisma";
 import { SESSION_COOKIE_CLIENTE, criarTokenCliente } from "@/lib/auth";
+import { VERSAO_AVISO_PRIVACIDADE } from "@/lib/aviso-privacidade";
 import { apenasDigitos, senhaConfere } from "@/lib/senha";
 import { verificarBloqueio, registrarTentativaFalha, registrarLoginOk, mensagemBloqueio } from "@/lib/rate-limit-login";
 
@@ -35,6 +36,20 @@ export async function loginCliente(
     return { erro: "E-mail ou senha incorretos." };
   }
   await registrarLoginOk(email, "cliente");
+
+  // Consentimento (LGPD): na primeira vez — ou quando o aviso muda de versão — exige o "li e
+  // concordo" e registra quando e qual versão foi aceita. Quem já aceitou esta versão entra direto.
+  if (cliente.status !== "CONCLUIDO" && cliente.consentimentoVersao !== VERSAO_AVISO_PRIVACIDADE) {
+    if (formData.get("aceitePrivacidade") !== "on") {
+      return {
+        erro: "Para continuar, leia o Aviso de Privacidade e marque a caixa de concordância.",
+      };
+    }
+    await prisma.clienteDs160.update({
+      where: { id: cliente.id },
+      data: { consentimentoEm: new Date(), consentimentoVersao: VERSAO_AVISO_PRIVACIDADE },
+    });
+  }
 
   const cookieStore = await cookies();
   cookieStore.set(

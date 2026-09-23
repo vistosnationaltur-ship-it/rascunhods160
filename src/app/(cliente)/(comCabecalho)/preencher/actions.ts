@@ -4,7 +4,7 @@ import { cookies } from "next/headers";
 import { exigirCliente, SESSION_COOKIE_CLIENTE } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
 import { obterPaginas } from "@/lib/formulario-schema";
-import { gerarPdfRascunho } from "@/lib/gerar-pdf";
+import { gerarPdfRascunho, senhaDoPdf } from "@/lib/gerar-pdf";
 import { enviarPdfRascunho, destinatariosRascunho } from "@/lib/email";
 import { avisarFlowConclusao } from "@/lib/flow-cliente";
 
@@ -92,16 +92,19 @@ export async function concluirRascunho(respostasPagina: Record<string, Valor>) {
   // Action inteira e fazer o cliente ver tela de erro depois de já ter
   // concluído de verdade.
   try {
+    const senha = senhaDoPdf(cliente.cpf);
     const pdf = await gerarPdfRascunho({
       nomeCliente: cliente.nome,
       email: cliente.email,
       respostas: respostasNovas,
+      senha,
     });
 
     const envio = await enviarPdfRascunho({
       nomeCliente: cliente.nome,
       destinatarios: destinatariosRascunho(cliente.email, respostasNovas),
       pdf,
+      protegido: Boolean(senha),
     });
 
     if (envio.ok) {

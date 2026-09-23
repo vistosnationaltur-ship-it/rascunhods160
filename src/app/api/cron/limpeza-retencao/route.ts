@@ -2,9 +2,9 @@ import { NextResponse } from "next/server";
 import { Resend } from "resend";
 import { limparClientesAntigos } from "@/lib/limpeza-retencao";
 
-// Roda 1x/mês (ver vercel.json) apagando rascunhos CONCLUIDO há mais de 6
-// meses — política de retenção decidida com o usuário em 2026-09-04 (LGPD:
-// não guardar dado sensível além do necessário). O backup semanal
+// Roda todo dia (ver vercel.json) apagando rascunhos com exclusão agendada vencida (30 dias
+// depois de "Passaporte devolvido" no Flow) e, como rede de segurança, os CONCLUIDO há mais de
+// 6 meses — política de retenção (LGPD: não guardar dado sensível além do necessário). O backup semanal
 // criptografado (outro cron) continua guardando uma cópia por um tempo
 // mesmo depois do apagão daqui, então não é uma perda irreversível
 // imediata se alguém precisar recuperar logo depois.
@@ -25,16 +25,19 @@ export async function GET(request: Request) {
       const resend = new Resend(apiKey);
       const lista =
         excluidos.length === 0
-          ? "Nenhum rascunho passou de 6 meses concluído desta vez."
+          ? "Nenhum rascunho venceu a retenção desta vez."
           : excluidos
-              .map((c) => `- ${c.nome} (${c.email}) — concluído em ${c.concluidoEm.toISOString().slice(0, 10)}`)
+              .map(
+                (c) =>
+                  `- ${c.nome} (${c.email}) — ${c.motivo === "passaporte-devolvido" ? "30 dias após passaporte devolvido" : "concluído há mais de 6 meses"}`,
+              )
               .join("\n");
       await resend.emails.send({
         from,
         to: [destino],
         subject: `Limpeza de retenção DS-160 — ${excluidos.length} removido(s)`,
         text:
-          `Rascunhos concluídos há mais de 6 meses foram apagados do banco (política de retenção).\n\n${lista}`,
+          `Rascunhos que venceram a política de retenção foram apagados do banco.\n\n${lista}`,
       });
     }
 

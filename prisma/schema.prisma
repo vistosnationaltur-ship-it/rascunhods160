@@ -26,6 +26,14 @@ model Usuario {
   senhaHash String
   role      Role     @default(USUARIO)
   criadoEm  DateTime @default(now())
+
+  // Verificação em duas etapas (app autenticador, TOTP). O segredo fica cifrado (ver
+  // src/lib/totp.ts); totpAtivadoEm nulo = ainda não configurou/confirmou.
+  totpSecret       String?
+  totpAtivadoEm    DateTime?
+  totpUltimoPasso  Int? // último passo de 30s aceito: o mesmo código não vale duas vezes
+  totpTentativas   Int       @default(0)
+  totpBloqueadoAte DateTime?
 }
 
 // Linha única (singleton) guardando o schema do formulário — pages,
@@ -96,6 +104,14 @@ model ClienteDs160 {
 
   concluidoEm DateTime? // quando o cliente marcou o rascunho como concluído
   pdfGeradoEm DateTime?
+
+  // Retenção: o Flow agenda a exclusão (30 dias depois de "Passaporte devolvido"); o cron diário
+  // apaga o rascunho quando essa data passa. Nulo = sem exclusão agendada.
+  excluirApos DateTime?
+
+  // Consentimento (LGPD): quando e qual versão do Aviso de Privacidade o cliente aceitou.
+  consentimentoEm     DateTime?
+  consentimentoVersao String?
 
   criadoEm     DateTime @default(now())
   atualizadoEm DateTime @updatedAt
