@@ -6,6 +6,7 @@ import { prisma } from "@/lib/prisma";
 import { obterPaginas } from "@/lib/formulario-schema";
 import { gerarPdfRascunho } from "@/lib/gerar-pdf";
 import { enviarPdfRascunho, destinatariosRascunho } from "@/lib/email";
+import { avisarFlowConclusao } from "@/lib/flow-cliente";
 
 type Valor = string | string[] | undefined;
 
@@ -73,21 +74,16 @@ export async function concluirRascunho(respostasPagina: Record<string, Valor>) {
   });
 
   // Avisa o Flow que o rascunho foi concluído (melhor esforço — não
-  // pode travar a conclusão se o Flow estiver fora do ar).
-  if (cliente.flowClienteId) {
-    const flowUrl = process.env.FLOW_API_URL;
-    const flowSecret = process.env.FLOW_API_SECRET;
-    if (flowUrl && flowSecret) {
-      try {
-        await fetch(`${flowUrl}/api/ds160-rascunho/marcar-concluido`, {
-          method: "POST",
-          headers: { "Content-Type": "application/json", Authorization: `Bearer ${flowSecret}` },
-          body: JSON.stringify({ clienteId: cliente.flowClienteId }),
-        });
-      } catch (erro) {
-        console.error(`Falha ao avisar o Flow da conclusão do cliente ${cliente.id}:`, erro);
-      }
+  // pode travar a conclusão se o Flow estiver fora do ar). Sem
+  // flowClienteId (cadastro manual aqui) o Flow acha a pessoa pelo CPF e,
+  // se ela não existir lá, cria; o id que volta vira o vínculo.
+  try {
+    const flowClienteId = await avisarFlowConclusao(cliente);
+    if (flowClienteId && flowClienteId !== cliente.flowClienteId) {
+      await prisma.clienteDs160.update({ where: { id: cliente.id }, data: { flowClienteId } });
     }
+  } catch (erro) {
+    console.error(`Falha ao avisar o Flow da conclusão do cliente ${cliente.id}:`, erro);
   }
 
   // O rascunho já está salvo e concluído acima — daqui pra baixo é só

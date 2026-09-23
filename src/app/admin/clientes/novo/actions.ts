@@ -5,6 +5,7 @@ import { exigirAdmin } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
 import { apenasDigitos, hashSenha } from "@/lib/senha";
 import { enviarLinkAcessoWhatsapp } from "@/lib/whatsapp";
+import { buscarClienteFlowPorCpf } from "@/lib/flow-cliente";
 
 export type EstadoCadastroCliente = { erro?: string };
 
@@ -25,7 +26,7 @@ export async function cadastrarCliente(
   const cpf = apenasDigitos((formData.get("cpf") ?? "").toString());
   const email = (formData.get("email") ?? "").toString().trim().toLowerCase();
   const telefone = (formData.get("telefone") ?? "").toString().trim() || null;
-  const flowClienteId = (formData.get("flowClienteId") ?? "").toString().trim() || null;
+  let flowClienteId = (formData.get("flowClienteId") ?? "").toString().trim() || null;
 
   if (!nome || !email || !cpf) {
     return { erro: "Nome, e-mail e CPF são obrigatórios — o CPF é a senha de login do cliente." };
@@ -40,6 +41,13 @@ export async function cadastrarCliente(
   const cpfExistente = await prisma.clienteDs160.findUnique({ where: { cpf } });
   if (cpfExistente) {
     return { erro: `Já existe um cliente cadastrado com o CPF "${cpf}".` };
+  }
+
+  // Cadastro manual ("sem buscar no Flow"): se já existe alguém no Flow com esse CPF, vincula
+  // sozinho — assim o Flow é avisado quando o cliente concluir. Sem achar, segue sem vínculo
+  // (ao concluir, o Flow cria/acha a pessoa pelo CPF).
+  if (!flowClienteId) {
+    flowClienteId = (await buscarClienteFlowPorCpf(cpf))?.id ?? null;
   }
 
   const cliente = await prisma.clienteDs160.create({

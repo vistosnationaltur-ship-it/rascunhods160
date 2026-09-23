@@ -23,12 +23,15 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ erro: "Corpo da requisição não é JSON válido." }, { status: 400 });
   }
 
-  const { nome, cpf: cpfBruto, email, telefone, flowClienteId } = body as {
+  const { nome, cpf: cpfBruto, email, telefone, flowClienteId, enviarWhatsapp } = body as {
     nome?: string;
     cpf?: string;
     email?: string;
     telefone?: string;
     flowClienteId?: string;
+    // Opcional, padrão true (comportamento de sempre). Família: o Flow manda false pros
+    // dependentes, que entram com o e-mail do responsável e não recebem outro link.
+    enviarWhatsapp?: boolean;
   };
   const cpf = apenasDigitos(cpfBruto ?? "");
 
@@ -60,6 +63,13 @@ export async function POST(request: NextRequest) {
       senhaHash: hashSenha(cpf),
     },
   });
+
+  if (enviarWhatsapp === false) {
+    return NextResponse.json(
+      { ok: true, id: cliente.id, whatsappEnviado: false, whatsappPulado: true },
+      { status: 201 },
+    );
+  }
 
   const envio = await enviarLinkAcessoWhatsapp({ telefone, login: nome });
 
