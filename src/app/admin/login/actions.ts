@@ -3,7 +3,7 @@
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 import { prisma } from "@/lib/prisma";
-import { SESSION_COOKIE_STAFF, criarTokenStaff } from "@/lib/auth";
+import { COOKIE_2FA_STAFF, SESSION_COOKIE_STAFF, criarToken2faStaff, criarTokenStaff } from "@/lib/auth";
 import { senhaConfere } from "@/lib/senha";
 import { verificarBloqueio, registrarTentativaFalha, registrarLoginOk, mensagemBloqueio } from "@/lib/rate-limit-login";
 
@@ -29,9 +29,24 @@ export async function loginStaff(
   await registrarLoginOk(username, "staff");
 
   const cookieStore = await cookies();
+
+  // Com 2FA ativo, a senha sozinha não abre a sessão: guarda um cookie curto e pede o código.
+  if (usuario.totpAtivadoEm && usuario.totpSecret) {
+    cookieStore.set(COOKIE_2FA_STAFF, criarToken2faStaff(usuario.id), {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === "production",
+      sameSite: "lax",
+      path: "/",
+      maxAge: 5 * 60,
+    });
+    redirect("/admin/login/2fa");
+  }
+
+  // Sem 2FA ainda: sessão "incompleta" (mfa false) que só alcança a tela de configuração
+  // (ver src/proxy.ts) — o 2FA é obrigatório pra usar o admin.
   cookieStore.set(
     SESSION_COOKIE_STAFF,
-    criarTokenStaff({ id: usuario.id, username: usuario.username, role: usuario.role }),
+    criarTokenStaff({ id: usuario.id, username: usuario.username, role: usuario.role, mfa: false }),
     {
       httpOnly: true,
       secure: process.env.NODE_ENV === "production",
@@ -41,7 +56,7 @@ export async function loginStaff(
     },
   );
 
-  redirect("/admin");
+  redirect("/admin/seguranca");
 }
 
 export async function logoutStaff() {

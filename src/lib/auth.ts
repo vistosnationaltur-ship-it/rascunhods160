@@ -16,8 +16,8 @@ function assinar(payload: string): string {
   return createHmac("sha256", secret).update(payload).digest("base64url");
 }
 
-function criarToken(dados: Record<string, unknown>): string {
-  const payload = JSON.stringify({ ...dados, exp: Date.now() + DURACAO_SESSAO_MS });
+function criarToken(dados: Record<string, unknown>, duracaoMs = DURACAO_SESSAO_MS): string {
+  const payload = JSON.stringify({ ...dados, exp: Date.now() + duracaoMs });
   const payloadBase64 = Buffer.from(payload).toString("base64url");
   const assinatura = assinar(payloadBase64);
   return `${payloadBase64}.${assinatura}`;
@@ -56,7 +56,23 @@ export type SessaoStaff = {
   id: string;
   username: string;
   role: Role;
+  // true quando o login passou pela verificação em duas etapas. Sessão sem isso só alcança a
+  // tela de configuração do 2FA (ver src/proxy.ts).
+  mfa?: boolean;
 };
+
+// Cookie curto (5 min) entre "senha certa" e "código do app certo".
+export const COOKIE_2FA_STAFF = "ds160_staff_2fa";
+
+/** Token de "senha conferida, falta o código do app": só serve pra tela do código. */
+export function criarToken2faStaff(usuarioId: string): string {
+  return criarToken({ tipo: "2fa", id: usuarioId }, 5 * 60 * 1000);
+}
+
+export function lerToken2faStaff(token: string | undefined): string | null {
+  const payload = lerToken(token);
+  return payload && payload.tipo === "2fa" && typeof payload.id === "string" ? payload.id : null;
+}
 
 export function criarTokenStaff(sessao: SessaoStaff): string {
   return criarToken(sessao);
@@ -65,7 +81,12 @@ export function criarTokenStaff(sessao: SessaoStaff): string {
 export function lerTokenStaff(token: string | undefined): SessaoStaff | null {
   const payload = lerToken(token);
   if (!payload) return null;
-  return { id: payload.id as string, username: payload.username as string, role: payload.role as Role };
+  return {
+    id: payload.id as string,
+    username: payload.username as string,
+    role: payload.role as Role,
+    mfa: payload.mfa === true,
+  };
 }
 
 export async function sessaoStaffAtual(): Promise<SessaoStaff | null> {
@@ -80,6 +101,7 @@ export async function sessaoStaffAtual(): Promise<SessaoStaff | null> {
 export async function exigirAdmin(): Promise<SessaoStaff> {
   const sessao = await sessaoStaffAtual();
   if (!sessao) throw new Error("Não autenticado.");
+  if (!sessao.mfa) throw new Error("Ative a verificação em duas etapas para continuar.");
 
   const usuario = await prisma.usuario.findUnique({ where: { id: sessao.id } });
   if (!usuario || usuario.role !== "ADMIN") {

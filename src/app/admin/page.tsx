@@ -29,6 +29,12 @@ export default async function AdminHomePage() {
           Cadastrar cliente
         </Link>
         <Link
+          href="/admin/seguranca"
+          className="w-fit rounded-lg border border-white/10 bg-zinc-900/60 px-4 py-2.5 text-sm text-zinc-100 transition-colors hover:border-indigo-500/50"
+        >
+          Segurança da conta (2 etapas)
+        </Link>
+        <Link
           href="/admin/formulario"
           className="w-fit rounded-lg border border-white/10 bg-zinc-900/60 px-4 py-2.5 text-sm text-zinc-100 transition-colors hover:border-indigo-500/50"
         >
