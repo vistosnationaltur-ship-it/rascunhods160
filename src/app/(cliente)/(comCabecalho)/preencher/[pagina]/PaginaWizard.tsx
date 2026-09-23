@@ -178,6 +178,19 @@ export function PaginaWizard({
       </div>
 
       <div className="flex flex-col gap-5">
+        {linhas.length === 0 && (
+          // Acontece quando NENHUM campo desta página se aplica ao caso do
+          // cliente (ex.: perguntas de trabalho/escola/viagens pra menor de
+          // 14 anos, ver src/lib/idade.ts, ou a página de cônjuge pra quem
+          // não é casado) - sem essa mensagem a tela ficava só com a barra
+          // de progresso e os botões, parecendo quebrada (usuário reportou
+          // em 2026-09-23: "os campos não aparecem... mas temos que
+          // avançar", sem entender por quê).
+          <p className="rounded-lg border border-zinc-200 bg-zinc-50 px-4 py-3 text-sm text-zinc-500">
+            Nenhuma pergunta desta página se aplica ao seu caso, com base no que já foi respondido antes
+            (ex.: idade ou estado civil). Clique em &quot;Seguinte&quot; pra continuar.
+          </p>
+        )}
         {linhas.map((linha) => (
           <div key={linha[0].id} className="grid grid-cols-12 gap-4">
             {linha.map((campo) => (

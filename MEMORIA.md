@@ -5,6 +5,17 @@ onde no código, e o porquê quando não é óbvio.
 
 ---
 
+## 2026-09-23 — Aviso quando nenhuma pergunta da página se aplica ao cliente
+
+- Gatilho: usuário testando o corte de idade mínima (14 anos) chegou numa página do wizard sem NENHUM campo
+  visível (todas as perguntas daquela página não se aplicavam ao caso) e só viu a barra de progresso + botões
+  "Anterior"/"Seguinte", sem entender por quê - "os campos não aparecem... mas temos que avançar".
+- `PaginaWizard.tsx`: quando `linhas.length === 0` (nenhum campo passou pelo `campoVisivel`), mostra um aviso
+  explicando que nenhuma pergunta se aplica com base no que já foi respondido antes, e que é pra clicar em
+  "Seguinte". Cobre qualquer página que fique vazia por condicional (idade mínima pra trabalho/escola/viagens,
+  ver `src/lib/idade.ts`, ou outras já existentes como a de cônjuge pra quem não é casado) - não é um aviso
+  específico só de "menor de idade".
+
 ## 2026-09-23 — Botão de reordenar sub-campos no editor de pergunta
 
 - Gatilho: usuário testando a idade mínima reparou que o campo "Data de nascimento" mostra Mês/Dia/Ano nessa
