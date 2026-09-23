@@ -11,14 +11,18 @@ export const DATA_AVISO_PRIVACIDADE = "23/09/2026";
 export const CONTROLADORA_NOME = "JANAINA PIRES DOS SANTOS CRUZ";
 export const CONTROLADORA_CNPJ = "48.135.204/0001-66";
 
-// Canal pra exercer direitos. Se nenhum e-mail dedicado estiver configurado, cai no WhatsApp em
-// que o cliente recebeu o link de acesso (o que é verdade hoje). ENCARREGADO: preencher quando
-// a 2N designar (LGPD art. 41) — enquanto vazio, a linha some do texto.
-export function contatoPrivacidade(): string {
-  const email = process.env.EMAIL_PRIVACIDADE?.trim();
-  return email ? `pelo e-mail ${email}` : "pelo mesmo WhatsApp da 2N Travel em que você recebeu o link de acesso";
+// Encarregado(a) pelo tratamento de dados (LGPD art. 41) e canal de contato, definidos pela 2N em
+// 2026-09-23. A env EMAIL_PRIVACIDADE, se existir, sobrescreve o e-mail (sem precisar de deploy de código).
+export const ENCARREGADO: string | null = "Alex G Cruz";
+export const EMAIL_PRIVACIDADE_PADRAO = "contato@ds160.2ntravel.com.br";
+
+export function emailPrivacidade(): string {
+  return process.env.EMAIL_PRIVACIDADE?.trim() || EMAIL_PRIVACIDADE_PADRAO;
 }
-export const ENCARREGADO: string | null = null;
+
+export function contatoPrivacidade(): string {
+  return `pelo e-mail ${emailPrivacidade()}`;
+}
 
 export type SecaoAviso = { titulo: string; paragrafos: string[]; itens?: string[] };
 
@@ -28,7 +32,11 @@ export function secoesAviso(): SecaoAviso[] {
       titulo: "1. Quem é responsável pelos seus dados",
       paragrafos: [
         `A 2N Travel presta assessoria para pedidos de visto americano de turista. A responsável pelo tratamento dos seus dados (controladora) é ${CONTROLADORA_NOME}, inscrita no CNPJ ${CONTROLADORA_CNPJ}.`,
-        ...(ENCARREGADO ? [`Encarregado(a) pelo tratamento de dados pessoais: ${ENCARREGADO}.`] : []),
+        ...(ENCARREGADO
+          ? [
+              `Encarregado(a) pelo tratamento de dados pessoais: ${ENCARREGADO}, contato ${emailPrivacidade()}.`,
+            ]
+          : []),
       ],
     },
     {
