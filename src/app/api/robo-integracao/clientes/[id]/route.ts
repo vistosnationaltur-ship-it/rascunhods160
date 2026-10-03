@@ -148,6 +148,16 @@ export async function GET(request: NextRequest, { params }: { params: Promise<{ 
     telefone: cliente.telefone,
     flowClienteId: cliente.flowClienteId,
     status: cliente.status,
+    paginaAtual: cliente.paginaAtual,
+    totalPaginas: paginas.length,
+    acesso: {
+      primeiroAcessoEm: cliente.primeiroAcessoEm,
+      ultimoAcessoEm: cliente.ultimoAcessoEm,
+      totalAcessos: cliente.totalAcessos,
+      ultimoSalvamentoEm: cliente.ultimoSalvamentoEm,
+      consentimentoEm: cliente.consentimentoEm,
+      concluidoEm: cliente.concluidoEm,
+    },
     respostas: porId,
   });
 }

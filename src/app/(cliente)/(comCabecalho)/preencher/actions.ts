@@ -31,6 +31,7 @@ export async function salvarPagina(paginaIndice: number, respostasPagina: Record
     data: {
       respostas: respostasNovas,
       paginaAtual: paginaIndice,
+      ultimoSalvamentoEm: new Date(),
     },
   });
 }

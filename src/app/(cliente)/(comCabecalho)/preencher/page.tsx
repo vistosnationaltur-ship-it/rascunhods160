@@ -2,10 +2,13 @@ import { redirect } from "next/navigation";
 import { exigirCliente } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
 import { obterPaginas } from "@/lib/formulario-schema";
+import { registrarAcessoCliente } from "@/lib/acesso-cliente";
 
 export default async function PreencherHomePage() {
   const sessao = await exigirCliente();
   const cliente = await prisma.clienteDs160.findUnique({ where: { id: sessao.id } });
+
+  if (cliente) await registrarAcessoCliente(cliente.id);
 
   if (cliente?.status === "CONCLUIDO") {
     redirect("/preencher/concluido");

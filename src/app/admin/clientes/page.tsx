@@ -7,6 +7,7 @@ const COLUNAS: { chave: string; label: string }[] = [
   { chave: "nome", label: "Nome" },
   { chave: "email", label: "E-mail" },
   { chave: "status", label: "Status" },
+  { chave: "ultimoAcessoEm", label: "Último acesso" },
   { chave: "criadoEm", label: "Cadastrado em" },
 ];
 
@@ -112,6 +113,21 @@ export default async function ListaClientesPage({
                     >
                       {c.status === "CONCLUIDO" ? "Concluído" : "Em preenchimento"}
                     </span>
+                  </td>
+                  <td className="px-4 py-3">
+                    {c.ultimoAcessoEm ? (
+                      <span className="text-zinc-300" title={`${c.totalAcessos} acesso(s)`}>
+                        {c.ultimoAcessoEm.toLocaleString("pt-BR", { dateStyle: "short", timeStyle: "short" })}
+                      </span>
+                    ) : c.consentimentoEm ? (
+                      <span className="text-zinc-400" title="Acessou antes do controle de acesso existir">
+                        Abriu em {c.consentimentoEm.toLocaleDateString("pt-BR")}
+                      </span>
+                    ) : (
+                      <span className="rounded-full bg-red-500/10 px-2.5 py-1 text-[11px] text-red-400">
+                        Nunca abriu
+                      </span>
+                    )}
                   </td>
                   <td className="px-4 py-3 text-zinc-400">
                     {c.criadoEm.toLocaleDateString("pt-BR")}

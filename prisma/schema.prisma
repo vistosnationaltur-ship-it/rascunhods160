@@ -113,6 +113,13 @@ model ClienteDs160 {
   consentimentoEm     DateTime?
   consentimentoVersao String?
 
+  // Controle de acesso do cliente ao rascunho (pra saber se ele realmente abriu/preencheu).
+  // Um "acesso" é uma visita nova — abertura do formulário depois de 30+ min sem atividade.
+  primeiroAcessoEm   DateTime?
+  ultimoAcessoEm     DateTime?
+  totalAcessos       Int       @default(0)
+  ultimoSalvamentoEm DateTime? // última vez que o cliente salvou uma página
+
   criadoEm     DateTime @default(now())
   atualizadoEm DateTime @updatedAt
 
