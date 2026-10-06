@@ -5,6 +5,20 @@ onde no código, e o porquê quando não é óbvio.
 
 ---
 
+## 2026-10-03 — Controle de acesso do cliente ao rascunho ("nunca abriu")
+
+- Gatilho: clientes diziam que tinham preenchido e não tinham; faltava saber se a pessoa sequer abriu o link.
+- `ClienteDs160` ganhou `primeiroAcessoEm`, `ultimoAcessoEm`, `totalAcessos`, `ultimoSalvamentoEm` (migration `20261003130000_controle_acesso_rascunho`;
+  roda sozinha no build da Vercel). `src/lib/acesso-cliente.ts::registrarAcessoCliente` é chamado ao entrar em `/preencher` (login ou cookie de
+  30 dias); só conta nova visita após 30+ min sem atividade; falha ali nunca atrapalha o cliente. `salvarPagina` grava `ultimoSalvamentoEm`.
+- Admin (`/admin/clientes`): coluna "Último acesso"; vermelho "Nunca abriu" quando não há acesso nem aceite de privacidade; quem aceitou o aviso
+  antes do controle existir aparece como "Abriu em <data do aceite>" (não há como reconstruir o passado).
+- `GET /api/robo-integracao/clientes/[id]` devolve também `paginaAtual`, `totalPaginas` e `acesso{...}` (o Flow mostra na página do rascunho do cliente).
+- **Entrar no formulário como o cliente conta como acesso dele.** O `.env` deste projeto aponta para um banco local; consultar produção daqui exige
+  a URL de produção (não está no `.env`).
+
+---
+
 ## 2026-09-23 — Salvar QUALQUER pergunta no admin quebrava (validação achava referência quebrada)
 
 - Gatilho: usuário reordenou os sub-campos de "Data de nascimento" (Dia acima de Mês, ver entrada de reordenar
