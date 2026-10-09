@@ -34,7 +34,9 @@ function main() {
   decipher.setAuthTag(authTag);
   const json = Buffer.concat([decipher.update(cifrado), decipher.final()]).toString("utf8");
 
-  const saida = arquivo.replace(/\.enc$/, "") + ".json";
+  // ds160.env.enc (do backup pro Drive) volta como .env.restaurado; os backups de dados voltam como .json.
+  const ehEnv = /(^|[\\/])ds160\.env\.enc$/.test(arquivo);
+  const saida = ehEnv ? arquivo.replace(/ds160\.env\.enc$/, ".env.restaurado") : arquivo.replace(/\.enc$/, "") + ".json";
   writeFileSync(saida, json);
   console.log(`Backup descriptografado em ${saida}`);
 }

@@ -55,8 +55,7 @@ pasta é a cópia local, nunca sobe pro GitHub.
 
 Para restaurar só o schema desse dump: `scripts/restaurar-schema.ts`
 aceita tanto o export enxuto quanto esse dump completo.
-Usuários/clientes: reinserir pelo Prisma Console ou script pontual (raro
-precisar).
+Usuários, schema e clientes de uma vez: `scripts/restaurar-tudo.ts` (seção 5).
 
 ---
 
@@ -84,3 +83,21 @@ projeto do banco → Connect / API Keys) — a string de **conexão direta**
 (`postgres://...`), não a de Accelerate (`prisma+postgres://...`).
 
 Feche o terminal depois de usar, pra não deixar a string na env da sessão.
+
+---
+
+## 5. Backup completo pro Drive e restauração completa
+
+### Backup pro Drive (junto com o do Flow)
+`npm run backup:drive` (lê `DATABASE_URL`, `BACKUP_ENCRYPTION_KEY` e `BACKUP_DRIVE_DIR` do `.env` local). Normalmente quem chama é o atalho
+**"Backup do Flow"** (repositório do Flow, `DS160_REPO_DIR`/`DS160_DRIVE_DIR`), que grava na pasta `Flow Visto Americano\Sistema Completo DS160`:
+`ds160-backup-*.enc` (dados, cifrado e conferido), `Codigo do Sistema/`, `ds160-historico-git.bundle`, `ds160.env.enc`, `ULTIMO-BACKUP.txt`.
+**Retenção LGPD:** cópias de dados só por 28 dias (mín. 2). Flag `--sem-alerta` = não manda e-mail (o Flow já avisa).
+
+### Restauração completa (banco novo e vazio)
+1. Banco Postgres novo; `$env:DATABASE_URL="<string do banco NOVO>"`; `npx prisma migrate deploy`
+2. `npx tsx scripts/descriptografar-backup.ts "<ds160-backup-....enc>" --chave "<BACKUP_ENCRYPTION_KEY do DS-160>"` → gera o `.json`
+3. `npx tsx scripts/restaurar-tudo.ts "<arquivo.json>"` (simula) e depois `... --confirmar`. Recusa banco com dados; no fim confere as tabelas.
+4. Variáveis na Vercel (`ds160.env.enc` abre como `.env.restaurado` com a mesma ferramenta), `DATABASE_URL` novo, Redeploy.
+Testado em 2026-10-09: backup → banco novo → comparação campo a campo **idêntica** (usuários com 2FA, schema, clientes com respostas e datas).
+Tabela nova no schema ⇒ incluir em `src/lib/backup-automatico.ts` **e** `scripts/restaurar-tudo.ts`.

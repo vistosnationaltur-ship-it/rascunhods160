@@ -512,3 +512,10 @@ Commits `32c34ad` → `36d3976` no `main` (build inicial das 6 fases + extras).
 - **Cliente de teste permanente** (não apagar, pedido do usuário) — login
   em `DOCUMENTACAO-INFRAESTRUTURA.md` (gitignored, não commitar credencial
   aqui). Ver também [[feedback_dados_teste_producao]].
+
+## Backup pro Drive + restauração completa (2026-10-09)
+- `scripts/backup-drive.ts` (`npm run backup:drive`): `.enc` conferido + código + bundle Git + `ds160.env.enc` numa pasta do Drive; retenção **28 dias** (LGPD, mín. 2 cópias).
+  Chamado pelo atalho "Backup do Flow" (repo do Flow), que passa `--destino` e `--sem-alerta` e registra o resultado no monitoramento do Flow.
+- `scripts/restaurar-tudo.ts`: usuários + schema + clientes num banco vazio (simula, `--confirmar` grava, confere no fim). Testado campo a campo.
+- `src/lib/backup-automatico.ts` virou fonte única (`lerBancoDs160`, `cifrarBackup`, `decifrarBackup`); o cron semanal por e-mail segue igual.
+- `.gitignore`: `*.enc`, `*.env.restaurado`, `backup-*.json`. Guia: `RESTAURAR.md` seção 5.
