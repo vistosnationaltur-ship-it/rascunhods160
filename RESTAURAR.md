@@ -92,6 +92,7 @@ Feche o terminal depois de usar, pra não deixar a string na env da sessão.
 `npm run backup:drive` (lê `DATABASE_URL`, `BACKUP_ENCRYPTION_KEY` e `BACKUP_DRIVE_DIR` do `.env` local). Normalmente quem chama é o atalho
 **"Backup do Flow"** (repositório do Flow, `DS160_REPO_DIR`/`DS160_DRIVE_DIR`), que grava na pasta `Flow Visto Americano\Sistema Completo DS160`:
 `ds160-backup-*.enc` (dados, cifrado e conferido), `Codigo do Sistema/`, `ds160-historico-git.bundle`, `ds160.env.enc`, `ULTIMO-BACKUP.txt`.
+**E-mail semanal:** se falhar (não gerou ou o envio foi recusado, ex.: anexo grande), o cron manda um aviso "⚠ Backup semanal do DS160 FALHOU" pro mesmo e-mail; se o Resend estiver fora do ar, só o log da Vercel mostra. O e-mail semanal fica na caixa de entrada sem prazo: apague os antigos de vez em quando (LGPD).
 **Retenção LGPD:** cópias de dados só por 28 dias (mín. 2). Flag `--sem-alerta` = não manda e-mail (o Flow já avisa).
 
 ### Restauração completa (banco novo e vazio)

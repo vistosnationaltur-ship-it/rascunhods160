@@ -519,3 +519,4 @@ Commits `32c34ad` → `36d3976` no `main` (build inicial das 6 fases + extras).
 - `scripts/restaurar-tudo.ts`: usuários + schema + clientes num banco vazio (simula, `--confirmar` grava, confere no fim). Testado campo a campo.
 - `src/lib/backup-automatico.ts` virou fonte única (`lerBancoDs160`, `cifrarBackup`, `decifrarBackup`); o cron semanal por e-mail segue igual.
 - `.gitignore`: `*.enc`, `*.env.restaurado`, `backup-*.json`. Guia: `RESTAURAR.md` seção 5.
+- **Alerta de falha no cron semanal** (`/api/cron/backup-semanal`): se o backup não for gerado ou o e-mail do backup falhar (ex.: anexo grande demais), manda um aviso curto "⚠ Backup semanal do DS160 FALHOU" pro `TEAM_EMAIL_DS160`. Não avisa se o próprio Resend estiver fora do ar (aí só o log da Vercel). Testado com `fetch` simulado: sem autorização não manda nada; falha ao gerar e falha ao enviar avisam; sucesso não avisa.
