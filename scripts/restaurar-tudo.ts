@@ -83,7 +83,7 @@ async function main() {
   await inserir(
     "clientes",
     lista("clientes"),
-    ["concluidoEm", "pdfGeradoEm", "excluirApos", "consentimentoEm", "criadoEm", "atualizadoEm"],
+    ["concluidoEm", "pdfGeradoEm", "excluirApos", "consentimentoEm", "primeiroAcessoEm", "ultimoAcessoEm", "ultimoSalvamentoEm", "criadoEm", "atualizadoEm"],
     (d) => prisma.clienteDs160.createMany({ data: d as never }),
   );
 
